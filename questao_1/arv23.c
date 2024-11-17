@@ -5,19 +5,41 @@
 
 
 /*-----------------------------------------------------------------------------------------------------*/
+Inglesbin* createNode(const char* word, int unidade) {
+    Inglesbin* newNode = (Inglesbin*)malloc(sizeof(Inglesbin));
+    if (newNode != NULL) {
+        strcpy(newNode->palavraIngles, word);
+        newNode->unidade = unidade;
+        newNode->esq = newNode->dir = NULL;
+    }
+    return newNode;
+}
 
+// Função para inserir uma palavra em inglês na árvore binária de busca
+Inglesbin* insertpalavraIngles(Inglesbin* root, const char* word, int unidade) {
+    Inglesbin *result;
+    if (root == NULL) {
+        result = createNode(word, unidade);
+    } else {
+        if (strcmp(word, root->palavraIngles) < 0) {
+            root->esq = insertpalavraIngles(root->esq, word, unidade);
+        } else if (strcmp(word, root->palavraIngles) > 0) {
+            root->dir = insertpalavraIngles(root->dir, word, unidade);
+        }
+        result = root;
+    }
+    return result;
+}
 /* (pré-itens) funções necessárias para que os itens i, ii, iii e iv possam ocorrer */
-Info criaInfo(char *palavra, int unidade) {
+Info criaInfo(char *palavra, char *palavraIngles, int unidade) {
     Info info;
-    info.palavraIngles = NULL;
+    info.palavraIngles = insertpalavraIngles(info.palavraIngles, palavraIngles, unidade);
     info.palavraPortugues = strdup(palavra);
     info.unidade = unidade;
-    info.palavraIngles = (Inglesbin*)malloc(sizeof(Inglesbin));
     info.palavraIngles->unidade = unidade;
-    info.palavraIngles->esq = NULL;
-    info.palavraIngles->dir = NULL;
     return info;
 }
+
 Portugues23 *criaNo(const Info *informacao, Portugues23 *filhoesq, Portugues23 *filhocen){
     Portugues23 *no = (Portugues23*)malloc(sizeof(Portugues23));
 
@@ -138,14 +160,7 @@ void freeTree(Portugues23 *no){
 
 
 void adicionarTraducaoEmIngles(Info *info, const char *palavraIng, int unidade) {    
-    if(info->palavraIngles == NULL){
-        info->palavraIngles = (Inglesbin*)malloc(sizeof(Inglesbin));
-        info->palavraIngles->unidade = unidade;
-        info->palavraIngles->esq = NULL;
-        info->palavraIngles->dir = NULL;
-    }
-
-    info->palavraIngles->palavraIngles = strdup(palavraIng);
+    info->palavraIngles = insertpalavraIngles(info->palavraIngles, palavraIng, unidade);
 }
 
 
@@ -177,31 +192,7 @@ void exibir_tree23(const Portugues23 *raiz){
 
 //#########################################TENTAR CORRIGIR ESSA BOMBA######################################
 
-// Inglesbin* createNode(const char* word, int unidade) {
-//     Inglesbin* newNode = (Inglesbin*)malloc(sizeof(Inglesbin));
-//     if (newNode != NULL) {
-//         strcpy(newNode->palavraIngles, word);
-//         newNode->unidade = unidade;
-//         newNode->esq = newNode->dir = NULL;
-//     }
-//     return newNode;
-// }
 
-// // Função para inserir uma palavra em inglês na árvore binária de busca
-// Inglesbin* insertpalavraIngles(Inglesbin* root, const char* word, int unidade) {
-//     Inglesbin *result;
-//     if (root == NULL) {
-//         result = createNode(word, unidade);
-//     } else {
-//         if (strcmp(word, root->palavraIngles) < 0) {
-//             root->esq = insertpalavraIngles(root->esq, word, unidade);
-//         } else if (strcmp(word, root->palavraIngles) > 0) {
-//             root->dir = insertpalavraIngles(root->dir, word, unidade);
-//         }
-//         result = root;
-//     }
-//     return result;
-// }
 
 
 

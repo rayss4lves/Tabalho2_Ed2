@@ -1,5 +1,5 @@
 typedef struct Inglesbin{
-    char *palavraIngles;
+    char palavraIngles[50];
     struct Inglesbin *dir,*esq;
     int unidade;
 } Inglesbin;

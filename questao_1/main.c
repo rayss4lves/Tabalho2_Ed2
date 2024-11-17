@@ -12,10 +12,10 @@ void carregarArquivo(const char *nomeArquivo, Portugues23 **arvore) {
         printf("Erro ao abrir o arquivo.\n");
     }else{
         char linha[256];
-    int unidadeAtual = 0; // Variável para armazenar a unidade atual
+     // Variável para armazenar a unidade atual
     Info promove;         // Armazena o valor promovido durante inserções
     Portugues23 *pai = NULL;
-    int i = 0;
+    int unidadeAtual = 0;  // Inicializa unidadeAtual
     while (fgets(linha, sizeof(linha), arquivo)) {
         // Remove a quebra de linha ao final
         linha[strcspn(linha, "\n")] = 0;
@@ -28,7 +28,7 @@ void carregarArquivo(const char *nomeArquivo, Portugues23 **arvore) {
             char palavraIngles[50];
             char traducoesPortugues[200];
 
-            if (sscanf(linha, "%49[^:]: %199[^\n]", palavraIngles, traducoesPortugues) == 2) {
+            if (sscanf(linha, "%[^:]: %[^;];", palavraIngles, traducoesPortugues) == 2) {
                 // Processar cada tradução em português
                 char *traducaoPortugues = strtok(traducoesPortugues, ",;");
                 while (traducaoPortugues != NULL) {
@@ -36,8 +36,8 @@ void carregarArquivo(const char *nomeArquivo, Portugues23 **arvore) {
                     while (*traducaoPortugues == ' ') traducaoPortugues++;
                     
                     // Criar um novo Info para a tradução em português
-                    Info novoInfo = criaInfo(traducaoPortugues, unidadeAtual);
-                    adicionarTraducaoEmIngles(&novoInfo, palavraIngles, unidadeAtual);  
+                    Info novoInfo = criaInfo(traducaoPortugues, palavraIngles, unidadeAtual);
+                    //adicionarTraducaoEmIngles(&novoInfo, palavraIngles, unidadeAtual);  
 
                     // Inserir o novo Info na árvore 2-3
                     inserirArv23(arvore, &novoInfo, &promove, &pai);
