@@ -3,15 +3,17 @@
 #include <string.h>
 #include "arv23.h"
 
+
 /*-----------------------------------------------------------------------------------------------------*/
 
 /* (pré-itens) funções necessárias para que os itens i, ii, iii e iv possam ocorrer */
-Info criaInfo(const char *palavraPortugues, const int unidade) {
+Info criaInfo(char *palavra, int unidade) {
     Info info;
     info.palavraIngles = NULL;
-    info.palavraPortugues = strdup(palavraPortugues);
+    info.palavraPortugues = strdup(palavra);
     info.unidade = unidade;
     info.palavraIngles = (Inglesbin*)malloc(sizeof(Inglesbin));
+    info.palavraIngles->unidade = unidade;
     info.palavraIngles->esq = NULL;
     info.palavraIngles->dir = NULL;
     return info;
@@ -135,9 +137,10 @@ void freeTree(Portugues23 *no){
 }
 
 
-void adicionarTraducaoEmIngles(Info *info, const char *palavraIng) {
+void adicionarTraducaoEmIngles(Info *info, const char *palavraIng, int unidade) {    
     if(info->palavraIngles == NULL){
         info->palavraIngles = (Inglesbin*)malloc(sizeof(Inglesbin));
+        info->palavraIngles->unidade = unidade;
         info->palavraIngles->esq = NULL;
         info->palavraIngles->dir = NULL;
     }
@@ -145,17 +148,17 @@ void adicionarTraducaoEmIngles(Info *info, const char *palavraIng) {
     info->palavraIngles->palavraIngles = strdup(palavraIng);
 }
 
+
 void exibir_tree23(const Portugues23 *raiz){
     if(raiz != NULL){
         exibir_tree23(raiz->esq);
         printf("Palavra (PT): %s, Unidade: %d", raiz->info1.palavraPortugues, raiz->info1.unidade);
-
-        if(raiz->info1.palavraIngles != NULL && raiz->info1.palavraIngles->palavraIngles != NULL){
+        if( raiz->info1.palavraIngles != NULL && raiz->info1.palavraIngles->palavraIngles != NULL){
             printf(", Traducao (EN): %s", raiz->info1.palavraIngles->palavraIngles);
             printf("\n");
         }
-
-        // Se houver o segundo elemento (nInfos == 2), exibe o segundo filho
+        exibir_tree23(raiz->cent);
+        // Se houver o segundo elemento (ninfos == 2), exibe o segundo filho
         if(raiz->nInfos == 2){
             printf("Palavra (PT): %s, Unidade: %d", raiz->info2.palavraPortugues, raiz->info2.unidade);
 
@@ -164,42 +167,75 @@ void exibir_tree23(const Portugues23 *raiz){
                 printf(", Traducao (EN): %s", raiz->info2.palavraIngles->palavraIngles);
             printf("\n");
         }
-        exibir_tree23(raiz->cent);
+        
         if(raiz->nInfos == 2) {
             exibir_tree23(raiz->dir);
         }
     }
 }
 
-Portugues23 **buscarValorArvore(Portugues23 **arvore, const char *valor, Portugues23 **irmao) {
-    Portugues23 **nodo = NULL;
 
-    if (*arvore) {
-        nodo = arvore;
+//#########################################TENTAR CORRIGIR ESSA BOMBA######################################
 
-        // Loop para procurar o valor até encontrar o nó ou um nó folha
-        while (*nodo && 
-               strcmp(valor, (*nodo)->info1.palavraPortugues) != 0 && 
-               ((*nodo)->nInfos == 1 || strcmp(valor, (*nodo)->info2.palavraPortugues) != 0)) {
+// Inglesbin* createNode(const char* word, int unidade) {
+//     Inglesbin* newNode = (Inglesbin*)malloc(sizeof(Inglesbin));
+//     if (newNode != NULL) {
+//         strcpy(newNode->palavraIngles, word);
+//         newNode->unidade = unidade;
+//         newNode->esq = newNode->dir = NULL;
+//     }
+//     return newNode;
+// }
+
+// // Função para inserir uma palavra em inglês na árvore binária de busca
+// Inglesbin* insertpalavraIngles(Inglesbin* root, const char* word, int unidade) {
+//     Inglesbin *result;
+//     if (root == NULL) {
+//         result = createNode(word, unidade);
+//     } else {
+//         if (strcmp(word, root->palavraIngles) < 0) {
+//             root->esq = insertpalavraIngles(root->esq, word, unidade);
+//         } else if (strcmp(word, root->palavraIngles) > 0) {
+//             root->dir = insertpalavraIngles(root->dir, word, unidade);
+//         }
+//         result = root;
+//     }
+//     return result;
+// }
+
+
+
+
+
+// Portugues23 **buscarValorArvore(Portugues23 **arvore, const char *valor, Portugues23 **irmao) {
+//     Portugues23 **nodo = NULL;
+
+//     if (*arvore) {
+//         nodo = arvore;
+
+//         // Loop para procurar o valor até encontrar o nó ou um nó folha
+//         while (*nodo && 
+//                strcmp(valor, (*nodo)->info1.palavraPortugues) != 0 && 
+//                ((*nodo)->nInfos == 1 || strcmp(valor, (*nodo)->info2.palavraPortugues) != 0)) {
             
-            *irmao = (*nodo)->cent;  // Supondo que `irmao` inicialmente seja o centro
+//             *irmao = (*nodo)->cent;  // Supondo que `irmao` inicialmente seja o centro
 
-            if ((*nodo)->nInfos == 2 && strcmp(valor, (*nodo)->info2.palavraPortugues) > 0) {
-                // Se `valor` é maior que `info2`, vá para o nó direito
-                nodo = &((*nodo)->dir);
-            } else if (strcmp(valor, (*nodo)->info1.palavraPortugues) < 0) {
-                // Se `valor` é menor que `info1`, vá para o nó esquerdo
-                nodo = &((*nodo)->esq);
-            } else {
-                // Caso contrário, vá para o nó do centro e ajuste `irmao`
-                *irmao = (*nodo)->esq;
-                nodo = &((*nodo)->cent);
-            }
-        }
-    }
+//             if ((*nodo)->nInfos == 2 && strcmp(valor, (*nodo)->info2.palavraPortugues) > 0) {
+//                 // Se `valor` é maior que `info2`, vá para o nó direito
+//                 nodo = &((*nodo)->dir);
+//             } else if (strcmp(valor, (*nodo)->info1.palavraPortugues) < 0) {
+//                 // Se `valor` é menor que `info1`, vá para o nó esquerdo
+//                 nodo = &((*nodo)->esq);
+//             } else {
+//                 // Caso contrário, vá para o nó do centro e ajuste `irmao`
+//                 *irmao = (*nodo)->esq;
+//                 nodo = &((*nodo)->cent);
+//             }
+//         }
+//     }
 
-    return nodo;
-}
+//     return nodo;
+// }
 
 /*-----------------------------------------------------------------------------------------------------*/
 
@@ -223,3 +259,88 @@ das quais ela pertence. Caso ela seja a única palavraPortugues em uma das árvo
 deve remover a palavraPortugues em inglês da árvore binária correspondente a palavraPortugues em português da mesma
 unidade. Caso ela seja a única palavraPortugues na árvore binária, a palavraPortugues em português deve ser removida da
 árvore 2-3 */
+
+// void imprimirNodo(Portugues23 *no, int value, int nivel) {
+//     int i;
+//     if (no) {
+//         // Indentação para representar o nível do nó na árvore
+//         for (i = 0; i < nivel; i++) {
+//             printf("\t");
+//         }
+
+//         if (value == 0) {
+//             printf("Palavra (PT): %s\n", no->info1.palavraPortugues);
+//             printf("Traduções em inglês:\n");
+//             printBinaryTree(no->info1.palavraIngles); // Imprime a árvore binária de traduções de `info1`
+//         } else {
+//             printf("Palavra (PT): %s\n", no->info2.palavraPortugues);
+//             printf("Traduções em inglês:\n");
+//             printBinaryTree(no->info2.palavraIngles); // Imprime a árvore binária de traduções de `info2`
+//         }
+//     }
+// }
+
+// void imprimirArvore(Portugues23 *arvore, int nivel) {
+//     if (arvore) {
+//         // Imprime a subárvore à esquerda
+//         imprimirArvore(arvore->esq, nivel + 1);
+
+//         // Imprime `info1` e suas traduções
+//         imprimirNodo(arvore, 0, nivel);
+
+//         // Imprime a subárvore do meio
+//         imprimirArvore(arvore->cent, nivel + 1);
+
+//         // Se o nó possui `info2`, imprime `info2` e a subárvore à direita
+//         if (arvore->nInfos == 2) {
+//             imprimirNodo(arvore, 1, nivel); // Imprime `info2`
+//             imprimirArvore(arvore->dir, nivel + 1);
+//         }
+//     }
+// }
+// void imprimirInfoUnidade(Portugues23 *arvore, int unidade) {
+//     if (arvore) {
+//         // Verifica se `info1` pertence à unidade
+//         if (arvore->info1.unidade == unidade) {
+//             int primeira = 1;
+//             imprimirTraducoes(arvore->info1.palavraIngles, arvore->info1.palavraPortugues, &primeira);
+//         }
+//         // Verifica se `info2` pertence à unidade
+//         if (arvore->nInfos == 2 && arvore->info2.unidade == unidade) {
+//             int primeira = 1;
+//             imprimirTraducoes(arvore->info2.palavraIngles, arvore->info2.palavraPortugues, &primeira);
+//         }
+
+//         // Percorre recursivamente as subárvores
+//         imprimirInfoUnidade(arvore->esq, unidade);
+//         imprimirInfoUnidade(arvore->cent, unidade);
+//         if (arvore->nInfos == 2) {
+//             imprimirInfoUnidade(arvore->dir, unidade);
+//         }
+//     }
+// }
+
+// void printBinaryTree(Inglesbin *root) {
+//     if (root != NULL) {
+//         printBinaryTree(root->esq);
+//         printf("- %s (Unidade: %d)\n", root->palavraIngles, root->unidade);
+//         printBinaryTree(root->dir);
+//     }
+// }
+
+// void imprimirTraducoes(Inglesbin *arvore, const char *palavraPortugues, int *primeira) {
+//     if (arvore) {
+//         imprimirTraducoes(arvore->esq, palavraPortugues, primeira);
+
+//         // Imprime o cabeçalho apenas na primeira vez
+//         if (*primeira) {
+//             printf("Palavra em Português: %s\n", palavraPortugues);
+//             printf("Traduções em Inglês:\n");
+//             *primeira = 0;
+//         }
+
+//         printf("- %s (Unidade: %d)\n", arvore->palavraIngles, arvore->unidade);
+
+//         imprimirTraducoes(arvore->dir, palavraPortugues, primeira);
+//     }
+// }
