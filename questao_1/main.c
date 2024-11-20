@@ -59,7 +59,7 @@ int main(){
     printf("\nPalavras da unidade 1: \n");
     exibir_traducoes_unidade(raiz, 1);
 
-    imprimirTraducoesEmIngles(raiz, "sistema");
+    //imprimirTraducoesEmIngles(raiz, "sistema");
 
     
 
