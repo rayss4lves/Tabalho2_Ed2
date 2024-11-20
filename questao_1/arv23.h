@@ -23,6 +23,10 @@ void exibir_tree23(const Portugues23 *raiz);
 void adicionarTraducaoEmIngles(Info *info, const char *palavraIng, int unidade);
 Info criaInfo(char *palavra, char *palavraIngles, int unidade);
 // Portugues23 **buscarValorArvore(Portugues23 **arvore, const char *valor, Portugues23 **irmao);
+//Portugues23 **buscarValorArvore(Portugues23 **arvore, const char *valor, Portugues23 **irmao);
+void imprimirArvorePorUnidade(Portugues23 *arvore);
+void imprimirInfoUnidade(Portugues23 *arvore, int unidade);
+void exibir_traducoes_unidade(const Portugues23 *raiz, int unidade);
 
 //void imprimirArvore(Portugues23 *arvore);
 
@@ -32,10 +36,9 @@ Inglesbin* createNode(const char* word, int unit);
 // Função para inserir uma palavra em inglês na árvore binária de busca
 Inglesbin* insertpalavraIngles(Inglesbin* root, const char* word, int unit);
 void printBinaryTree(Inglesbin* root);
+
 void imprimirTraducoes(Inglesbin *arvore, const char *palavraPortugues, int *primeira);
-void imprimirInfoUnidade(Portugues23 *arvore, int unidade);
-void imprimirArvore(Portugues23 *arvore, int nivel);
-// void imprimirNodo(Portugues23 *no, int value, int nivel);
+
 
 
 
