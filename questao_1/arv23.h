@@ -27,7 +27,7 @@ Info criaInfo(char *palavra, char *palavraIngles, int unidade);
 void imprimirArvorePorUnidade(Portugues23 *arvore);
 void imprimirInfoUnidade(Portugues23 *arvore, int unidade);
 void exibir_traducoes_unidade(const Portugues23 *raiz, int unidade);
-
+//Portugues23 *adicionarTraducaoPalavra_existente(Portugues23 *no, const char *palavraPortugues, const char *palavraIngles, int unidade);
 //void imprimirArvore(Portugues23 *arvore);
 
 //funções ingles
@@ -37,7 +37,7 @@ Inglesbin* createNode(const char* word, int unit);
 Inglesbin* insertpalavraIngles(Inglesbin* root, const char* word, int unit);
 void printBinaryTree(Inglesbin* root);
 
-void imprimirTraducoes(Inglesbin *arvore, const char *palavraPortugues, int *primeira);
+void imprimirTraducoes(Inglesbin *arvore, const char *palavraPortugues);
 
 
 
