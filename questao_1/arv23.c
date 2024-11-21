@@ -62,7 +62,7 @@ Portugues23 *criaNo(const Info *informacao, Portugues23 *filhoesq, Portugues23 *
     Portugues23 *no = (Portugues23 *)malloc(sizeof(Portugues23));
     if (!no)
     {
-        printf("Erro ao alocar mem0ria para no");
+        printf("Erro ao alocar memoria para no");
     }
     else
     {
@@ -126,32 +126,33 @@ int ehFolha(const Portugues23 *no)
     return (no->esq == NULL);
 }
 
-// Portugues23 *adicionarTraducaoPalavra_existente(Portugues23 *no, const char *palavraPortugues, const char *palavraIngles, int unidade) {
-//     Portugues23 *resultado = NULL; // Inicializa o retorno como NULL
+Portugues23 *adicionarTraducaoPalavra_existente(Portugues23 **no, const char *palavraPortugues, const char *palavraIngles, int unidade) {
+    Portugues23 *resultado = NULL; // Inicializa o retorno como NULL
 
-//     if (no != NULL) {
-//         if (strcmp(palavraPortugues, no->info1.palavraPortugues) == 0) {
-//             // Se a palavra em português já existe, adicione a tradução em inglês
-//             adicionarTraducaoEmIngles(&no->info1, palavraIngles, unidade);
-//             resultado = no; // Palavra encontrada, retorna o nó
-//         } else if (no->nInfos == 2 && strcmp(palavraPortugues, no->info2.palavraPortugues) == 0) {
-//             // Se a palavra em português já existe na segunda posição, adicione a tradução em inglês
-//             adicionarTraducaoEmIngles(&no->info2, palavraIngles, unidade);
-//             resultado = no; // Palavra encontrada, retorna o nó
-//         } else {
-//             // Continua a busca nos filhos
-//             if (strcmp(palavraPortugues, no->info1.palavraPortugues) < 0) {
-//                 resultado = adicionarTraducaoPalavra_existente(no->esq, palavraPortugues, palavraIngles, unidade);
-//             } else if (no->nInfos == 1 || strcmp(palavraPortugues, no->info2.palavraPortugues) < 0) {
-//                 resultado = adicionarTraducaoPalavra_existente(no->cent, palavraPortugues, palavraIngles, unidade);
-//             } else {
-//                 resultado = adicionarTraducaoPalavra_existente(no->dir, palavraPortugues, palavraIngles, unidade);
-//             }
-//         }
-//     }
+    if (no != NULL && *no != NULL) {
+        if (strcmp(palavraPortugues, (*no)->info1.palavraPortugues) == 0) {
+            // Se a palavra em português já existe, adicione a tradução em inglês
+            adicionarTraducaoEmIngles(&(*no)->info1, palavraIngles, unidade);
+            resultado = *no; // Palavra encontrada, retorna o nó
+        } else if ((*no)->nInfos == 2 && strcmp(palavraPortugues, (*no)->info2.palavraPortugues) == 0) {
+            // Se a palavra em português já existe na segunda posição, adicione a tradução em inglês
+            adicionarTraducaoEmIngles(&(*no)->info2, palavraIngles, unidade);
+            resultado = *no; // Palavra encontrada, retorna o nó
+        } else {
+            // Continua a busca nos filhos
+            if (strcmp(palavraPortugues, (*no)->info1.palavraPortugues) < 0) {
+                resultado = adicionarTraducaoPalavra_existente(&(*no)->esq, palavraPortugues, palavraIngles, unidade);
+            } else if ((*no)->nInfos == 1 || strcmp(palavraPortugues, (*no)->info2.palavraPortugues) < 0) {
+                resultado = adicionarTraducaoPalavra_existente(&(*no)->cent, palavraPortugues, palavraIngles, unidade);
+            } else {
+                resultado = adicionarTraducaoPalavra_existente(&(*no)->dir, palavraPortugues, palavraIngles, unidade);
+            }
+        }
+    }
 
-//     return resultado; // Retorna o resultado final
-// }
+    return resultado; // Retorna o resultado final
+}
+
 
 
 
@@ -159,18 +160,12 @@ Portugues23 *inserirArv23(Portugues23 **no, Info *informacao, Info *promove, Por
 {
     Info promove1;
     Portugues23 *maiorNo = NULL;
-
     if (*no == NULL)
     {
         *no = criaNo(informacao, NULL, NULL);
     }
     else
     {
-        // Portugues23 *noExistente = adicionarTraducaoPalavra_existente(*no, informacao->palavraPortugues, informacao->palavraIngles->palavraIngles, informacao->unidade);
-        // if (noExistente)
-        // {
-        //     maiorNo = noExistente; // Atualiza o retorno caso a palavra ja exista
-        // }
         if (ehFolha(*no))
         {
             if ((*no)->nInfos == 1)
@@ -315,8 +310,9 @@ void imprimirTraducoes(Inglesbin *node, const char *palavraPortugues)
         imprimirTraducoes(node->esq, palavraPortugues);
 
         // Imprime a palavra em inglês e a tradução em português
+        printBinaryTree(node);
         
-        printf("%s: %s;", node->palavraIngles, palavraPortugues);
+        //printf("%s", palavraPortugues);
        // *primeira = 0;  // Após a primeira impressão, 'primeira' se torna 0
 
         // Imprime o nó direito

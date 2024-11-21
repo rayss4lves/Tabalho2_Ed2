@@ -25,16 +25,22 @@ void carregarArquivo(const char *nomeArquivo, Portugues23 **arvore) {
             sscanf(linha, "%% Unidade %d", &unidadeAtual);
         } else {
             char palavraIngles[50], traducoesPortugues[200];
-            if (sscanf(linha, "%[^:]: %[^;]", palavraIngles, traducoesPortugues) == 2) {
+            sscanf(linha, "%[^:]: %[^;]", palavraIngles, traducoesPortugues);
                 printf("Lendo: Palavra Inglês = '%s', Traduções: '%s'\n", palavraIngles, traducoesPortugues);
                 char *traducaoPortugues = strtok(traducoesPortugues, ",;");
                 while (traducaoPortugues != NULL) {
                     while (*traducaoPortugues == ' ') traducaoPortugues++;
-                    Info novoInfo = criaInfo(traducaoPortugues, palavraIngles, unidadeAtual);
-                    inserirArv23(arvore, &novoInfo, &promove, &pai);
+                    if (adicionarTraducaoPalavra_existente(arvore, traducoesPortugues, palavraIngles, unidadeAtual))
+                    {
+                        printf("A palavra já existe.\n");
+                    }else{
+                        Info novoInfo = criaInfo(traducaoPortugues, palavraIngles, unidadeAtual);
+                        inserirArv23(arvore, &novoInfo, &promove, &pai);
+                        
+                    }
                     traducaoPortugues = strtok(NULL, ",;");
+                    
                 }
-            }
         }
     }
 
