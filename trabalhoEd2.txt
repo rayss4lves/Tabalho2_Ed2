@@ -4,7 +4,7 @@
         Bike: bicicleta;  
         Coller: ventilador; 
         Network: rede de computadores; 
-        System: sistema; 
+        System: sistema;  
 % Unidade 2 
        Bug: inseto;  
        Bicycle: bicicleta; 
