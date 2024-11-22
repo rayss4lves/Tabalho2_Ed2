@@ -93,6 +93,16 @@ int main()
 
     exibir_traducao_Portugues(&raiz, "bicicleta");
 
+    BuscarPalavraIngles(&raiz, "Bus");
+   
+    printf("\n--------------------------------------------------------------- \n");
+
+    printf("\nPalavras apos remoção: \n");
+
+    exibir_tree23(raiz);
+
+
+
     // freeTree(raiz);
 
     return 0;

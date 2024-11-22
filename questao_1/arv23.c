@@ -38,6 +38,10 @@ Inglesbin *insertpalavraIngles(Inglesbin *root, const char *palavraIngles, int u
     }
     return result;
 }
+
+// ############################################## ARVORE 2-3 ##############################################
+
+
 /* (pré-itens) funções necessarias para que os itens i, ii, iii e iv possam ocorrer */
 Info criaInfo(char *palavra, char *palavraIngles, int unidade)
 {
@@ -254,6 +258,8 @@ void adicionarTraducaoEmIngles(Info *info, const char *palavraIng, int unidade)
     info->palavraIngles = insertpalavraIngles(info->palavraIngles, palavraIng, unidade);
 }
 
+// ############################################## FUNÇOES PARA EXIBIR ##############################################
+
 void exibir_tree23(const Portugues23 *raiz)
 {
     if (raiz != NULL)
@@ -352,7 +358,97 @@ void printBinaryTree(Inglesbin *root)
     }
 }
 
-// #########################################TENTAR CORRIGIR ESSA BOMBA######################################
+// ######################################### REMOÇÃO : corrigir essa parte ######################################
+// ########################## A função de remover, não está conseguindo ler a palavra ###########################
+
+int ehFolhas(Inglesbin *raiz){
+    return (raiz->esq == NULL && raiz->dir == NULL);
+}
+
+Inglesbin *soUmFilho(Inglesbin *raiz){
+    Inglesbin *aux;
+    aux = NULL;
+
+    if(raiz->dir == NULL){
+        aux = raiz->esq;
+    }else if(raiz->esq == NULL){
+        aux = raiz->dir;
+    }
+
+    return aux;
+}
+
+Inglesbin *menorFilho(Inglesbin *raiz){
+    Inglesbin *aux;
+    aux = raiz;
+
+    if(raiz){
+        if(raiz->esq)
+            aux = menorFilho(raiz->esq);
+    }
+
+    return aux;
+}
+
+int removerPalavraIngles(Inglesbin *raiz, char *palavra) {
+    Inglesbin *endFilho;
+    int existe = 0;
+
+    if (raiz) {
+        if (strcmp(palavra, (raiz)->palavraIngles) == 0) {
+            existe = 1;
+            printf("Removendo palavra: %s\n", palavra);
+            Inglesbin *aux = raiz;
+            if (ehFolhas(raiz)) {
+                free(aux);
+                raiz = NULL;
+            } else if ((endFilho = soUmFilho(raiz)) != NULL) {
+                free(aux);
+                raiz = endFilho;
+            } else {
+                endFilho = menorFilho((raiz)->dir);
+                strcpy((raiz)->palavraIngles, endFilho->palavraIngles);
+                (raiz)->unidade = endFilho->unidade;
+
+                removerPalavraIngles((raiz)->dir, endFilho->palavraIngles);
+            }
+        } else if (strcmp(palavra, (raiz)->palavraIngles) < 0) {
+            existe = removerPalavraIngles((raiz)->esq, palavra);
+        } else {
+            existe = removerPalavraIngles((raiz)->dir, palavra);
+        }
+    } else {
+        printf("A árvore está vazia ou o nó é nulo.\n");
+    }
+
+    return existe;
+}
+
+void BuscarPalavraIngles(Portugues23 **raiz, char *palavraIngles) 
+{
+    Portugues23 *no = *raiz; 
+    
+    if (no != NULL) 
+    {
+        if (no->info1.palavraIngles != NULL) 
+        {
+            printf("Verificando info1.palavraIngles: %s\n", no->info1.palavraIngles->palavraIngles); // Depuração
+            removerPalavraIngles(no->info1.palavraIngles, palavraIngles);
+        }
+
+        if (no->nInfos == 2 && no->info2.palavraIngles != NULL) 
+        {
+            printf("Verificando info2.palavraIngles: %s\n", no->info2.palavraIngles->palavraIngles); // Depuração
+            removerPalavraIngles(no->info2.palavraIngles, palavraIngles);
+        }
+
+        // Chamando recursivamente para as subárvores
+        BuscarPalavraIngles(&(no->esq), palavraIngles);
+        BuscarPalavraIngles(&(no->cent), palavraIngles);
+        BuscarPalavraIngles(&(no->dir), palavraIngles);
+    }
+}
+
 
 
 
