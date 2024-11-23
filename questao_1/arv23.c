@@ -42,7 +42,7 @@ Inglesbin *insertpalavraIngles(Inglesbin *root, const char *palavraIngles, int u
 // ############################################## ARVORE 2-3 ##############################################
 
 
-/* (pré-itens) funções necessarias para que os itens i, ii, iii e iv possam ocorrer */
+/* (pre-itens) funções necessarias para que os itens i, ii, iii e iv possam ocorrer */
 Info criaInfo(char *palavra, char *palavraIngles, int unidade)
 {
     Info info;
@@ -201,7 +201,7 @@ Portugues23 *inserirArv23(Portugues23 **no, Info *informacao, Info *promove, Por
             }
         }
         else
-        { // Nó não é folha
+        { // Nó não e folha
             // Navega para o filho apropriado
             if (strcmp(informacao->palavraPortugues, (*no)->info1.palavraPortugues) < 0)
             {
@@ -353,13 +353,12 @@ void printBinaryTree(Inglesbin *root)
     {
         printBinaryTree(root->esq); // Percorre a árvore à esquerda
         // Imprime a tradução de inglês associada à palavra em português
-        printf("Palavra em Inglês: %s = Unidade: %d\n", root->palavraIngles, root->unidade);
+        printf("  Palavra em Inglês: %s = Unidade: %d\n", root->palavraIngles, root->unidade);
         printBinaryTree(root->dir); // Percorre a árvore à direita
     }
 }
 
-// ######################################### REMOÇÃO : corrigir essa parte ######################################
-// ########################## A função de remover, não está conseguindo ler a palavra ###########################
+// ############################################# REMOÇÃO ############################################
 
 int ehFolhas(Inglesbin *raiz){
     return (raiz->esq == NULL && raiz->dir == NULL);
@@ -390,66 +389,66 @@ Inglesbin *menorFilho(Inglesbin *raiz){
     return aux;
 }
 
-int removerPalavraIngles(Inglesbin *raiz, char *palavra) {
+int removerPalavraIngles(Inglesbin **raiz, char *palavra) {
     Inglesbin *endFilho;
     int existe = 0;
 
-    if (raiz) {
-        if (strcmp(palavra, (raiz)->palavraIngles) == 0) {
+    if (*raiz) {
+        if (strcmp(palavra, (*raiz)->palavraIngles) == 0) {
             existe = 1;
             printf("Removendo palavra: %s\n", palavra);
-            Inglesbin *aux = raiz;
-            if (ehFolhas(raiz)) {
+            Inglesbin *aux = *raiz;
+            if (ehFolhas(*raiz)) {
                 free(aux);
-                raiz = NULL;
-            } else if ((endFilho = soUmFilho(raiz)) != NULL) {
+                *raiz = NULL;
+            } else if ((endFilho = soUmFilho(*raiz)) != NULL) {
                 free(aux);
-                raiz = endFilho;
+                *raiz = endFilho;
             } else {
-                endFilho = menorFilho((raiz)->dir);
-                strcpy((raiz)->palavraIngles, endFilho->palavraIngles);
-                (raiz)->unidade = endFilho->unidade;
+                endFilho = menorFilho((*raiz)->dir);
+                strcpy((*raiz)->palavraIngles, endFilho->palavraIngles);
+                (*raiz)->unidade = endFilho->unidade;
 
-                removerPalavraIngles((raiz)->dir, endFilho->palavraIngles);
+                removerPalavraIngles(&(*raiz)->dir, endFilho->palavraIngles);
             }
-        } else if (strcmp(palavra, (raiz)->palavraIngles) < 0) {
-            existe = removerPalavraIngles((raiz)->esq, palavra);
+        } else if (strcmp(palavra, (*raiz)->palavraIngles) < 0) {
+            existe = removerPalavraIngles(&(*raiz)->esq, palavra);
         } else {
-            existe = removerPalavraIngles((raiz)->dir, palavra);
+            existe = removerPalavraIngles(&(*raiz)->dir, palavra);
         }
     } else {
-        printf("A árvore está vazia ou o nó é nulo.\n");
+        printf("A arvore esta vazia ou o no e nulo.\n\n");
     }
 
     return existe;
 }
 
-void BuscarPalavraIngles(Portugues23 **raiz, char *palavraIngles) 
-{
-    Portugues23 *no = *raiz; 
-    
-    if (no != NULL) 
+void BuscarPalavraIngles(Portugues23 **raiz, char *palavraIngles, int unidade) 
+{ 
+    if (*raiz != NULL) 
     {
-        if (no->info1.palavraIngles != NULL) 
+        BuscarPalavraIngles(&(*raiz)->esq, palavraIngles, unidade);
+
+        if ((*raiz)->info1.palavraIngles != NULL && (*raiz)->info1.palavraIngles->unidade == unidade) 
         {
-            printf("Verificando info1.palavraIngles: %s\n", no->info1.palavraIngles->palavraIngles); // Depuração
-            removerPalavraIngles(no->info1.palavraIngles, palavraIngles);
+            printf("Verificando info1.palavraIngles: %s\n\n", (*raiz)->info1.palavraIngles->palavraIngles);
+            removerPalavraIngles(&(*raiz)->info1.palavraIngles, palavraIngles);
+        }
+        BuscarPalavraIngles(&(*raiz)->cent, palavraIngles, unidade);
+
+        if ((*raiz)->nInfos == 2 && (*raiz)->info2.palavraIngles != NULL && (*raiz)->info2.palavraIngles->unidade == unidade) 
+        {
+            printf("Verificando info2.palavraIngles: %s\n\n", (*raiz)->info2.palavraIngles->palavraIngles);
+            removerPalavraIngles(&(*raiz)->info2.palavraIngles, palavraIngles);
         }
 
-        if (no->nInfos == 2 && no->info2.palavraIngles != NULL) 
+        if ((*raiz)->nInfos == 2 && (*raiz)->info2.palavraIngles != NULL) 
         {
-            printf("Verificando info2.palavraIngles: %s\n", no->info2.palavraIngles->palavraIngles); // Depuração
-            removerPalavraIngles(no->info2.palavraIngles, palavraIngles);
+            BuscarPalavraIngles(&(*raiz)->dir, palavraIngles, unidade);
         }
-
-        // Chamando recursivamente para as subárvores
-        BuscarPalavraIngles(&(no->esq), palavraIngles);
-        BuscarPalavraIngles(&(no->cent), palavraIngles);
-        BuscarPalavraIngles(&(no->dir), palavraIngles);
+           
     }
 }
-
-
 
 
 /*-----------------------------------------------------------------------------------------------------*/
@@ -465,7 +464,7 @@ português dada, independente da unidade */
 /*-----------------------------------------------------------------------------------------------------*/
 
 /* (iii) informar uma palavraPortugues em inglês e a unidade a qual a mesma pertence removÊ-la das arvores binarias
-das quais ela pertence. Caso ela seja a única palavraPortugues em uma das arvores binarias, remover também da
+das quais ela pertence. Caso ela seja a única palavraPortugues em uma das arvores binarias, remover tambem da
 arvore 2-3 */
 
 /*-----------------------------------------------------------------------------------------------------*/

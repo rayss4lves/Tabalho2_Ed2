@@ -36,8 +36,7 @@ void carregarArquivo(const char *nomeArquivo, Portugues23 **arvore)
     }
 
     char linha[256];
-    Info promove;
-    Portugues23 *pai = NULL;
+
     int unidadeAtual = 0;
 
     while (fgets(linha, sizeof(linha), arquivo))
@@ -62,9 +61,7 @@ void carregarArquivo(const char *nomeArquivo, Portugues23 **arvore)
                     traducaoPortugues++;
 
                 inserirPalavraPortugues(arvore, traducaoPortugues, palavraIngles, unidadeAtual);
-                traducaoPortugues = strtok(NULL, ",;");
-                
-                
+                traducaoPortugues = strtok(NULL, ",;");    
             }
             
         }
@@ -93,11 +90,13 @@ int main()
 
     exibir_traducao_Portugues(&raiz, "bicicleta");
 
-    BuscarPalavraIngles(&raiz, "Bus");
+    printf("\n--------------------------------------------------------------- \n");
+
+    BuscarPalavraIngles(&raiz, "Bus", 1);
    
     printf("\n--------------------------------------------------------------- \n");
 
-    printf("\nPalavras apos remoção: \n");
+    printf("\nPalavras apos remoção: \n\n");
 
     exibir_tree23(raiz);
 

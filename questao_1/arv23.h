@@ -37,9 +37,9 @@ void printBinaryTree(Inglesbin* root);
 void imprimirTraducoes(Inglesbin *node, int unidade, const char *palavraPortuguês);
 void adicionarTraducao(Portugues23 *no, const char *palavraPortugues, const char *palavraIngles, int unidade);
 
-int removerPalavraIngles(Inglesbin *raiz, char *palavra);
+int removerPalavraIngles(Inglesbin **raiz, char *palavra);
 // Inglesbin* removeInglesbin(Inglesbin* root, const char* word, int unit);
-void BuscarPalavraIngles(Portugues23 **no, char *palavraIngles);
+void BuscarPalavraIngles(Portugues23 **no, char *palavraIngles, int unidade);
 
 int ehFolhas(Inglesbin *raiz);
 
