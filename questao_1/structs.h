@@ -7,7 +7,6 @@ typedef struct Inglesbin{
 typedef struct info {
     char *palavraPortugues;
     Inglesbin *palavraIngles;
-    int unidade;
 } Info;
 
 typedef struct Portugues23{
