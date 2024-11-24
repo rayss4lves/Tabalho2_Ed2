@@ -38,14 +38,18 @@ void imprimirTraducoes(Inglesbin *node, int unidade, const char *palavraPortugu√
 void adicionarTraducao(Portugues23 *no, const char *palavraPortugues, const char *palavraIngles, int unidade);
 
 int removerPalavraIngles(Inglesbin **raiz, char *palavra);
-// Inglesbin* removeInglesbin(Inglesbin* root, const char* word, int unit);
-void BuscarPalavraIngles(Portugues23 **no, char *palavraIngles, int unidade);
+
+void BuscarPalavraIngles(Portugues23 **raiz, char *palavraIngles, int unidade);
 
 int ehFolhas(Inglesbin *raiz);
 
 Inglesbin *soUmFilho(Inglesbin *raiz);
 
 Inglesbin *menorFilho(Inglesbin *raiz);
+
+int removerArv23(Portugues23 **raiz, const char *info, const Portugues23 *pai, Portugues23 **ref);
+
+void removerElemento(Portugues23 **raiz, const char *palavra);
 
 
 #endif

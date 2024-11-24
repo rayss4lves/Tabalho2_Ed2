@@ -92,9 +92,11 @@ int main()
 
     printf("\n--------------------------------------------------------------- \n");
 
-    BuscarPalavraIngles(&raiz, "Bus", 1);
+    BuscarPalavraIngles(&raiz, "Coller", 1);
    
     printf("\n--------------------------------------------------------------- \n");
+
+    removerElemento(&raiz, "bicicleta");
 
     printf("\nPalavras apos remoção: \n\n");
 
