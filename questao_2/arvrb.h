@@ -5,7 +5,7 @@
 #define RED 1
 #define BLACK 0
 
-//passar as funções para o arquivo .c
+//passar as funções para o arquivo . c
 Inglesbin *createNode(char *palavraIngles, int unidade)
 {
     Inglesbin *novoNo = (Inglesbin *)malloc(sizeof(Inglesbin));
