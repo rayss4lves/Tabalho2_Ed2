@@ -1,13 +1,14 @@
 typedef struct InglesBin
 {
   char palavraIngles[50];
-  struct ArvoreBinaria *esq;
-  struct ArvoreBinaria *dir;
-} InglesBin;
+  int unidade;
+  struct InglesBin *esq;
+  struct InglesBin *dir;
+} Inglesbin;
 
 typedef struct Info
 {
-  InglesBin *palavraIngles;
+  Inglesbin *palavraIngles;
   char *palavraPortugues;
 } Info;
 

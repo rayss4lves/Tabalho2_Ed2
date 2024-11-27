@@ -20,7 +20,7 @@
 //         inseriu = 1;
 //     } else {
 //         Info novoInfo = criaInfo(palavraPortugues, palavraIngles, unidade);
-//         inserirArv23(arvore, &novoInfo, &promove, &pai);
+//         inserirArvRB(arvore, &novoInfo);
 //         inseriu = 0;
 //     }
 //     return inseriu;
@@ -60,7 +60,8 @@ void carregarArquivo(const char *nomeArquivo, PortuguesRB **arvore)
                 while (*traducaoPortugues == ' ') 
                     traducaoPortugues++;
 
-                inserirPalavraPortugues(arvore, traducaoPortugues, palavraIngles, unidadeAtual);
+                Info novoInfo = criaInfo(traducaoPortugues, palavraIngles, unidadeAtual);
+                inserirArvRB(arvore, &novoInfo);
                 traducaoPortugues = strtok(NULL, ",;");    
             }
             
@@ -74,8 +75,30 @@ void carregarArquivo(const char *nomeArquivo, PortuguesRB **arvore)
 
 int main()
 {
+
     PortuguesRB *raiz = NULL;
+
     carregarArquivo("/mnt/c/Users/Rayssa Alves/Documents/trabalho_ed2/Tabalho2_Ed2/trabalhoEd2.txt", &raiz);
+
+    // Info info1 = criaInfo("casa", 1);
+    // Info info2 = criaInfo("livro", 2);
+    // Info info3 = criaInfo("carro", 3);
+    // Info info4 = criaInfo("arroz", 4);
+
+    // inserirArvRB(&raiz, &info1);
+    // inserirArvRB(&raiz, &info2);
+    // inserirArvRB(&raiz, &info3);
+    // inserirArvRB(&raiz, &info4);
+
+    exibirArvore(raiz);
+
+    removerNoArvVP(&raiz, "barramento");
+    printf("\n--------------------------------------------------------------- \n");
+
+    exibirArvore(raiz);
+
+    // PortuguesRB *raiz = NULL;
+    
     
     // printf("\n--------------------------------------------------------------- \n");
     // printf("Árvore 2-3 carregada:\n");
