@@ -6,7 +6,7 @@
             "command": "sh",
             "args": [
                 "-c",
-                "gcc -g main.c arv23.c -o main"
+                "gcc -g main.c arvrb.h -o main"
             ],
             "options": {
                 "cwd": "${fileDirname}"

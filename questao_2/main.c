@@ -5,26 +5,24 @@
 #include "arvrb.h"
 // #include "arvbin.h"
 
-// int inserirPalavraPortugues(PortuguesRB **arvore, char *palavraPortugues, char *palavraIngles, int unidade) {
-//     Info promove;
-//     PortuguesRB *pai = NULL;
-//     int inseriu;
+int inserirPalavraPortugues(PortuguesRB **arvore, char *palavraPortugues, char *palavraIngles, int unidade) {
+    int inseriu = 0;
 
-//     // Busca a palavra na árvore
-//     PortuguesRB *noExistente = NULL;
-//     noExistente =  BuscarPalavra(arvore, palavraPortugues);
+    // Busca a palavra na árvore
+    PortuguesRB *noExistente = NULL;
+    noExistente =  BuscarPalavra(arvore, palavraPortugues);
 
-//     if (noExistente != NULL) {
-//         printf("A palavra já existe. Adicionando tradução...\n");
-//         adicionarTraducao(noExistente, palavraPortugues, palavraIngles, unidade);
-//         inseriu = 1;
-//     } else {
-//         Info novoInfo = criaInfo(palavraPortugues, palavraIngles, unidade);
-//         inserirArvRB(arvore, &novoInfo);
-//         inseriu = 0;
-//     }
-//     return inseriu;
-// }
+    if (noExistente != NULL) {
+        printf("A palavra já existe. Adicionando tradução...\n");
+        adicionarTraducaoEmIngles(noExistente, palavraIngles, unidade);
+        inseriu = 1;
+    } else {
+        Info novoInfo = criaInfo(palavraPortugues, palavraIngles, unidade);
+        inserirArvRB(arvore, &novoInfo);
+        inseriu = 1;
+    }
+    return inseriu;
+}
 
 void carregarArquivo(const char *nomeArquivo, PortuguesRB **arvore)
 {
@@ -60,8 +58,10 @@ void carregarArquivo(const char *nomeArquivo, PortuguesRB **arvore)
                 while (*traducaoPortugues == ' ') 
                     traducaoPortugues++;
 
-                Info novoInfo = criaInfo(traducaoPortugues, palavraIngles, unidadeAtual);
-                inserirArvRB(arvore, &novoInfo);
+                inserirPalavraPortugues(arvore, traducaoPortugues, palavraIngles, unidadeAtual);
+
+                // Info novoInfo = criaInfo(traducaoPortugues, palavraIngles, unidadeAtual);
+                // inserirArvRB(arvore, &novoInfo);
                 traducaoPortugues = strtok(NULL, ",;");    
             }
             
@@ -91,9 +91,16 @@ int main()
     // inserirArvRB(&raiz, &info4);
 
     exibirArvore(raiz);
-
-    removerNoArvVP(&raiz, "barramento");
     printf("\n--------------------------------------------------------------- \n");
+
+    removerNoArvVP(&raiz, "bicicleta");
+    printf("\n--------------------------------------------------------------- \n");
+
+    exibirArvore(raiz);
+
+    printf("\n--------------------------------------------------------------- \n");
+
+    BuscarPalavraIngles(&raiz, "Bus", 1);
 
     exibirArvore(raiz);
 
