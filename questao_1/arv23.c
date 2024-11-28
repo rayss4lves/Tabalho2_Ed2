@@ -41,7 +41,6 @@ Inglesbin *insertpalavraIngles(Inglesbin *root, const char *palavraIngles, int u
 
 // ############################################## ArVOrE 2-3 ##############################################
 
-
 /* (pre-itens) funções necessarias para que os itens i, ii, iii e iv possam ocorrer */
 Info criaInfo(char *palavra, char *palavraIngles, int unidade)
 {
@@ -65,7 +64,8 @@ Portugues23 *criaNo(const Info *informacao, Portugues23 *filhoesq, Portugues23 *
     else
     {
         no->info1 = *informacao;
-        memset(&(no->info2), 0, sizeof(Info)); // Inicializa info2 com zeros
+        no->info2.palavraIngles = NULL;
+        no->info2.palavraPortugues = NULL;
         no->esq = filhoesq;
         no->cent = filhocen;
         no->dir = NULL;
@@ -290,19 +290,19 @@ void exibir_tree23(const Portugues23 *raiz)
     }
 }
 
-void imprimirInfoUnidade(Portugues23 *arvore, int unidade)
+void imprimirPalavrasUnidade(Portugues23 *arvore, int unidade)
 {
     if (arvore)
     {
-        imprimirInfoUnidade(arvore->esq, unidade);
+        imprimirPalavrasUnidade(arvore->esq, unidade);
         imprimirTraducoes(arvore->info1.palavraIngles, unidade, arvore->info1.palavraPortugues);
 
-        imprimirInfoUnidade(arvore->cent, unidade);
+        imprimirPalavrasUnidade(arvore->cent, unidade);
         if (arvore->nInfos == 2)
         {
             imprimirTraducoes(arvore->info2.palavraIngles, unidade, arvore->info2.palavraPortugues);
         }
-        imprimirInfoUnidade(arvore->dir, unidade);
+        imprimirPalavrasUnidade(arvore->dir, unidade);
     }
 }
 
@@ -334,11 +334,10 @@ void exibir_traducao_Portugues(Portugues23 **raiz, const char *palavraPortugues)
             {
                 printBinaryTree(resultado->info1.palavraIngles);
             }
-            else 
+            else
             {
                 printBinaryTree(resultado->info2.palavraIngles);
             }
-            
         }
         else
         {
@@ -359,7 +358,7 @@ void printBinaryTree(Inglesbin *root)
     }
 }
 
-// ############################################# rEMOÇÃO ############################################
+// ############################################# REMOÇÃO ############################################
 
 int ehFolhas(Inglesbin *raiz){
     return (raiz->esq == NULL && raiz->dir == NULL);
@@ -369,9 +368,12 @@ Inglesbin *soUmFilho(Inglesbin *raiz){
     Inglesbin *aux;
     aux = NULL;
 
-    if(raiz->dir == NULL){
+    if (raiz->dir == NULL)
+    {
         aux = raiz->esq;
-    }else if(raiz->esq == NULL){
+    }
+    else if (raiz->esq == NULL)
+    {
         aux = raiz->dir;
     }
 
@@ -382,39 +384,52 @@ Inglesbin *menorFilho(Inglesbin *raiz){
     Inglesbin *aux;
     aux = raiz;
 
-    if(raiz){
-        if(raiz->esq)
+    if (raiz)
+    {
+        if (raiz->esq)
             aux = menorFilho(raiz->esq);
     }
 
     return aux;
 }
 
-int removerPalavraIngles(Inglesbin **raiz, char *palavra) {
+int removerPalavraIngles(Inglesbin **raiz, char *palavra)
+{
     Inglesbin *endFilho;
     int existe = 0;
 
-    if (*raiz) {
-        if (strcmp(palavra, (*raiz)->palavraIngles) == 0) {
+    if (*raiz)
+    {
+        if (strcmp(palavra, (*raiz)->palavraIngles) == 0)
+        {
             existe = 1;
             printf("removendo palavra: %s\n", palavra);
             Inglesbin *aux = *raiz;
-            if (ehFolhas(*raiz)) {
+            if (ehFolhas(*raiz))
+            {
                 free(aux);
                 *raiz = NULL;
-            } else if ((endFilho = soUmFilho(*raiz)) != NULL) {
+            }
+            else if ((endFilho = soUmFilho(*raiz)) != NULL)
+            {
                 free(aux);
                 *raiz = endFilho;
-            } else {
+            }
+            else
+            {
                 endFilho = menorFilho((*raiz)->dir);
                 strcpy((*raiz)->palavraIngles, endFilho->palavraIngles);
                 (*raiz)->unidade = endFilho->unidade;
 
                 removerPalavraIngles(&(*raiz)->dir, endFilho->palavraIngles);
             }
-        } else if (strcmp(palavra, (*raiz)->palavraIngles) < 0) {
+        }
+        else if (strcmp(palavra, (*raiz)->palavraIngles) < 0)
+        {
             existe = removerPalavraIngles(&(*raiz)->esq, palavra);
-        } else {
+        }
+        else
+        {
             existe = removerPalavraIngles(&(*raiz)->dir, palavra);
         }
     }
@@ -422,247 +437,262 @@ int removerPalavraIngles(Inglesbin **raiz, char *palavra) {
     return existe;
 }
 
-void BuscarPalavraIngles(Portugues23 **raiz, char *palavraIngles, int unidade) 
-{ 
-    if (*raiz != NULL) 
+void BuscarPalavraIngles(Portugues23 **raiz, char *palavraIngles, int unidade, Portugues23 **pai)
+{
+    int removeu;
+    if (*raiz != NULL)
     {
-        BuscarPalavraIngles(&(*raiz)->esq, palavraIngles, unidade);
+        BuscarPalavraIngles(&(*raiz)->esq, palavraIngles, unidade, pai);
 
-        if ((*raiz)->info1.palavraIngles != NULL && (*raiz)->info1.palavraIngles->unidade == unidade) 
+        if ((*raiz)->info1.palavraIngles != NULL && (*raiz)->info1.palavraIngles->unidade == unidade)
         {
-            removerPalavraIngles(&(*raiz)->info1.palavraIngles, palavraIngles);
+            removeu = removerPalavraIngles(&(*raiz)->info1.palavraIngles, palavraIngles);
+            if(removeu) 
+                printf("A palavra %s foi removida com sucesso!\n\n", palavraIngles);
+            if ((*raiz)->info1.palavraIngles == NULL)
+            {
+                removeu = remover23(pai, raiz, (*raiz)->info1.palavraPortugues);
+                if(removeu) printf("Removido\n\n");
+            }
         }
-        BuscarPalavraIngles(&(*raiz)->cent, palavraIngles, unidade);
 
-        if ((*raiz)->nInfos == 2 && (*raiz)->info2.palavraIngles != NULL && (*raiz)->info2.palavraIngles->unidade == unidade) 
+        BuscarPalavraIngles(&(*raiz)->cent, palavraIngles, unidade, raiz);
+
+        if ((*raiz)->nInfos == 2 && (*raiz)->info2.palavraIngles != NULL && (*raiz)->info2.palavraIngles->unidade == unidade)
         {
-            removerPalavraIngles(&(*raiz)->info2.palavraIngles, palavraIngles);
+            removeu = removerPalavraIngles(&(*raiz)->info2.palavraIngles, palavraIngles);
+            if(removeu) 
+                printf("A palavra %s foi removida com sucesso!\n\n", palavraIngles);
+            if ((*raiz)->info2.palavraIngles == NULL)
+            {
+                removeu = remover23(pai, raiz, (*raiz)->info2.palavraPortugues);
+                if(removeu) printf("Removido\n\n");
+            }
         }
-
-        if ((*raiz)->nInfos == 2 && (*raiz)->info2.palavraIngles != NULL) 
+        if ((*raiz)->nInfos == 2 && (*raiz)->info2.palavraIngles != NULL)
         {
-            BuscarPalavraIngles(&(*raiz)->dir, palavraIngles, unidade);
-        }
-           
-    }
-}
-
-static void onda(const Info info, Info *entrada, const Portugues23 *pai, Portugues23 **fonte, Portugues23 **raiz) {
-    removerArv23(raiz, info.palavraPortugues, pai, fonte);
-    if(entrada)
-        *entrada = info;
-}
-
-static int removivel(const Portugues23 *raiz) {
-    int pode = 0;
-
-    if(raiz != NULL) {
-        if(raiz->nInfos == 2)
-            pode = 1;
-        if(!pode) {
-            pode = removivel(raiz->cent);
-            if(!pode)
-                pode = removivel(raiz->esq);
+            BuscarPalavraIngles(&(*raiz)->dir, palavraIngles, unidade, raiz);
         }
     }
-    return pode;
 }
 
-static Portugues23 *menorfilho(Portugues23 *no, Portugues23 **pai, Info *res){
-    *pai = no;
-    Portugues23 *filho = no->esq;
-
-    while(filho != NULL && !ehFolha(filho)){
-        *pai = filho;
-        filho = filho->esq;
+void menorInfoDir(Portugues23 *Raiz, Portugues23 **no, Portugues23 **paiNo)
+{
+    if (Raiz->esq != NULL)
+    {
+        *paiNo = Raiz;
+        menorInfoDir(Raiz->esq, no, paiNo);
     }
-    if(filho != NULL)
-        *res = filho->info1;
-
-    return filho;
+    else
+        *no = Raiz;
 }
 
-static Portugues23 *maior(const Portugues23 *raiz) {
-    return raiz->nInfos == 2 ? raiz->dir : raiz->cent;
-}
-
-static Portugues23 *maiorfilho(Portugues23 *raiz, Portugues23 **pai, Info *maiorinfo) {
-    Portugues23 *filho = maior(raiz);
-    *pai = raiz;
-
-    while(filho != NULL && maior(filho) != NULL) {
-        *pai = filho;
-        filho = maior(filho);
+void maiorInfoEsq(Portugues23 *Raiz, Portugues23 **no, Portugues23 **paiNo)
+{
+    if (Raiz->dir != NULL)
+    {
+        *paiNo = Raiz;
+        maiorInfoEsq(Raiz->dir, no, paiNo);
     }
-    if(filho != NULL)
-        *maiorinfo = filho->nInfos ? filho->info2 : filho->info1;
-
-    return filho;
+    else
+        *no = Raiz;
 }
 
-static void desalocaNo(Portugues23 **no) {
-    free(*no);
-    *no = NULL;
-}
-
-static Portugues23 *juntaNo(Portugues23 *filho1, Portugues23 *filho2, Portugues23 **filho3) {
-    Portugues23 *maior = NULL;
-    if(!ehFolha(filho2)) {
-        maior = juntaNo(filho2->esq, filho2->cent, &(filho1->dir));
-
-        const Info aux = filho2->info1;
-        filho2->info1 = maior->info1;
-        maior->info1 = aux;
-    }
-
-    filho1->info2 = filho2->info1;
-    maior = filho1;
-    *filho3 = maior;
-    desalocaNo(&filho2);
-
-    return maior;
-}
-
-static int ehInfo1(const Portugues23 no, const char *palavra){
-    int aux = 0;
-    if(no.nInfos == 1 && palavra && no.info1.palavraPortugues)
-        aux = strcmp(no.info1.palavraPortugues, palavra) == 0;
-    return aux;
-}
-
-static int ehInfo2(const Portugues23 no, const char *palavra){
-    int aux = 0;
-    if(no.nInfos == 2 && palavra && no.info2.palavraPortugues)
-        aux = strcmp(no.info2.palavraPortugues, palavra) == 0;
-    return aux;
-}
-
-static Portugues23 *buscapai(Portugues23 *raiz, const char *palavra) {
-    Portugues23 *pai = NULL;
-
-    if(raiz != NULL) {
-        if(!ehInfo1(*raiz, palavra) && !ehInfo2(*raiz, palavra)) {
-            if(strcmp(palavra, raiz->info1.palavraPortugues) < 0)
-                pai = buscapai(raiz->esq, palavra);
-            else if(raiz->nInfos == 1 || strcmp(palavra, raiz->info1.palavraPortugues) < 0)
-                pai = buscapai(raiz->cent, palavra);
-            else
-                pai = buscapai(raiz->dir, palavra);
-
-            if(!pai)
-                pai = raiz;
-        }
-    }
-    return pai;
-}
-
-int removerArv23(Portugues23 **raiz, const char *info, const Portugues23 *pai, Portugues23 **ref) {
+int remover23(Portugues23 **Pai, Portugues23 **Raiz, char *valor)
+{
     int removeu = 0;
+    Portugues23 *no = NULL, *no1, *paiNo = NULL, *paiNo1 = NULL, **aux;
+    aux = (Portugues23 **)malloc(sizeof(Portugues23 *));
+    no1 = (Portugues23 *)malloc(sizeof(Portugues23));
 
-    if(*raiz != NULL) {
-        const int info1 = ehInfo1(**raiz, info);
-        const int info2 = ehInfo2(**raiz, info);
-        if(info1 || info2) {
-            if(ehFolha(*raiz)) {
-                if((*raiz)->nInfos == 2) {
-                    if(info1)
-                        (*raiz)->info1 = (*raiz)->info2;
-                    (*raiz)->nInfos = 1;
+    if (*Raiz != NULL)
+    {
+        if (ehFolha(*Raiz) == 1)
+        {
+            if ((*Raiz)->nInfos == 2)
+            {
+                if (strcmp(valor, (*Raiz)->info2.palavraPortugues) == 0)
+                { // quando é folha, tem duas informações e o numero ta na segunda posição
+                    (*Raiz)->info2.palavraIngles = NULL;
+                    (*Raiz)->info2.palavraPortugues = NULL;
+                    (*Raiz)->nInfos = 1;
                     removeu = 1;
                 }
-                else {
-                    if(pai != NULL) {
-                        if((*raiz) == pai->esq)
-                            onda(pai->info1, &((*raiz)->info1), NULL, ref, ref);
-                        else {
-                            if(pai->nInfos == 2) {
-                                if(*raiz == pai->cent)
-                                    onda(pai->info2, &((*raiz)->info1), NULL, ref, ref);
-                                else
-                                    onda(pai->info2, &(pai->cent->info2), NULL, ref, ref);
+                else if (strcmp(valor, (*Raiz)->info1.palavraPortugues) == 0)
+                { // quando é folha, tem duas informações e o numero ta na primeira posição do nó
+                    (*Raiz)->info1 = (*Raiz)->info2;
+                    (*Raiz)->info2.palavraIngles = NULL;
+                    (*Raiz)->info2.palavraPortugues = NULL;
+                    (*Raiz)->nInfos = 1;
+                    removeu = 1;
+                }
+            }
+            else if (strcmp(valor, (*Raiz)->info1.palavraPortugues) == 0)
+            {
+                if (*Pai == NULL)
+                {
+                    free(*Raiz);
+                    *Raiz = NULL;
+                    removeu = 1;
+                }
+                else if (*Raiz == (*Pai)->esq)
+                {
+                    (*Raiz)->info1 = (*Pai)->info1;
+                    paiNo = *Pai;
+                    menorInfoDir((*Pai)->cent, &no, &paiNo);
+                    (*Pai)->info1 = no->info1;
+                    removeu = 1;
+
+                    if (no->nInfos == 2)
+                    {
+                        no->info1 = no->info2;
+                        (*Raiz)->info2.palavraIngles = NULL;
+                        (*Raiz)->info2.palavraPortugues = NULL;
+                        no->nInfos = 1;
+                    }
+                    else
+                    {
+                        if (paiNo->nInfos == 1)
+                        {
+                            (*Raiz)->info2 = no->info1;
+                            (*Raiz)->nInfos = 2;
+                            free(no);
+                            *Pai = *Raiz;
+                        }
+                        else
+                        {
+                            no->info1 = paiNo->info2;
+                            paiNo1 = paiNo;
+                            menorInfoDir(paiNo->dir, &no1, &paiNo1);
+                            paiNo->info2 = no1->info1;
+
+                            if (no1->nInfos == 2)
+                            {
+                                no1->info1 = no1->info2;
+                                no1->info2.palavraIngles = NULL;
+                                no1->info2.palavraPortugues = NULL;
+                                no1->nInfos = 1;
                             }
                             else
-                                onda(pai->info1, &(pai->esq->info2), NULL, ref, ref);
+                            {
+                                no->info2 = paiNo->info2;
+                                no->nInfos = 2;
+                                paiNo->info2.palavraIngles = NULL;
+                                paiNo->info2.palavraPortugues = NULL;
+                                paiNo->nInfos = 1;
+                                free(no1);
+                                paiNo1->dir = NULL;
+                            }
                         }
-                        removeu = 1;
-                    }
-                    else {
-                        free(*raiz);
-                        *raiz = NULL;
-                        removeu = 1;
                     }
                 }
-            }
-            else {
-                removeu = 1;
-                Portugues23 *filho, *auxpai;
-                Info auxinfo;
-                int juntou = 0;
-                if(info2) {
-                    if(removivel((*raiz)->dir))
-                        filho = menorfilho((*raiz)->dir, &auxpai, &auxinfo);
-                    else if(removivel((*raiz)->cent))
-                        filho = maiorfilho((*raiz)->cent, &auxpai, &auxinfo);
-                    else {
-                        juntaNo((*raiz)->cent, (*raiz)->dir, &(*raiz)->cent);
-                        juntou = 1;
+                else if ((*Raiz) == (*Pai)->cent)
+                {
+                    removeu = 1;
+                    if ((*Pai)->nInfos == 1)
+                    {
+                        if (((*Pai)->esq)->nInfos == 2)
+                        {
+                            (*Raiz)->info1 = (*Pai)->info1;
+                            (*Pai)->info1 = ((*Pai)->esq)->info2;
+                            ((*Pai)->esq)->info2.palavraIngles = NULL;
+                            ((*Pai)->esq)->info2.palavraPortugues = NULL;
+                            ((*Pai)->esq)->nInfos = 1;
+                        }
+                        else
+                        {
+                            ((*Pai)->esq)->info2 = (*Pai)->info1;
+                            free(*Raiz);
+                            ((*Pai)->esq)->nInfos = 2;
+                            *aux = (*Pai)->esq;
+                            free(*Pai);
+                            *Pai = *aux;
+                        }
                     }
-                    if(!juntou)
-                        onda(auxinfo, &((*raiz)->info2), auxpai, &filho, raiz);
-                }
-                if(info1){
-                    if(removivel((*raiz)->esq))
-                        filho = maiorfilho((*raiz)->esq, &auxpai, &auxinfo);
-                    else if(removivel((*raiz)->cent))
-                        filho = maiorfilho((*raiz)->cent, &auxpai, &auxinfo);
-                    else if((*raiz)->nInfos == 1) {
-                        if(pai != NULL) {
-                            if(*raiz == pai->esq || (pai->nInfos == 2 && (*raiz == pai->cent))) {
-                                filho = menorfilho((*raiz)->cent, &auxpai, &auxinfo);
-                                auxpai = buscapai(*ref, pai->info1.palavraPortugues);
+                    else
+                    {
+                        (*Raiz)->info1 = (*Pai)->info2;
+                        paiNo = *Pai;
+                        menorInfoDir((*Pai)->dir, &no, &paiNo);
+                        (*Pai)->info2 = no->info1;
 
-                                if(*raiz == pai->esq)
-                                    onda(pai->info1, &(filho->info2), auxpai, ref, ref);
-                                else
-                                    onda(pai->info2, &(filho->info2), auxpai, ref, ref);
-                            }
-                            else {
-                                filho = maiorfilho((*raiz)->esq, &auxpai, &auxinfo);
-                                auxpai = buscapai(*ref, pai->info1.palavraPortugues);
-                                filho->info2 = filho->info1;
-                                onda((pai->nInfos == 2 && (*raiz == pai->dir)) ? pai->info2 : pai->info1, &((*raiz)->info1), auxpai, ref, ref);
-                            }
+                        if (no->nInfos == 2)
+                        {
+                            no->info1 = no->info2;
+                            no->info2.palavraIngles = NULL;
+                            no->info2.palavraPortugues = NULL;
+                            no->nInfos = 1;
                         }
-                        else {
-                            Portugues23 *aux = *raiz;
-                            juntaNo((*raiz)->esq, (*raiz)->cent, raiz);
-                            juntou = 1;
-                            desalocaNo(&aux);
+                        else
+                        {
+                            (*Raiz)->nInfos = 2;
+                            (*Raiz)->info2 = (*Pai)->info2;
+                            (*Pai)->info2.palavraIngles = NULL;
+                            (*Pai)->info2.palavraPortugues = NULL;
+                            (*Pai)->nInfos = 1;
+                            free(no);
+                            (*Pai)->dir = NULL;
                         }
                     }
-                    if(pai != NULL && !juntou)
-                        onda(auxinfo, &((*raiz)->info1), auxpai, ref, &filho);
+                }
+                else
+                {
+                    removeu = 1;
+                    paiNo = *Pai;
+                    maiorInfoEsq((*Pai)->cent, &no, &paiNo);
+
+                    if (no->nInfos == 1)
+                    {
+                        no->info2 = (*Pai)->info2;
+                        (*Pai)->info2.palavraIngles = NULL;
+                        (*Pai)->info2.palavraPortugues = NULL;
+                        (*Pai)->nInfos = 1;
+                        no->nInfos = 2;
+                        free(*Raiz);
+                        *Raiz = NULL;
+                    }
+                    else
+                    {
+                        (*Raiz)->info1 = (*Pai)->info2;
+                        (*Pai)->info2 = no->info2;
+                        no->info2.palavraIngles = NULL;
+                        no->info2.palavraPortugues = NULL;
+                        no->nInfos = 1;
+                    }
                 }
             }
         }
-        else {
-            if(strcmp(info, (*raiz)->info1.palavraPortugues) < 0)
-                removeu = removerArv23((&(*raiz)->esq), info, *raiz, ref);
-            else if((*raiz)->nInfos == 1 || strcmp(info, (*raiz)->info2.palavraPortugues) < 0)
-                removeu = removerArv23((&(*raiz)->cent), info, *raiz, ref);
+        else
+        { // se nao é folha
+            if (strcmp(valor, (*Raiz)->info1.palavraPortugues) < 0)
+                removeu = remover23(Raiz, &(*Raiz)->esq, valor);
+            else if (strcmp(valor, (*Raiz)->info1.palavraPortugues) == 0)
+            {
+                paiNo = *Raiz;
+                menorInfoDir((*Raiz)->cent, &no, &paiNo);
+                (*Raiz)->info1 = no->info1;
+                remover23(Raiz, &(*Raiz)->cent, (*Raiz)->info1.palavraPortugues);
+                removeu = 1;
+            }
+            else if (((*Raiz)->nInfos == 1) || (strcmp(valor, (*Raiz)->info1.palavraPortugues) < 0))
+            {
+                removeu = remover23(Raiz, &(*Raiz)->cent, valor);
+            }
+            else if (strcmp(valor, (*Raiz)->info1.palavraPortugues) == 0)
+            {
+                paiNo = *Pai;
+                menorInfoDir((*Pai)->dir, &no, &paiNo);
+                (*Raiz)->info2 = no->info1;
+                remover23(Raiz, &(*Raiz)->dir, (*Raiz)->info2.palavraPortugues);
+                removeu = 1;
+            }
             else
-                removeu = removerArv23((&(*raiz)->dir), info, *raiz, ref);
+            {
+                removeu = remover23(Raiz, &(*Raiz)->dir, valor);
+            }
         }
     }
-
     return removeu;
-}
-
-void removerElemento(Portugues23 **raiz, const char *palavra) {
-    if (removerArv23(raiz, palavra, NULL, raiz))
-        printf("Elemento '%s' removido com sucesso.\n", palavra);
-    else
-        printf("Elemento '%s' nao encontrado.\n", palavra);
 }
 
 /*-----------------------------------------------------------------------------------------------------*/

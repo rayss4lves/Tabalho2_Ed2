@@ -24,7 +24,7 @@ void adicionarTraducaoEmIngles(Info *info, const char *palavraIng, int unidade);
 Info criaInfo(char *palavra, char *palavraIngles, int unidade);
 
 
-void imprimirInfoUnidade(Portugues23 *arvore, int unidade);
+void imprimirPalavrasUnidade(Portugues23 *arvore, int unidade);
 void exibir_traducao_Portugues(Portugues23 **raiz, const char *palavraPortugues);
 Portugues23 *BuscarPalavra(Portugues23 **no, const char *palavraPortugues);
 
@@ -39,17 +39,10 @@ void adicionarTraducao(Portugues23 *no, const char *palavraPortugues, const char
 
 int removerPalavraIngles(Inglesbin **raiz, char *palavra);
 
-void BuscarPalavraIngles(Portugues23 **raiz, char *palavraIngles, int unidade);
+void BuscarPalavraIngles(Portugues23 **raiz, char *palavraIngles, int unidade, Portugues23 **pai);
 
-int ehFolhas(Inglesbin *raiz);
+int remover23(Portugues23 **Pai, Portugues23 **Raiz, char *valor);
 
-Inglesbin *soUmFilho(Inglesbin *raiz);
-
-Inglesbin *menorFilho(Inglesbin *raiz);
-
-int removerArv23(Portugues23 **raiz, const char *info, const Portugues23 *pai, Portugues23 **ref);
-
-void removerElemento(Portugues23 **raiz, const char *palavra);
 
 
 #endif
