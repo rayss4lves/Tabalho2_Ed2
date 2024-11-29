@@ -2,27 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "arvbin.h"
 #include "arvrb.h"
-// #include "arvbin.h"
-
-int inserirPalavraPortugues(PortuguesRB **arvore, char *palavraPortugues, char *palavraIngles, int unidade) {
-    int inseriu = 0;
-
-    // Busca a palavra na árvore
-    PortuguesRB *noExistente = NULL;
-    noExistente =  BuscarPalavra(arvore, palavraPortugues);
-
-    if (noExistente != NULL) {
-        printf("A palavra já existe. Adicionando tradução...\n");
-        adicionarTraducaoEmIngles(noExistente, palavraIngles, unidade);
-        inseriu = 1;
-    } else {
-        Info novoInfo = criaInfo(palavraPortugues, palavraIngles, unidade);
-        inserirArvRB(arvore, &novoInfo);
-        inseriu = 1;
-    }
-    return inseriu;
-}
 
 void carregarArquivo(const char *nomeArquivo, PortuguesRB **arvore)
 {
@@ -50,7 +31,6 @@ void carregarArquivo(const char *nomeArquivo, PortuguesRB **arvore)
         {
             char palavraIngles[50], traducoesPortugues[200];
             sscanf(linha, "%[^:]: %[^;]", palavraIngles, traducoesPortugues);
-            printf("Lendo: Palavra Inglês = '%s', Traduções: '%s'\n", palavraIngles, traducoesPortugues);
             
             char *traducaoPortugues = strtok(traducoesPortugues, ",;");
             while(traducaoPortugues != NULL)
@@ -60,8 +40,6 @@ void carregarArquivo(const char *nomeArquivo, PortuguesRB **arvore)
 
                 inserirPalavraPortugues(arvore, traducaoPortugues, palavraIngles, unidadeAtual);
 
-                // Info novoInfo = criaInfo(traducaoPortugues, palavraIngles, unidadeAtual);
-                // inserirArvRB(arvore, &novoInfo);
                 traducaoPortugues = strtok(NULL, ",;");    
             }
             
@@ -69,8 +47,23 @@ void carregarArquivo(const char *nomeArquivo, PortuguesRB **arvore)
     }
 
     fclose(arquivo);
-    printf("Arquivo '%s' carregado com sucesso!\n", nomeArquivo);
+    // printf("Arquivo '%s' carregado com sucesso!\n", nomeArquivo);
 }
+
+void menu(){
+    printf("\n------------------------------------------------------------------------------------------------- \n");
+    printf("\nMenu de opções:\n");
+    printf("1 - Informar uma unidade e imprimir todas as palavras em português e as equivalentes em inglês.\n");
+    printf("2 - Informar uma palavra em português e imprimir todas as palavras em inglês equivalentes.\n");
+    printf("3 - Informar uma palavra em inglês e a unidade, removê-la da árvore binária e da árvore 2-3.\n");
+    printf("4 - Informar uma palavra em português e a unidade, removê-la da árvore binária e da árvore 2-3.\n");
+    printf("5 - Imprimir a arvore completa\n");
+    printf("0 - Sair\n");
+    printf("Escolha uma opção: \n");
+    printf("\n------------------------------------------------------------------------------------------------- \n");
+    
+}
+
 
 
 int main()
@@ -80,61 +73,88 @@ int main()
 
     carregarArquivo("/mnt/c/Users/Rayssa Alves/Documents/trabalho_ed2/Tabalho2_Ed2/trabalhoEd2.txt", &raiz);
 
-    // Info info1 = criaInfo("casa", 1);
-    // Info info2 = criaInfo("livro", 2);
-    // Info info3 = criaInfo("carro", 3);
-    // Info info4 = criaInfo("arroz", 4);
+    int op, res;
+    char palavra[50];
+    int unidade;
+    int removido;
+    do
+    {
+        menu();
+        scanf("%d", &op);
 
-    // inserirArvRB(&raiz, &info1);
-    // inserirArvRB(&raiz, &info2);
-    // inserirArvRB(&raiz, &info3);
-    // inserirArvRB(&raiz, &info4);
+        switch (op)
+        {
+        case 1:
+            printf("\n--------------------------------------------------------------- \n");
+            printf("Insira a unidade que deseja imprimir as palavras: ");
+            scanf("%d", &unidade);
+            imprimirPalavrasUnidade(raiz, unidade);
+            printf("\n--------------------------------------------------------------- \n");
+            break;
+        case 2:
+            printf("\n--------------------------------------------------------------- \n");
+            printf("Insira a palavra em portugues que deseja imprimir as palavras em ingles: ");
+            scanf("%s", palavra);
+            exibir_traducao_Portugues(&raiz, palavra);
+            printf("\n--------------------------------------------------------------- \n");
+            break;
+        case 3:
+        printf("\n--------------------------------------------------------------- \n");
+            printf("Insira a palavra em ingles que deseja remover: ");
+            scanf("%s", palavra);
+            printf("Insira a unidade da palavra que deseja remover: ");
+            scanf("%d", &unidade);
+            BuscarPalavraIngles(&raiz, palavra, unidade);
+            printf("\n--------------------------------------------------------------- \n");
+            break;
+        case 4:
+            printf("\n--------------------------------------------------------------- \n");
+            printf("Insira a palavra em portugues que deseja remover: ");
+            scanf("%s", palavra);
+            removido = removerNoArvVP(&raiz, palavra);
+            if(removido)
+                printf("A palavra %s foi removida com sucesso!\n\n", palavra);
+            printf("\n--------------------------------------------------------------- \n");
+            break;
+        case 5:
+            printf("\n--------------------------------------------------------------- \n");
+            exibirArvore(raiz);
+            printf("\n--------------------------------------------------------------- \n");
+            break;
+        case 0:
+            printf("\n--------------------------------------------------------------- \n");
+            printf("\nSaindo do programa...\n");
+            printf("\n--------------------------------------------------------------- \n");
+        default:
+            printf("Insira um valor válido. \n");
+            break;
+        }
+    } while (op != 0);
 
-    exibirArvore(raiz);
-    printf("\n--------------------------------------------------------------- \n");
 
-    removerNoArvVP(&raiz, "bicicleta");
-    printf("\n--------------------------------------------------------------- \n");
-
-    exibirArvore(raiz);
-
-    printf("\n--------------------------------------------------------------- \n");
-
-    BuscarPalavraIngles(&raiz, "Bus", 1);
-
-    exibirArvore(raiz);
-
-    // PortuguesRB *raiz = NULL;
-    
-    
+    // exibirArvore(raiz);
     // printf("\n--------------------------------------------------------------- \n");
-    // printf("Árvore 2-3 carregada:\n");
-    // exibir_tree23(raiz);
+
+    // removerNoArvVP(&raiz, "bicicleta");
+    // printf("\n--------------------------------------------------------------- \n");
+
+    // exibirArvore(raiz);
+
+    // printf("\n--------------------------------------------------------------- \n");
 
     // printf("\n--------------------------------------------------------------- \n");
     // printf("\nPalavras da unidade 1: \n");
-    // imprimirInfoUnidade(raiz, 1);
+    // imprimirPalavrasUnidade(raiz, 1);
 
     // printf("\n--------------------------------------------------------------- \n");
-
-
-    // exibir_traducao_Portugues(&raiz, "bicicleta");
-
+    // BuscarPalavraIngles(&raiz, "Bus", 1);
     // printf("\n--------------------------------------------------------------- \n");
-
-    // BuscarPalavraIngles(&raiz, "Coller", 1);
-   
+    // exibirArvore(raiz);
     // printf("\n--------------------------------------------------------------- \n");
-
-    // removerElemento(&raiz, "bicicleta");
-
-    // printf("\nPalavras apos remoção: \n\n");
-
-    // exibir_tree23(raiz);
+    // exibir_traducao_Portugues(&raiz, "ventilador");
 
 
-
-    // // freeTree(raiz);
+    //freeTree(raiz);
 
     return 0;
 }
