@@ -12,13 +12,13 @@ Portugues23 *buscaTestes(Portugues23 **tree, char *codigo, int n) {
             no = *tree;
         } else {
             if (strcmp(codigo, (*tree)->info1.palavraPortugues) < 0) {
-                printf("%d-left ", n);
+                printf("%d-left \n", n);
                 no = buscaTestes(&(*tree)->esq, codigo, n + 1);
             } else if ((*tree)->nInfos == 1 || strcmp(codigo, (*tree)->info2.palavraPortugues) < 0) {
-                printf("%d-center ", n);
+                printf("%d-center \n", n);
                 no = buscaTestes(&(*tree)->cent, codigo, n + 1);
             } else {
-                printf("%d-right ", n);
+                printf("%d-right \n", n);
                 no = buscaTestes(&(*tree)->dir, codigo, n + 1);
             }
         }
@@ -34,20 +34,21 @@ int main_teste(void) {
     Info info, promove;
     Portugues23 *pai = NULL;
 
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 100; i++) {
         char str[DIGIT + 1]; // Aloca memória para a string
         sprintf(str, "%d", i); // Converte o número para string
-        printf("\nValor: %d", i); // Imprime o valor de i
         info = criaInfo(str, str, i); // Cria nova informação
-        arvore = inserirArv23(&arvore, &info, &promove, &pai);
+        inserirArv23(&arvore, &info, &promove, &pai);
     }
 
     // Busca na árvore
     start = clock();
     for (int i = 0; i < TEST_SIZE; i++) {
         char str[DIGIT]; // Aloca memória para a string
+        printf("%d busca %d",i, i * 5);
         sprintf(str, "%d", i * 5); // Converte o valor para string
         buscaTestes(&arvore, str, 0); // Busca na árvore
+        
     }
     end = clock();
 
