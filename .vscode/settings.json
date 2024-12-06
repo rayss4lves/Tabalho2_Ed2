@@ -59,6 +59,7 @@
   "files.associations": {
     "cwchar": "cpp",
     "arv23.h": "c",
-    "structs.h": "c"
+    "structs.h": "c",
+    "arvbin.h": "c"
   }
 }

@@ -4,6 +4,7 @@
 #include <string.h>
 #include "src/arv23.h"
 #include "src/arvbin.h"
+#include "test/maintest.h"
 
 void carregarArquivo(const char *nomeArquivo, Portugues23 **arvore)
 {
@@ -127,6 +128,12 @@ int main()
             break;
         }
     } while (op != 0);
+
+    
+
+    freeTree(raiz);
+
+    main_teste();
 
     freeTree(raiz);
 
