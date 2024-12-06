@@ -2,29 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "arv23.h"
-// #include "arvbin.h"
-
-int inserirPalavraPortugues(Portugues23 **arvore, char *palavraPortugues, char *palavraIngles, int unidade) {
-    Info promove;
-    Portugues23 *pai = NULL;
-    int inseriu;
-
-    // Busca a palavra na árvore
-    Portugues23 *noExistente = NULL;
-    noExistente =  BuscarPalavra(arvore, palavraPortugues);
-
-    if (noExistente != NULL) {
-        printf("A palavra já existe. Adicionando tradução...\n");
-        adicionarTraducao(noExistente, palavraPortugues, palavraIngles, unidade);
-        inseriu = 1;
-    } else {
-        Info novoInfo = criaInfo(palavraPortugues, palavraIngles, unidade);
-        inserirArv23(arvore, &novoInfo, &promove, &pai);
-        inseriu = 0;
-    }
-    return inseriu;
-}
+#include "src/arv23.h"
+#include "src/arvbin.h"
 
 void carregarArquivo(const char *nomeArquivo, Portugues23 **arvore)
 {
@@ -136,6 +115,11 @@ int main()
         case 5:
             printf("\n--------------------------------------------------------------- \n");
             exibir_tree23(raiz);
+            printf("\n--------------------------------------------------------------- \n");
+            break;
+        case 0:
+            printf("\n--------------------------------------------------------------- \n");
+            printf("Saindo do programa...\n");
             printf("\n--------------------------------------------------------------- \n");
             break;
         default:

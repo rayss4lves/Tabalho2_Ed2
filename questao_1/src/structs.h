@@ -1,5 +1,8 @@
+#ifndef STRUCTS_H
+#define STRUCTS_H
+
 typedef struct Inglesbin{
-    char palavraIngles[50];
+    char *palavraIngles;
     struct Inglesbin *dir,*esq;
     int unidade;
 } Inglesbin;
@@ -17,3 +20,7 @@ typedef struct Portugues23{
     struct Portugues23 *esq;
     int nInfos;
 } Portugues23;
+
+
+
+#endif // STRUCTS_H

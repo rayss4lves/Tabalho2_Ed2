@@ -3,127 +3,6 @@
 #include <string.h>
 #include "arv23.h"
 
-/*-----------------------------------------------------------------------------------------------------*/
-Inglesbin *createNode(const char *palavraIngles, int unidade)
-{
-    Inglesbin *novoNo = (Inglesbin *)malloc(sizeof(Inglesbin));
-    if (novoNo != NULL)
-    {
-        strcpy(novoNo->palavraIngles, palavraIngles);
-        novoNo->unidade = unidade;
-        novoNo->esq = novoNo->dir = NULL;
-    }
-    return novoNo;
-}
-
-// Função para inserir uma palavra em inglês na arvore binaria de busca
-Inglesbin *insertpalavraIngles(Inglesbin *root, const char *palavraIngles, int unidade)
-{
-    Inglesbin *result;
-    if (root == NULL)
-    {
-        result = createNode(palavraIngles, unidade);
-    }
-    else
-    {
-        if (strcmp(palavraIngles, root->palavraIngles) < 0)
-        {
-            root->esq = insertpalavraIngles(root->esq, palavraIngles, unidade);
-        }
-        else if (strcmp(palavraIngles, root->palavraIngles) > 0)
-        {
-            root->dir = insertpalavraIngles(root->dir, palavraIngles, unidade);
-        }
-        result = root;
-    }
-    return result;
-}
-
-// ############################################## ArVOrE 2-3 ##############################################
-
-/* (pre-itens) funções necessarias para que os itens i, ii, iii e iv possam ocorrer */
-Info criaInfo(char *palavra, char *palavraIngles, int unidade)
-{
-    Info info;
-
-    info.palavraPortugues = malloc(strlen(palavra) + 1);
-    strcpy(info.palavraPortugues, palavra);
-
-    info.palavraIngles = NULL;
-    info.palavraIngles = insertpalavraIngles(info.palavraIngles, palavraIngles, unidade);
-    return info;
-}
-
-Portugues23 *criaNo(const Info *informacao, Portugues23 *filhoesq, Portugues23 *filhocen)
-{
-    Portugues23 *no = (Portugues23 *)malloc(sizeof(Portugues23));
-    if (!no)
-    {
-        printf("Erro ao alocar memoria para no");
-    }
-    else
-    {
-        no->info1 = *informacao;
-        no->info2.palavraIngles = NULL;
-        no->info2.palavraPortugues = NULL;
-        no->esq = filhoesq;
-        no->cent = filhocen;
-        no->dir = NULL;
-        no->nInfos = 1;
-    }
-
-    return no;
-}
-
-Portugues23 *adicionaChave(Portugues23 *no, const Info *informacao, Portugues23 *filho)
-{
-    if (strcmp(informacao->palavraPortugues, no->info1.palavraPortugues) > 0)
-    {
-        no->info2 = *informacao;
-        no->dir = filho;
-    }
-    else
-    {
-        no->info2 = no->info1;
-        no->dir = no->cent;
-        no->info1 = *informacao;
-        no->cent = filho;
-    }
-    no->nInfos = 2;
-    return no;
-}
-
-Portugues23 *quebraNo(Portugues23 **no, const Info *informacao, Info *promove, Portugues23 **filho)
-{
-    Portugues23 *maior;
-
-    if (strcmp(informacao->palavraPortugues, (*no)->info2.palavraPortugues) > 0)
-    {
-        *promove = (*no)->info2;
-        maior = criaNo(informacao, (*no)->dir, (filho ? *filho : NULL));
-    }
-    else if (strcmp(informacao->palavraPortugues, (*no)->info1.palavraPortugues) > 0)
-    {
-        *promove = *informacao;
-        maior = criaNo(&(*no)->info2, (filho ? *filho : NULL), (*no)->dir);
-    }
-    else
-    {
-        *promove = (*no)->info1;
-        maior = criaNo(&(*no)->info2, (*no)->cent, (*no)->dir);
-        (*no)->info1 = *informacao;
-        (*no)->cent = (filho ? *filho : NULL);
-    }
-
-    (*no)->nInfos = 1;
-    return maior;
-}
-
-int ehFolha(const Portugues23 *no)
-{
-    return (no->esq == NULL);
-}
-
 Portugues23 *BuscarPalavra(Portugues23 **no, const char *palavraPortugues)
 {
     Portugues23 *inserida = NULL; // Inicializa o retorno como NULL
@@ -170,6 +49,112 @@ void adicionarTraducao(Portugues23 *no, const char *palavraPortugues, const char
         adicionarTraducaoEmIngles(&(no)->info2, palavraIngles, unidade);
     }
 }
+
+int inserirPalavraPortugues(Portugues23 **arvore, char *palavraPortugues, char *palavraIngles, int unidade) {
+    Info promove;
+    Portugues23 *pai = NULL;
+    int inseriu;
+
+    // Busca a palavra na árvore
+    Portugues23 *noExistente = NULL;
+    noExistente =  BuscarPalavra(arvore, palavraPortugues);
+
+    if (noExistente != NULL) {
+        printf("A palavra já existe. Adicionando tradução...\n");
+        adicionarTraducao(noExistente, palavraPortugues, palavraIngles, unidade);
+        inseriu = 1;
+    } else {
+        Info novoInfo = criaInfo(palavraPortugues, palavraIngles, unidade);
+        inserirArv23(arvore, &novoInfo, &promove, &pai);
+        inseriu = 0;
+    }
+    return inseriu;
+}
+
+Info criaInfo(char *palavra, char *palavraIngles, int unidade)
+{
+    Info info;
+
+    info.palavraPortugues = malloc(strlen(palavra) + 1);
+    strcpy(info.palavraPortugues, palavra);
+
+    info.palavraIngles = NULL;
+    info.palavraIngles = insertpalavraIngles(info.palavraIngles, palavraIngles, unidade);
+    return info;
+}
+
+Portugues23 *criaNo(const Info *informacao, Portugues23 *filhoesq, Portugues23 *filhocen)
+{
+    Portugues23 *no = (Portugues23 *)malloc(sizeof(Portugues23));
+    no->info1 = *informacao;
+    no->info2.palavraIngles = NULL;
+    no->info2.palavraPortugues = NULL;
+    no->esq = filhoesq;
+    no->cent = filhocen;
+    no->dir = NULL;
+    no->nInfos = 1;
+
+    return no;
+}
+
+Portugues23 *adicionaChave(Portugues23 *no, const Info *informacao, Portugues23 *filho)
+{
+    if (strcmp(informacao->palavraPortugues, no->info1.palavraPortugues) > 0)
+    {
+        no->info2 = *informacao;
+        no->dir = filho;
+    }
+    else
+    {
+        no->info2 = no->info1;
+        no->dir = no->cent;
+        no->info1 = *informacao;
+        no->cent = filho;
+    }
+    no->nInfos = 2;
+    return no;
+}
+
+Portugues23 *quebraNo(Portugues23 **no, const Info *informacao, Info *promove, Portugues23 **filho)
+{
+    Portugues23 *maior;
+
+    if (strcmp(informacao->palavraPortugues, (*no)->info2.palavraPortugues) > 0)
+    {
+        *promove = (*no)->info2;
+        if(filho)
+            maior = criaNo(informacao, (*no)->dir, *filho);
+        else
+            maior = criaNo(informacao, (*no)->dir, NULL);
+    }
+    else if (strcmp(informacao->palavraPortugues, (*no)->info1.palavraPortugues) > 0)
+    {
+        *promove = *informacao;
+        if(filho)
+            maior = criaNo(&(*no)->info2, *filho, (*no)->dir);
+        else
+            maior = criaNo(&(*no)->info2, NULL, (*no)->dir);
+    }
+    else
+    {
+        *promove = (*no)->info1;
+        maior = criaNo(&(*no)->info2, (*no)->cent, (*no)->dir);
+        (*no)->info1 = *informacao;
+        if(filho)
+            (*no)->cent = *filho;
+        else
+            (*no)->cent = NULL;
+    }
+
+    (*no)->nInfos = 1;
+    return maior;
+}
+
+int ehFolha(const Portugues23 *no)
+{
+    return (no->esq == NULL);
+}
+
 
 Portugues23 *inserirArv23(Portugues23 **no, Info *informacao, Info *promove, Portugues23 **pai)
 {
@@ -242,23 +227,9 @@ Portugues23 *inserirArv23(Portugues23 **no, Info *informacao, Info *promove, Por
     return maiorNo;
 }
 
-void freeTree(Portugues23 *no)
-{
-    if (no != NULL)
-    {
-        freeTree(no->esq);
-        freeTree(no->cent);
-        freeTree(no->dir);
-        free(no);
-    }
-}
 
-void adicionarTraducaoEmIngles(Info *info, const char *palavraIng, int unidade)
-{
-    info->palavraIngles = insertpalavraIngles(info->palavraIngles, palavraIng, unidade);
-}
 
-// ############################################## FUNÇOES PArA EXIBIr ##############################################
+// ############################################## FUNÇOES PARA EXIBIR ##############################################
 
 void exibir_tree23(const Portugues23 *raiz)
 {
@@ -346,135 +317,10 @@ void exibir_traducao_Portugues(Portugues23 **raiz, const char *palavraPortugues)
     }
 }
 
-void printBinaryTree(Inglesbin *root)
-{
-    if (root != NULL)
-    {
-        printBinaryTree(root->esq); // Percorre a árvore à esquerda
-        printf("\n");
-        // Imprime a tradução de inglês associada à palavra em português
-        printf("Palavra em Inglês: %s = Unidade: %d\n", root->palavraIngles, root->unidade);
-        printBinaryTree(root->dir); // Percorre a árvore à direita
-    }
-}
+
 
 // ############################################# REMOÇÃO ############################################
 
-int ehFolhas(Inglesbin *raiz){
-    return (raiz->esq == NULL && raiz->dir == NULL);
-}
-
-Inglesbin *soUmFilho(Inglesbin *raiz){
-    Inglesbin *aux;
-    aux = NULL;
-
-    if (raiz->dir == NULL)
-    {
-        aux = raiz->esq;
-    }
-    else if (raiz->esq == NULL)
-    {
-        aux = raiz->dir;
-    }
-
-    return aux;
-}
-
-Inglesbin *menorFilho(Inglesbin *raiz){
-    Inglesbin *aux;
-    aux = raiz;
-
-    if (raiz)
-    {
-        if (raiz->esq)
-            aux = menorFilho(raiz->esq);
-    }
-
-    return aux;
-}
-
-int removerPalavraIngles(Inglesbin **raiz, char *palavra)
-{
-    Inglesbin *endFilho;
-    int existe = 0;
-
-    if (*raiz)
-    {
-        if (strcmp(palavra, (*raiz)->palavraIngles) == 0)
-        {
-            existe = 1;
-            printf("removendo palavra: %s\n", palavra);
-            Inglesbin *aux = *raiz;
-            if (ehFolhas(*raiz))
-            {
-                free(aux);
-                *raiz = NULL;
-            }
-            else if ((endFilho = soUmFilho(*raiz)) != NULL)
-            {
-                free(aux);
-                *raiz = endFilho;
-            }
-            else
-            {
-                endFilho = menorFilho((*raiz)->dir);
-                strcpy((*raiz)->palavraIngles, endFilho->palavraIngles);
-                (*raiz)->unidade = endFilho->unidade;
-
-                removerPalavraIngles(&(*raiz)->dir, endFilho->palavraIngles);
-            }
-        }
-        else if (strcmp(palavra, (*raiz)->palavraIngles) < 0)
-        {
-            existe = removerPalavraIngles(&(*raiz)->esq, palavra);
-        }
-        else
-        {
-            existe = removerPalavraIngles(&(*raiz)->dir, palavra);
-        }
-    }
-
-    return existe;
-}
-
-void BuscarPalavraIngles(Portugues23 **raiz, char *palavraIngles, int unidade, Portugues23 **pai)
-{
-    int removeu;
-    if (*raiz != NULL)
-    {
-        BuscarPalavraIngles(&(*raiz)->esq, palavraIngles, unidade, pai);
-
-        if ((*raiz)->info1.palavraIngles != NULL && (*raiz)->info1.palavraIngles->unidade == unidade)
-        {
-            removeu = removerPalavraIngles(&(*raiz)->info1.palavraIngles, palavraIngles);
-            if(removeu) 
-                printf("A palavra %s foi removida com sucesso!\n\n", palavraIngles);
-            if ((*raiz)->info1.palavraIngles == NULL)
-            {
-                removeu = remover23(pai, raiz, (*raiz)->info1.palavraPortugues);
-                if(removeu) printf("Removido\n\n");
-            }
-        }
-
-        BuscarPalavraIngles(&(*raiz)->cent, palavraIngles, unidade, raiz);
-
-        if ((*raiz)->nInfos == 2 && (*raiz)->info2.palavraIngles != NULL && (*raiz)->info2.palavraIngles->unidade == unidade)
-        {
-            removeu = removerPalavraIngles(&(*raiz)->info2.palavraIngles, palavraIngles);
-            if(removeu) 
-                printf("A palavra %s foi removida com sucesso!\n\n", palavraIngles);
-            if ((*raiz)->info2.palavraIngles == NULL)
-            {
-                removeu = remover23(pai, raiz, (*raiz)->info2.palavraPortugues);
-                if(removeu) printf("Removido\n\n");
-            }
-        }
-        if ((*raiz)->nInfos == 2 && (*raiz)->info2.palavraIngles != NULL)
-        {
-            BuscarPalavraIngles(&(*raiz)->dir, palavraIngles, unidade, raiz);
-        }
-    }
-}
 
 void menorInfoDir(Portugues23 *Raiz, Portugues23 **no, Portugues23 **paiNo)
 {
@@ -693,6 +539,29 @@ int remover23(Portugues23 **Pai, Portugues23 **Raiz, char *valor)
         }
     }
     return removeu;
+}
+
+/*#########################################FREE#######################################################*/
+
+void freeInfo2_3(Info *info)
+{
+  free_arvore_binaria(info->palavraIngles);
+  free(info->palavraPortugues);
+}
+
+void freeTree(Portugues23 *no)
+{
+    if (no != NULL)
+    {
+        freeTree(no->esq);
+        freeTree(no->cent);
+        if (no->nInfos == 2)
+            freeTree(no->dir);
+        if (no->nInfos == 2)
+            freeInfo2_3(&no->info2);
+        freeInfo2_3(&no->info1);
+        free(no);
+    }
 }
 
 /*-----------------------------------------------------------------------------------------------------*/
