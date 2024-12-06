@@ -58,7 +58,7 @@
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
     "cwchar": "cpp",
-    "arv23.h": "c",
-    "structs.h": "c"
+    "time.h": "c",
+    "arvrb.h": "c"
   }
 }
