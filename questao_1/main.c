@@ -9,48 +9,45 @@
 void carregarArquivo(const char *nomeArquivo, Portugues23 **arvore)
 {
     FILE *arquivo = fopen(nomeArquivo, "r");
-    if (arquivo == NULL)
+    if (arquivo != NULL)
     {
-        printf("Erro ao abrir o arquivo.\n");
-        return;
-    }
+        char linha[256];
 
-    char linha[256];
+        int unidadeAtual = 0;
 
-    int unidadeAtual = 0;
-
-    while (fgets(linha, sizeof(linha), arquivo))
-    {
-        linha[strcspn(linha, "\n")] = 0;
-
-        if (linha[0] == '%')
+        while (fgets(linha, sizeof(linha), arquivo))
         {
-            // Atualiza a unidade corretamente
-            sscanf(linha, "%% Unidade %d", &unidadeAtual);
-        }
-        else
-        {
-            char palavraIngles[50], traducoesPortugues[200];
-            sscanf(linha, "%[^:]: %[^;]", palavraIngles, traducoesPortugues);
-            
-            char *traducaoPortugues = strtok(traducoesPortugues, ",;");
-            while(traducaoPortugues != NULL)
+            linha[strcspn(linha, "\n")] = 0;
+
+            if (linha[0] == '%')
             {
-                while (*traducaoPortugues == ' ') 
-                    traducaoPortugues++;
-
-                inserirPalavraPortugues(arvore, traducaoPortugues, palavraIngles, unidadeAtual);
-                traducaoPortugues = strtok(NULL, ",;");    
+                // Atualiza a unidade corretamente
+                sscanf(linha, "%% Unidade %d", &unidadeAtual);
             }
-            
-        }
-    }
+            else
+            {
+                char palavraIngles[50], traducoesPortugues[200];
+                sscanf(linha, "%[^:]: %[^;]", palavraIngles, traducoesPortugues);
 
-    fclose(arquivo);
-    printf("Arquivo '%s' carregado com sucesso!\n", nomeArquivo);
+                char *traducaoPortugues = strtok(traducoesPortugues, ",;");
+                while (traducaoPortugues != NULL)
+                {
+                    while (*traducaoPortugues == ' ')
+                        traducaoPortugues++;
+
+                    inserirPalavraPortugues(arvore, traducaoPortugues, palavraIngles, unidadeAtual);
+                    traducaoPortugues = strtok(NULL, ",;");
+                }
+            }
+        }
+
+        fclose(arquivo);
+        printf("Arquivo '%s' carregado com sucesso!\n", nomeArquivo);
+    }
 }
 
-void menu(){
+void menu()
+{
     printf("\n------------------------------------------------------------------------------------------------- \n");
     printf("\nMenu de opções:\n");
     printf("1 - Informar uma unidade e imprimir todas as palavras em português e as equivalentes em inglês.\n");
@@ -61,7 +58,6 @@ void menu(){
     printf("0 - Sair\n");
     printf("Escolha uma opção: \n");
     printf("\n------------------------------------------------------------------------------------------------- \n");
-    
 }
 
 int main()
@@ -72,7 +68,7 @@ int main()
     char palavra[50];
     int unidade;
     int removido;
-    carregarArquivo("/mnt/c/Users/Rayssa Alves/Documents/trabalho_ed2/Tabalho2_Ed2/trabalhoEd2.txt", &raiz);
+    carregarArquivo("../trabalhoEd2.txt", &raiz);
     int op, res;
     do
     {
@@ -96,7 +92,7 @@ int main()
             printf("\n--------------------------------------------------------------- \n");
             break;
         case 3:
-        printf("\n--------------------------------------------------------------- \n");
+            printf("\n--------------------------------------------------------------- \n");
             printf("Insira a palavra em ingles que deseja remover: ");
             scanf("%s", palavra);
             printf("Insira a unidade da palavra que deseja remover: ");
@@ -109,7 +105,7 @@ int main()
             printf("Insira a palavra em portugues que deseja remover: ");
             scanf("%s", palavra);
             removido = remover23(&pai, &raiz, palavra);
-            if(removido)
+            if (removido)
                 printf("A palavra %s foi removida com sucesso!\n\n", palavra);
             printf("\n--------------------------------------------------------------- \n");
             break;
@@ -128,8 +124,6 @@ int main()
             break;
         }
     } while (op != 0);
-
-    
 
     freeTree(raiz);
 
