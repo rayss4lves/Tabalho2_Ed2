@@ -105,7 +105,7 @@ int main()
             printf("\n--------------------------------------------------------------- \n");
             printf("Insira a palavra em portugues que deseja remover: ");
             scanf("%s", palavra);
-            removido = removerNoArvVP(&raiz, palavra);
+            removido = removerArvRB(&raiz, palavra);
             if (removido)
                 printf("A palavra %s foi removida com sucesso!\n\n", palavra);
             printf("\n--------------------------------------------------------------- \n");

@@ -187,7 +187,6 @@ PortuguesRB *procuraMenor(PortuguesRB *raiz)
 int removerNoArvVP(PortuguesRB **raiz, char *valor)
 {
     int existe = 0;
-    printf("\nEntrou \n");
 
     if (*raiz)
     {
@@ -231,6 +230,16 @@ int removerNoArvVP(PortuguesRB **raiz, char *valor)
     }
     balancear(raiz);
     return existe;
+}
+
+int removerArvRB(PortuguesRB **raiz, char *valor)
+{
+    int removeu = removerNoArvVP(raiz, valor);
+    if (removeu)
+    {
+        (*raiz)->cor = BLACK;
+    }
+    return removeu;
 }
 
 

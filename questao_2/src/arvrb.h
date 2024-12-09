@@ -31,6 +31,8 @@ PortuguesRB *procuraMenor(PortuguesRB *raiz);
 
 int removerNoArvVP(PortuguesRB **raiz, char *valor);
 
+int removerArvRB(PortuguesRB **raiz, char *valor);
+
 PortuguesRB *BuscarPalavra(PortuguesRB **arvore, char *palavraPortugues);
 
 void imprimirPalavrasUnidade(PortuguesRB *arvore, int unidade);
