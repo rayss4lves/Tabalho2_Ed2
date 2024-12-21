@@ -103,7 +103,8 @@ int main()
         case 4:
             printf("\n--------------------------------------------------------------- \n");
             printf("Insira a palavra em portugues que deseja remover: ");
-            scanf("%s", palavra);
+            setbuf(stdin, NULL);
+            scanf("%[^\n]", palavra);
             removido = remover23(&pai, &raiz, palavra);
             if (removido)
                 printf("A palavra %s foi removida com sucesso!\n\n", palavra);
