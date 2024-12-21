@@ -252,12 +252,9 @@ void exibir_tree23(const Portugues23 *raiz)
             if (raiz->info2.palavraIngles != NULL && raiz->info2.palavraIngles->palavraIngles != NULL)
                 printBinaryTree(raiz->info2.palavraIngles);
             printf("\n");
-        }
-
-        if (raiz->nInfos == 2)
-        {
             exibir_tree23(raiz->dir);
         }
+
     }
 }
 

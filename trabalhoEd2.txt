@@ -8,7 +8,7 @@ System: sistema;
 % Unidade 2 
 Bug: inseto;  
 Bicycle: bicicleta; 
-Fan: ventilador; 
+Fan: ventilador; k
 Network: rede de relacionamento;
 % Unidade 3
 Bus: ônibus, barramento;
