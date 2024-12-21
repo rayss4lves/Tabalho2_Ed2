@@ -324,25 +324,36 @@ void exibir_traducao_Portugues(Portugues23 **raiz, const char *palavraPortugues)
 
 void menorInfoDir(Portugues23 *Raiz, Portugues23 **no, Portugues23 **paiNo)
 {
-    if (Raiz->esq != NULL)
+    if (Raiz != NULL)
     {
-        *paiNo = Raiz;
-        menorInfoDir(Raiz->esq, no, paiNo);
+        if (Raiz->esq != NULL)
+        {
+            *paiNo = Raiz;  // Atualiza o ponteiro do pai
+            menorInfoDir(Raiz->esq, no, paiNo);  // Chama recursivamente para o filho esquerdo
+        }
+        else
+        {
+            *no = Raiz;  // Encontrou o menor valor
+        }
     }
-    else
-        *no = Raiz;
 }
 
 void maiorInfoEsq(Portugues23 *Raiz, Portugues23 **no, Portugues23 **paiNo)
 {
-    if (Raiz->dir != NULL)
+    if (Raiz != NULL)
     {
-        *paiNo = Raiz;
-        maiorInfoEsq(Raiz->dir, no, paiNo);
+        if (Raiz->dir != NULL)
+        {
+            *paiNo = Raiz;  // Atualiza o ponteiro do pai
+            maiorInfoEsq(Raiz->dir, no, paiNo);  // Chama recursivamente para o filho direito
+        }
+        else
+        {
+            *no = Raiz;  // Encontrou o maior valor
+        }
     }
-    else
-        *no = Raiz;
 }
+
 
 int remover23(Portugues23 **Pai, Portugues23 **Raiz, char *valor)
 {
@@ -353,7 +364,7 @@ int remover23(Portugues23 **Pai, Portugues23 **Raiz, char *valor)
 
     if (*Raiz != NULL)
     {
-        if (ehFolha(*Raiz) == 1)
+        if (ehFolha(*Raiz))
         {
             if ((*Raiz)->nInfos == 2)
             {
@@ -363,8 +374,7 @@ int remover23(Portugues23 **Pai, Portugues23 **Raiz, char *valor)
                     (*Raiz)->info2.palavraPortugues = NULL;
                     (*Raiz)->nInfos = 1;
                     removeu = 1;
-                }
-                else if (strcmp(valor, (*Raiz)->info1.palavraPortugues) == 0)
+                }else if (strcmp(valor, (*Raiz)->info1.palavraPortugues) == 0)
                 { // quando é folha, tem duas informações e o numero ta na primeira posição do nó
                     (*Raiz)->info1 = (*Raiz)->info2;
                     (*Raiz)->info2.palavraIngles = NULL;
@@ -372,6 +382,7 @@ int remover23(Portugues23 **Pai, Portugues23 **Raiz, char *valor)
                     (*Raiz)->nInfos = 1;
                     removeu = 1;
                 }
+                 
             }
             else if (strcmp(valor, (*Raiz)->info1.palavraPortugues) == 0)
             {
@@ -520,11 +531,11 @@ int remover23(Portugues23 **Pai, Portugues23 **Raiz, char *valor)
                 remover23(Raiz, &(*Raiz)->cent, (*Raiz)->info1.palavraPortugues);
                 removeu = 1;
             }
-            else if (((*Raiz)->nInfos == 1) || (strcmp(valor, (*Raiz)->info1.palavraPortugues) < 0))
+            else if (((*Raiz)->nInfos == 1) || (strcmp(valor, (*Raiz)->info2.palavraPortugues) < 0))
             {
                 removeu = remover23(Raiz, &(*Raiz)->cent, valor);
             }
-            else if (strcmp(valor, (*Raiz)->info1.palavraPortugues) == 0)
+            else if (strcmp(valor, (*Raiz)->info2.palavraPortugues) == 0)
             {
                 paiNo = *Pai;
                 menorInfoDir((*Pai)->dir, &no, &paiNo);

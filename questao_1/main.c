@@ -126,11 +126,11 @@ int main()
         }
     } while (op != 0);
 
-    freeTree(raiz);
+    //freeTree(raiz);
 
-    main_teste();
+    //main_teste();
 
-    freeTree(raiz);
+    //freeTree(raiz);
 
     return 0;
 }
