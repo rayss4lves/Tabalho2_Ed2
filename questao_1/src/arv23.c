@@ -362,121 +362,6 @@ void maiorInfoEsq(Portugues23 *Raiz, Portugues23 **no, Portugues23 **paiNo)
 }
 
 
-// void balancear23(Portugues23 **Pai, Portugues23 **Raiz) {
-//     if (*Raiz != NULL && (*Raiz)->nInfos == 0) {
-//         if (*Pai == NULL) {
-//             // Caso onde a raiz tem 0 informações e não tem um nó pai (árvore de um único nó)
-//             free(*Raiz);
-//             *Raiz = NULL;
-//         } else {
-//             if (*Raiz == (*Pai)->esq) {
-//                 // Fusão entre o nó da esquerda e o nó central
-//                 if ((*Pai)->cent->nInfos == 1) {
-//                     (*Raiz)->info1 = (*Pai)->info1;
-//                     (*Pai)->info1 = (*Pai)->cent->info1;
-//                     (*Pai)->cent->info1.palavraPortugues = NULL;
-//                     (*Pai)->cent->info1.palavraIngles = NULL;
-//                     (*Pai)->cent->nInfos = 1;
-//                     free(*Raiz);
-//                     *Raiz = (*Pai)->cent;
-//                     (*Pai)->esq = NULL;
-//                 } else {
-//                     (*Raiz)->info1 = (*Pai)->info1;
-//                     (*Pai)->info1 = (*Pai)->cent->info1;
-//                     (*Pai)->cent->info1.palavraPortugues = NULL;
-//                     (*Pai)->cent->info1.palavraIngles = NULL;
-//                     (*Pai)->cent->nInfos = 1;
-//                     (*Raiz)->nInfos = 2;
-//                 }
-//             } else if (*Raiz == (*Pai)->cent) {
-//                 // Fusão ou redistribuição entre o nó pai e o filho central
-//                 if ((*Pai)->esq->nInfos == 2) {
-//                     (*Raiz)->info1 = (*Pai)->info1;
-//                     (*Pai)->info1 = (*Pai)->esq->info2;
-//                     (*Pai)->esq->info2.palavraPortugues = NULL;
-//                     (*Pai)->esq->info2.palavraIngles = NULL;
-//                     (*Pai)->esq->nInfos = 1;
-//                 } else {
-//                     (*Raiz)->info1 = (*Pai)->info2;
-//                     (*Pai)->info2.palavraPortugues = NULL;
-//                     (*Pai)->info2.palavraIngles = NULL;
-//                     (*Pai)->nInfos = 1;
-//                     free(*Raiz);
-//                     *Raiz = (*Pai)->esq;
-//                     *Pai = (*Pai)->esq;
-                    
-//                 }
-//             }
-//         }
-//     }
-// }
-// int remover23Recursivo(Portugues23 **Raiz, char *valor) {
-//     int removeu = 0;
-//     Portugues23 *no = NULL, *no1, *paiNo = NULL;
-    
-//     if (*Raiz != NULL) {
-//         // Caso base: se o nó for folha
-//         if (ehFolha(*Raiz)) {
-//             if ((*Raiz)->nInfos == 2) {
-//                 if (strcmp(valor, (*Raiz)->info2.palavraPortugues) == 0) {
-//                     (*Raiz)->info2.palavraIngles = NULL;
-//                     (*Raiz)->info2.palavraPortugues = NULL;
-//                     (*Raiz)->nInfos = 1;
-//                     removeu = 1;
-//                 } else if (strcmp(valor, (*Raiz)->info1.palavraPortugues) == 0) {
-//                     (*Raiz)->info1 = (*Raiz)->info2;
-//                     (*Raiz)->info2.palavraIngles = NULL;
-//                     (*Raiz)->info2.palavraPortugues = NULL;
-//                     (*Raiz)->nInfos = 1;
-//                     removeu = 1;
-//                 }
-//             } else if (strcmp(valor, (*Raiz)->info1.palavraPortugues) == 0) {
-//                 // Remoção do único nó em uma folha
-//                 free(*Raiz);
-//                 *Raiz = NULL;
-//                 removeu = 1;
-//             }
-//         } else { // Caso recursivo: se o nó não for folha
-//             if (strcmp(valor, (*Raiz)->info1.palavraPortugues) < 0) {
-//                 removeu = remover23Recursivo(&(*Raiz)->esq, valor);
-//             } else if (strcmp(valor, (*Raiz)->info1.palavraPortugues) == 0) {
-//                 // Caso onde a chave está no primeiro valor do nó
-//                 paiNo = *Raiz;
-//                 menorInfoDir((*Raiz)->cent, &no, &paiNo);
-//                 (*Raiz)->info1 = no->info1;
-//                 remover23Recursivo(&(*Raiz)->cent, (*Raiz)->info1.palavraPortugues);
-//                 removeu = 1;
-//             } else if ((*Raiz)->nInfos == 1 || strcmp(valor, (*Raiz)->info2.palavraPortugues) < 0) {
-//                 removeu = remover23Recursivo(&(*Raiz)->cent, valor);
-//             } else if (strcmp(valor, (*Raiz)->info2.palavraPortugues) == 0) {
-//                 // Caso onde a chave está no segundo valor do nó
-//                 paiNo = *Raiz;
-//                 menorInfoDir((*Raiz)->dir, &no, &paiNo);
-//                 (*Raiz)->info2 = no->info1;
-//                 remover23Recursivo(&(*Raiz)->dir, (*Raiz)->info2.palavraPortugues);
-//                 removeu = 1;
-//             } else {
-//                 removeu = remover23Recursivo(&(*Raiz)->dir, valor);
-//             }
-//         }
-//     }
-//     return removeu;
-// }
-
-// int remover23(Portugues23 **Pai, Portugues23 **Raiz, char *valor) {
-//     int removeu = 0;
-
-//     // Chama a remoção recursiva
-//     removeu = remover23Recursivo(Raiz, valor);
-
-//     // Após a remoção, balanceia a árvore para garantir que a árvore 2-3 está correta
-//     if (removeu) {
-//         balancear23(Pai, Raiz);
-//     }
-
-//     return removeu;
-// }
-
 
 int remover23(Portugues23 **Pai, Portugues23 **Raiz, char *valor)
 {
@@ -648,10 +533,22 @@ int remover23(Portugues23 **Pai, Portugues23 **Raiz, char *valor)
                 removeu = remover23(Raiz, &(*Raiz)->esq, valor);
             else if (strcmp(valor, (*Raiz)->info1.palavraPortugues) == 0)
             {
+                
                 paiNo = *Raiz;
                 menorInfoDir((*Raiz)->cent, &no, &paiNo);
                 (*Raiz)->info1 = no->info1;
                 remover23(Raiz, &(*Raiz)->cent, (*Raiz)->info1.palavraPortugues);
+
+                removeu = 1;
+            }
+            else if (strcmp(valor, (*Raiz)->info1.palavraPortugues) == 0 && (*Raiz)->nInfos == 1)
+            {
+                
+                paiNo = *Raiz;
+                menorInfoDir((*Raiz)->cent, &no, &paiNo);
+                (*Raiz)->info1 = no->info1;
+                remover23(Raiz, &(*Raiz)->cent, (*Raiz)->info1.palavraPortugues);
+
                 removeu = 1;
             }
             else if (((*Raiz)->nInfos == 1) || (strcmp(valor, (*Raiz)->info2.palavraPortugues) < 0))
