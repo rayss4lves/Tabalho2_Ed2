@@ -56,20 +56,22 @@ int inserirPalavraPortugues(Portugues23 **arvore, char *palavraPortugues, char *
     int inseriu;
 
     // Busca a palavra na árvore
-    Portugues23 *noExistente = NULL;
-    noExistente =  BuscarPalavra(arvore, palavraPortugues);
+    Portugues23 *noExistente = BuscarPalavra(arvore, palavraPortugues);
 
     if (noExistente != NULL) {
-        printf("A palavra já existe. Adicionando tradução...\n");
+        printf("A palavra %s já existe. Adicionando tradução...\n", palavraPortugues);
         adicionarTraducao(noExistente, palavraPortugues, palavraIngles, unidade);
-        inseriu = 1;
+        inseriu = 0;
     } else {
+        //printf("Inserindo a palavra %s \n", palavraPortugues);
         Info novoInfo = criaInfo(palavraPortugues, palavraIngles, unidade);
         inserirArv23(arvore, &novoInfo, &promove, &pai);
-        inseriu = 0;
+        inseriu = 1;
+        
     }
     return inseriu;
 }
+
 
 Info criaInfo(char *palavra, char *palavraIngles, int unidade)
 {
@@ -87,33 +89,30 @@ Portugues23 *criaNo(const Info *informacao, Portugues23 *filhoesq, Portugues23 *
 {
     Portugues23 *no = (Portugues23 *)malloc(sizeof(Portugues23));
     no->info1 = *informacao;
-    no->info2.palavraIngles = NULL;
-    no->info2.palavraPortugues = NULL;
     no->esq = filhoesq;
     no->cent = filhocen;
-    no->dir = NULL;
     no->nInfos = 1;
 
     return no;
 }
 
-Portugues23 *adicionaChave(Portugues23 *no, const Info *informacao, Portugues23 *filho)
+void adicionaChave(Portugues23 **no, const Info *informacao, Portugues23 *filho)
 {
-    if (strcmp(informacao->palavraPortugues, no->info1.palavraPortugues) > 0)
+    if (strcmp(informacao->palavraPortugues, (*no)->info1.palavraPortugues) > 0)
     {
-        no->info2 = *informacao;
-        no->dir = filho;
+        (*no)->info2 = *informacao;
+        (*no)->dir = filho;
     }
     else
     {
-        no->info2 = no->info1;
-        no->dir = no->cent;
-        no->info1 = *informacao;
-        no->cent = filho;
+        (*no)->info2 = (*no)->info1;
+        (*no)->dir = (*no)->cent;
+        (*no)->info1 = *informacao;
+        (*no)->cent = filho;
     }
-    no->nInfos = 2;
-    return no;
+    (*no)->nInfos = 2; // Atualiza o número de informações
 }
+
 
 Portugues23 *quebraNo(Portugues23 **no, const Info *informacao, Info *promove, Portugues23 **filho)
 {
@@ -127,7 +126,7 @@ Portugues23 *quebraNo(Portugues23 **no, const Info *informacao, Info *promove, P
         else
             maior = criaNo(informacao, (*no)->dir, NULL);
     }
-    else if (strcmp(informacao->palavraPortugues, (*no)->info1.palavraPortugues) > 0)
+    else if (strcmp(informacao->palavraPortugues, (*no)->info1.palavraPortugues) >= 0)
     {
         *promove = *informacao;
         if(filho)
@@ -160,19 +159,19 @@ Portugues23 *inserirArv23(Portugues23 **no, Info *informacao, Info *promove, Por
 {
     Info promove1;
     Portugues23 *maiorNo = NULL;
+
     if (*no == NULL)
     {
         // Cria um novo nó caso seja nulo
         *no = criaNo(informacao, NULL, NULL);
-    }
-    else
+    }else
     {
         if (ehFolha(*no))
         { // Caso seja folha
             if ((*no)->nInfos == 1)
             {
                 // O nó tem espaço para a nova chave
-                *no = adicionaChave(*no, informacao, NULL);
+                adicionaChave(no, informacao, NULL);
             }
             else
             {
@@ -207,7 +206,7 @@ Portugues23 *inserirArv23(Portugues23 **no, Info *informacao, Info *promove, Por
                 if ((*no)->nInfos == 1)
                 {
                     // Adiciona chave promovida no nó atual
-                    *no = adicionaChave(*no, promove, maiorNo);
+                    adicionaChave(no, promove, maiorNo);
                     maiorNo = NULL;
                 }
                 else
@@ -235,13 +234,14 @@ void exibir_tree23(const Portugues23 *raiz)
 {
     if (raiz != NULL)
     {
-        exibir_tree23(raiz->esq);
+        
         printf("Palavra (PT): %s", raiz->info1.palavraPortugues);
         if (raiz->info1.palavraIngles != NULL && raiz->info1.palavraIngles->palavraIngles != NULL)
         {
             printBinaryTree(raiz->info1.palavraIngles);
             printf("\n");
         }
+        exibir_tree23(raiz->esq);
         exibir_tree23(raiz->cent);
         // Se houver o segundo elemento (nInfos == 2), exibe o segundo filho
         if (raiz->nInfos == 2)
@@ -562,12 +562,12 @@ void freeTree(Portugues23 *no)
     if (no != NULL)
     {
         freeTree(no->esq);
-        freeTree(no->cent);
-        if (no->nInfos == 2)
-            freeTree(no->dir);
-        if (no->nInfos == 2)
-            freeInfo2_3(&no->info2);
         freeInfo2_3(&no->info1);
+        freeTree(no->cent);
+        if (no->nInfos == 2){
+            freeInfo2_3(&no->info2);
+            freeTree(no->dir);
+        }   
         free(no);
     }
 }

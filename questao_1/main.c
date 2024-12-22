@@ -34,7 +34,7 @@ void carregarArquivo(const char *nomeArquivo, Portugues23 **arvore)
                 {
                     while (*traducaoPortugues == ' ')
                         traducaoPortugues++;
-
+                  
                     inserirPalavraPortugues(arvore, traducaoPortugues, palavraIngles, unidadeAtual);
                     traducaoPortugues = strtok(NULL, ",;");
                 }
