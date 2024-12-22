@@ -5,7 +5,52 @@
 #include "src/arv23.h"
 #include "src/arvbin.h"
 #include "test/maintest.h"
+void imprimirArvore23(Portugues23 *raiz, int nivel) {
+    if (raiz == NULL) return;
 
+    // Indentação para cada nível da árvore
+    for (int i = 0; i < nivel; i++) {
+        printf("    ");  // Indentação
+    }
+
+    // Imprime as chaves do nó
+    if (raiz->nInfos == 1) {
+        printf("[ %s ]\n", raiz->info1.palavraPortugues);
+    }
+    else if (raiz->nInfos == 2) {
+        printf("[ %s | %s ]\n", raiz->info1.palavraPortugues, raiz->info2.palavraPortugues);
+    }
+
+    // Se o nó tem filhos, imprime-os
+    if (raiz->esq != NULL || raiz->cent != NULL || raiz->dir != NULL) {
+        // Imprime os filhos à esquerda
+        if (raiz->esq != NULL) {
+            for (int i = 0; i < nivel + 1; i++) {
+                printf("    ");
+            }
+            printf("Esq -> ");
+            imprimirArvore23(raiz->esq, nivel + 1);  // Filhos à esquerda
+        }
+
+        // Imprime o filho central
+        if (raiz->cent != NULL) {
+            for (int i = 0; i < nivel + 1; i++) {
+                printf("    ");
+            }
+            printf("Cent -> ");
+            imprimirArvore23(raiz->cent, nivel + 1);  // Filho central
+        }
+
+        // Imprime os filhos à direita
+        if (raiz->dir != NULL) {
+            for (int i = 0; i < nivel + 1; i++) {
+                printf("    ");
+            }
+            printf("Dir -> ");
+            imprimirArvore23(raiz->dir, nivel + 1);  // Filho à direita
+        }
+    }
+}
 void carregarArquivo(const char *nomeArquivo, Portugues23 **arvore)
 {
     FILE *arquivo = fopen(nomeArquivo, "r");
@@ -70,6 +115,8 @@ int main()
     int removido;
     carregarArquivo("../trabalhoEd2.txt", &raiz);
     int op, res;
+    printf("Árvore 2-3:\n");
+    imprimirArvore23(raiz, 0);
     do
     {
         menu();
@@ -113,6 +160,7 @@ int main()
         case 5:
             printf("\n--------------------------------------------------------------- \n");
             exibir_tree23(raiz);
+            imprimirArvore23(raiz, 0);
             printf("\n--------------------------------------------------------------- \n");
             break;
         case 0:
@@ -125,6 +173,8 @@ int main()
             break;
         }
     } while (op != 0);
+
+    
 
     //freeTree(raiz);
 

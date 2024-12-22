@@ -306,10 +306,6 @@ void exibir_traducao_Portugues(PortuguesRB **raiz, char *palavraPortugues)
             }
 
         }
-        else
-        {
-            printf("A palavra '%s' não foi encontrada na árvore.\n", palavraPortugues);
-        }
     }
 }
 
@@ -319,7 +315,7 @@ void exibirArvore(PortuguesRB *raiz)
     {
         exibirArvore(raiz->esq);
         printf("Cor - %d\n", raiz->cor);
-        printf("Valor - %s\n", raiz->info.palavraPortugues);
+        printf("Palavra em Português - %s\n", raiz->info.palavraPortugues);
         printBinaryTree(raiz->info.palavraIngles);
         printf("\n");
         exibirArvore(raiz->dir);

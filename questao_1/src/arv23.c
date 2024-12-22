@@ -63,7 +63,7 @@ int inserirPalavraPortugues(Portugues23 **arvore, char *palavraPortugues, char *
         adicionarTraducao(noExistente, palavraPortugues, palavraIngles, unidade);
         inseriu = 0;
     } else {
-        //printf("Inserindo a palavra %s \n", palavraPortugues);
+        printf("Inserindo a palavra %s \n", palavraPortugues);
         Info novoInfo = criaInfo(palavraPortugues, palavraIngles, unidade);
         inserirArv23(arvore, &novoInfo, &promove, &pai);
         inseriu = 1;
@@ -87,136 +87,145 @@ Info criaInfo(char *palavra, char *palavraIngles, int unidade)
 
 Portugues23 *criaNo(const Info *informacao, Portugues23 *filhoesq, Portugues23 *filhocen)
 {
-    Portugues23 *no = (Portugues23 *)malloc(sizeof(Portugues23));
+    Portugues23 *no;
+    no = (Portugues23 *)malloc(sizeof(Portugues23)); // allocate memory
+
+    // Preenche info1 com os dados da nova disciplina
     no->info1 = *informacao;
     no->esq = filhoesq;
     no->cent = filhocen;
     no->nInfos = 1;
 
-    return no;
+    // Inicializa info2 com nulo
+    no->info2.palavraIngles = NULL;
+    no->info2.palavraPortugues = NULL;
+    no->dir = NULL;
+
+    return no; 
 }
 
 void adicionaChave(Portugues23 **no, const Info *informacao, Portugues23 *filho)
 {
     if (strcmp(informacao->palavraPortugues, (*no)->info1.palavraPortugues) > 0)
     {
+        // Adiciona a nova informação a info2
         (*no)->info2 = *informacao;
-        (*no)->dir = filho;
+        (*no)->dir = filho; // Ajusta o ponteiro do filho direito
     }
     else
     {
+        // Move info1 para info2 e coloca a nova informação em info1
         (*no)->info2 = (*no)->info1;
-        (*no)->dir = (*no)->cent;
         (*no)->info1 = *informacao;
+        (*no)->dir = (*no)->cent;
         (*no)->cent = filho;
     }
     (*no)->nInfos = 2; // Atualiza o número de informações
 }
 
 
-Portugues23 *quebraNo(Portugues23 **no, const Info *informacao, Info *promove, Portugues23 **filho)
+Portugues23 *quebraNo(Portugues23 **no, const Info *informacao, Info *promove, Portugues23 *filho)
 {
     Portugues23 *maior;
 
-    if (strcmp(informacao->palavraPortugues, (*no)->info2.palavraPortugues) > 0)
+    if (strcmp(informacao->palavraPortugues, (*no)->info1.palavraPortugues) < 0)
     {
-        *promove = (*no)->info2;
-        if(filho)
-            maior = criaNo(informacao, (*no)->dir, *filho);
-        else
-            maior = criaNo(informacao, (*no)->dir, NULL);
+        // A nova informação é menor que info1, então info1 será promovida
+        *promove = (*no)->info1;
+        maior = criaNo(&(*no)->info2, (*no)->cent, (*no)->dir);
+        
+        // Atualiza info1 com a nova informação
+        (*no)->info1 = *informacao;
+        (*no)->cent = filho;
+  
     }
-    else if (strcmp(informacao->palavraPortugues, (*no)->info1.palavraPortugues) >= 0)
+    else if (strcmp(informacao->palavraPortugues, (*no)->info2.palavraPortugues) < 0)
     {
+        // A nova informação é maior que info1 e menor que info2, então ela será promovida
         *promove = *informacao;
-        if(filho)
-            maior = criaNo(&(*no)->info2, *filho, (*no)->dir);
-        else
-            maior = criaNo(&(*no)->info2, NULL, (*no)->dir);
+        maior = criaNo(&(*no)->info2, filho, (*no)->dir);
+        
     }
     else
     {
-        *promove = (*no)->info1;
-        maior = criaNo(&(*no)->info2, (*no)->cent, (*no)->dir);
-        (*no)->info1 = *informacao;
-        if(filho)
-            (*no)->cent = *filho;
-        else
-            (*no)->cent = NULL;
+        // A nova informação é maior que info1 e info2, então info2 será promovido
+        *promove = (*no)->info2;
+        maior = criaNo(informacao, (*no)->dir, filho);
     }
 
-    (*no)->nInfos = 1;
+    // Limpa info2
+    (*no)->info2.palavraIngles = NULL;
+    (*no)->info2.palavraPortugues = NULL;
+
+    (*no)->nInfos = 1; // Atualizando a quantidade de informação no nó
+    (*no)->dir = NULL; // Ajusta o filho direito
+
     return maior;
 }
 
 int ehFolha(const Portugues23 *no)
 {
-    return (no->esq == NULL);
+    int achou = 0;
+
+    if (no->esq == NULL) {
+        achou = 1; // Se não tem filho esquerdo, é uma folha
+    }
+
+    return achou;
 }
 
 
-Portugues23 *inserirArv23(Portugues23 **no, Info *informacao, Info *promove, Portugues23 **pai)
-{
+Portugues23 *inserirArv23(Portugues23 **no, Info *informacao, Info *promove, Portugues23 **pai) {
     Info promove1;
     Portugues23 *maiorNo = NULL;
 
-    if (*no == NULL)
-    {
+    if (*no == NULL) {
         // Cria um novo nó caso seja nulo
         *no = criaNo(informacao, NULL, NULL);
-    }else
-    {
-        if (ehFolha(*no))
-        { // Caso seja folha
-            if ((*no)->nInfos == 1)
-            {
+    } else {
+        if (ehFolha(*no)) { // Verifica se é folha
+            if ((*no)->nInfos == 1) {
                 // O nó tem espaço para a nova chave
                 adicionaChave(no, informacao, NULL);
-            }
-            else
-            {
+            } else {
                 // O nó precisa ser quebrado
-                maiorNo = quebraNo(no, informacao, promove, NULL);
-                if (*pai == NULL)
-                { // Se não há pai, criar nova raiz
-                    *no = criaNo(promove, *no, maiorNo);
-                    maiorNo = NULL;
+                Portugues23 *novo;
+                novo = quebraNo(no, informacao, promove, NULL); //quebra no e sobe a informação
+                if (*pai == NULL) {
+                    Portugues23 *novaRaiz;
+                    novaRaiz = criaNo(promove, *no, novo);// Cria nova raiz se necessário
+                    *no = novaRaiz;
+                } else {
+                    maiorNo = novo; // Ajusta o novo maior nó
                 }
             }
-        }
-        else
-        { // Nó não e folha
+        } else { // Nó não é folha
             // Navega para o filho apropriado
-            if (strcmp(informacao->palavraPortugues, (*no)->info1.palavraPortugues) < 0)
-            {
-                maiorNo = inserirArv23(&((*no)->esq), informacao, promove, no);
-            }
-            else if ((*no)->nInfos == 1 || strcmp(informacao->palavraPortugues, (*no)->info2.palavraPortugues) < 0)
-            {
-                maiorNo = inserirArv23(&((*no)->cent), informacao, promove, no);
-            }
-            else
-            {
-                maiorNo = inserirArv23(&((*no)->dir), informacao, promove, no);
+            if (strcmp(informacao->palavraPortugues, (*no)->info1.palavraPortugues) < 0) {
+                maiorNo = inserirArv23(&((*no)->esq), informacao, promove, no); // Insere na subárvore à esquerda
+            } else if ((*no)->nInfos == 1 || strcmp(informacao->palavraPortugues, (*no)->info2.palavraPortugues) < 0) {
+                maiorNo = inserirArv23(&((*no)->cent), informacao, promove, no); // Insere na subárvore do centro
+            } else {
+                maiorNo = inserirArv23(&((*no)->dir), informacao, promove, no); // Insere na subárvore à direita
             }
 
             // Após inserir, verifica se houve promoção
-            if (maiorNo)
-            {
-                if ((*no)->nInfos == 1)
-                {
-                    // Adiciona chave promovida no nó atual
+            if (maiorNo != NULL) {
+                if ((*no)->nInfos == 1) {
                     adicionaChave(no, promove, maiorNo);
                     maiorNo = NULL;
-                }
-                else
-                {
+                } else { // Quando não tem espaço
                     // O nó precisa ser quebrado
-                    maiorNo = quebraNo(no, promove, &promove1, &maiorNo);
-                    if (*pai == NULL)
-                    {
-                        *no = criaNo(&promove1, *no, maiorNo);
+                    Portugues23 *novo;
+                    novo = quebraNo(no, promove, &promove1, maiorNo); // Quebra o nó e sobe a informação
+                    if (*pai == NULL) {
+                        Portugues23 *novaRaiz;
+                        novaRaiz = criaNo(&promove1, *no, novo); // Cria nova raiz se necessário
+                        *no = novaRaiz;
                         maiorNo = NULL;
+                    } else {
+                        maiorNo = novo; // Ajusta o novo maior nó
+                        *promove = promove1;
                     }
                 }
             }
@@ -228,20 +237,21 @@ Portugues23 *inserirArv23(Portugues23 **no, Info *informacao, Info *promove, Por
 
 
 
+
 // ############################################## FUNÇOES PARA EXIBIR ##############################################
 
 void exibir_tree23(const Portugues23 *raiz)
 {
     if (raiz != NULL)
     {
-        
+        exibir_tree23(raiz->esq);
         printf("Palavra (PT): %s", raiz->info1.palavraPortugues);
         if (raiz->info1.palavraIngles != NULL && raiz->info1.palavraIngles->palavraIngles != NULL)
         {
             printBinaryTree(raiz->info1.palavraIngles);
             printf("\n");
         }
-        exibir_tree23(raiz->esq);
+        
         exibir_tree23(raiz->cent);
         // Se houver o segundo elemento (nInfos == 2), exibe o segundo filho
         if (raiz->nInfos == 2)
@@ -350,6 +360,122 @@ void maiorInfoEsq(Portugues23 *Raiz, Portugues23 **no, Portugues23 **paiNo)
         }
     }
 }
+
+
+// void balancear23(Portugues23 **Pai, Portugues23 **Raiz) {
+//     if (*Raiz != NULL && (*Raiz)->nInfos == 0) {
+//         if (*Pai == NULL) {
+//             // Caso onde a raiz tem 0 informações e não tem um nó pai (árvore de um único nó)
+//             free(*Raiz);
+//             *Raiz = NULL;
+//         } else {
+//             if (*Raiz == (*Pai)->esq) {
+//                 // Fusão entre o nó da esquerda e o nó central
+//                 if ((*Pai)->cent->nInfos == 1) {
+//                     (*Raiz)->info1 = (*Pai)->info1;
+//                     (*Pai)->info1 = (*Pai)->cent->info1;
+//                     (*Pai)->cent->info1.palavraPortugues = NULL;
+//                     (*Pai)->cent->info1.palavraIngles = NULL;
+//                     (*Pai)->cent->nInfos = 1;
+//                     free(*Raiz);
+//                     *Raiz = (*Pai)->cent;
+//                     (*Pai)->esq = NULL;
+//                 } else {
+//                     (*Raiz)->info1 = (*Pai)->info1;
+//                     (*Pai)->info1 = (*Pai)->cent->info1;
+//                     (*Pai)->cent->info1.palavraPortugues = NULL;
+//                     (*Pai)->cent->info1.palavraIngles = NULL;
+//                     (*Pai)->cent->nInfos = 1;
+//                     (*Raiz)->nInfos = 2;
+//                 }
+//             } else if (*Raiz == (*Pai)->cent) {
+//                 // Fusão ou redistribuição entre o nó pai e o filho central
+//                 if ((*Pai)->esq->nInfos == 2) {
+//                     (*Raiz)->info1 = (*Pai)->info1;
+//                     (*Pai)->info1 = (*Pai)->esq->info2;
+//                     (*Pai)->esq->info2.palavraPortugues = NULL;
+//                     (*Pai)->esq->info2.palavraIngles = NULL;
+//                     (*Pai)->esq->nInfos = 1;
+//                 } else {
+//                     (*Raiz)->info1 = (*Pai)->info2;
+//                     (*Pai)->info2.palavraPortugues = NULL;
+//                     (*Pai)->info2.palavraIngles = NULL;
+//                     (*Pai)->nInfos = 1;
+//                     free(*Raiz);
+//                     *Raiz = (*Pai)->esq;
+//                     *Pai = (*Pai)->esq;
+                    
+//                 }
+//             }
+//         }
+//     }
+// }
+// int remover23Recursivo(Portugues23 **Raiz, char *valor) {
+//     int removeu = 0;
+//     Portugues23 *no = NULL, *no1, *paiNo = NULL;
+    
+//     if (*Raiz != NULL) {
+//         // Caso base: se o nó for folha
+//         if (ehFolha(*Raiz)) {
+//             if ((*Raiz)->nInfos == 2) {
+//                 if (strcmp(valor, (*Raiz)->info2.palavraPortugues) == 0) {
+//                     (*Raiz)->info2.palavraIngles = NULL;
+//                     (*Raiz)->info2.palavraPortugues = NULL;
+//                     (*Raiz)->nInfos = 1;
+//                     removeu = 1;
+//                 } else if (strcmp(valor, (*Raiz)->info1.palavraPortugues) == 0) {
+//                     (*Raiz)->info1 = (*Raiz)->info2;
+//                     (*Raiz)->info2.palavraIngles = NULL;
+//                     (*Raiz)->info2.palavraPortugues = NULL;
+//                     (*Raiz)->nInfos = 1;
+//                     removeu = 1;
+//                 }
+//             } else if (strcmp(valor, (*Raiz)->info1.palavraPortugues) == 0) {
+//                 // Remoção do único nó em uma folha
+//                 free(*Raiz);
+//                 *Raiz = NULL;
+//                 removeu = 1;
+//             }
+//         } else { // Caso recursivo: se o nó não for folha
+//             if (strcmp(valor, (*Raiz)->info1.palavraPortugues) < 0) {
+//                 removeu = remover23Recursivo(&(*Raiz)->esq, valor);
+//             } else if (strcmp(valor, (*Raiz)->info1.palavraPortugues) == 0) {
+//                 // Caso onde a chave está no primeiro valor do nó
+//                 paiNo = *Raiz;
+//                 menorInfoDir((*Raiz)->cent, &no, &paiNo);
+//                 (*Raiz)->info1 = no->info1;
+//                 remover23Recursivo(&(*Raiz)->cent, (*Raiz)->info1.palavraPortugues);
+//                 removeu = 1;
+//             } else if ((*Raiz)->nInfos == 1 || strcmp(valor, (*Raiz)->info2.palavraPortugues) < 0) {
+//                 removeu = remover23Recursivo(&(*Raiz)->cent, valor);
+//             } else if (strcmp(valor, (*Raiz)->info2.palavraPortugues) == 0) {
+//                 // Caso onde a chave está no segundo valor do nó
+//                 paiNo = *Raiz;
+//                 menorInfoDir((*Raiz)->dir, &no, &paiNo);
+//                 (*Raiz)->info2 = no->info1;
+//                 remover23Recursivo(&(*Raiz)->dir, (*Raiz)->info2.palavraPortugues);
+//                 removeu = 1;
+//             } else {
+//                 removeu = remover23Recursivo(&(*Raiz)->dir, valor);
+//             }
+//         }
+//     }
+//     return removeu;
+// }
+
+// int remover23(Portugues23 **Pai, Portugues23 **Raiz, char *valor) {
+//     int removeu = 0;
+
+//     // Chama a remoção recursiva
+//     removeu = remover23Recursivo(Raiz, valor);
+
+//     // Após a remoção, balanceia a árvore para garantir que a árvore 2-3 está correta
+//     if (removeu) {
+//         balancear23(Pai, Raiz);
+//     }
+
+//     return removeu;
+// }
 
 
 int remover23(Portugues23 **Pai, Portugues23 **Raiz, char *valor)
@@ -535,7 +661,7 @@ int remover23(Portugues23 **Pai, Portugues23 **Raiz, char *valor)
             else if (strcmp(valor, (*Raiz)->info2.palavraPortugues) == 0)
             {
                 paiNo = *Pai;
-                menorInfoDir((*Pai)->dir, &no, &paiNo);
+                menorInfoDir((*Raiz)->dir, &no, &paiNo);
                 (*Raiz)->info2 = no->info1;
                 remover23(Raiz, &(*Raiz)->dir, (*Raiz)->info2.palavraPortugues);
                 removeu = 1;
