@@ -27,10 +27,11 @@ void imprimirTraducoes(Inglesbin *node, int unidade, const char *palavraPortugu√
 
 void menorInfoDir(Portugues23 *Raiz, Portugues23 **no, Portugues23 **paiNo);
 void maiorInfoEsq(Portugues23 *Raiz, Portugues23 **no, Portugues23 **paiNo);
-int remover23(Portugues23 **Pai, Portugues23 **Raiz, char *valor);
-int remover23Recursivo(Portugues23 **Raiz, char *valor);
-void balancear23(Portugues23 **Pai, Portugues23 **Raiz);
 
+int remover23(Portugues23 **Pai, Portugues23 **Raiz, char *valor, Portugues23 **Origem);
+
+int ehInfo1(Portugues23 *raiz, char *valor);
+int ehInfo2(Portugues23 *raiz, char *valor);
 
 
 #endif

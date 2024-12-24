@@ -144,7 +144,7 @@ int main()
             scanf("%s", palavra);
             printf("Insira a unidade da palavra que deseja remover: ");
             scanf("%d", &unidade);
-            BuscarPalavraIngles(&raiz, palavra, unidade, &pai);
+            BuscarPalavraIngles(&raiz, palavra, unidade, &pai, &raiz);
             printf("\n--------------------------------------------------------------- \n");
             break;
         case 4:
@@ -152,7 +152,7 @@ int main()
             printf("Insira a palavra em portugues que deseja remover: ");
             setbuf(stdin, NULL);
             scanf("%[^\n]", palavra);
-            removido = remover23(&pai, &raiz, palavra);
+            removido = remover23(&pai, &raiz, palavra, &raiz);
             if (removido)
                 printf("A palavra %s foi removida com sucesso!\n\n", palavra);
             printf("\n--------------------------------------------------------------- \n");

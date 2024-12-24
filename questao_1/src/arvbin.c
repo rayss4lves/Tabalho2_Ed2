@@ -133,12 +133,12 @@ int removerPalavraIngles(Inglesbin **raiz, char *palavra)
     return existe;
 }
 
-void BuscarPalavraIngles(Portugues23 **raiz, char *palavraIngles, int unidade, Portugues23 **pai)
+void BuscarPalavraIngles(Portugues23 **raiz, char *palavraIngles, int unidade, Portugues23 **pai, Portugues23 **origem)
 {
     int removeu;
     if (*raiz != NULL)
     {
-        BuscarPalavraIngles(&(*raiz)->esq, palavraIngles, unidade, pai);
+        BuscarPalavraIngles(&(*raiz)->esq, palavraIngles, unidade, pai, origem);
 
         if ((*raiz)->info1.palavraIngles != NULL && (*raiz)->info1.palavraIngles->unidade == unidade)
         {
@@ -147,12 +147,12 @@ void BuscarPalavraIngles(Portugues23 **raiz, char *palavraIngles, int unidade, P
                 printf("A palavra %s foi removida com sucesso!\n\n", palavraIngles);
             if ((*raiz)->info1.palavraIngles == NULL)
             {
-                removeu = remover23(pai, raiz, (*raiz)->info1.palavraPortugues);
+                removeu = remover23(pai, raiz, (*raiz)->info1.palavraPortugues, origem);
                 if(removeu) printf("Removido\n\n");
             }
         }
 
-        BuscarPalavraIngles(&(*raiz)->cent, palavraIngles, unidade, raiz);
+        BuscarPalavraIngles(&(*raiz)->cent, palavraIngles, unidade, raiz, origem);
 
         if ((*raiz)->nInfos == 2 && (*raiz)->info2.palavraIngles != NULL && (*raiz)->info2.palavraIngles->unidade == unidade)
         {
@@ -161,13 +161,13 @@ void BuscarPalavraIngles(Portugues23 **raiz, char *palavraIngles, int unidade, P
                 printf("A palavra %s foi removida com sucesso!\n\n", palavraIngles);
             if ((*raiz)->info2.palavraIngles == NULL)
             {
-                removeu = remover23(pai, raiz, (*raiz)->info2.palavraPortugues);
+                removeu = remover23(pai, raiz, (*raiz)->info2.palavraPortugues, origem);
                 if(removeu) printf("Removido\n\n");
             }
         }
         if ((*raiz)->nInfos == 2 && (*raiz)->info2.palavraIngles != NULL)
         {
-            BuscarPalavraIngles(&(*raiz)->dir, palavraIngles, unidade, raiz);
+            BuscarPalavraIngles(&(*raiz)->dir, palavraIngles, unidade, raiz, origem);
         }
     }
 }
