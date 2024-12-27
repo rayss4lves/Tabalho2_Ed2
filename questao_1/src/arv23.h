@@ -25,11 +25,16 @@ void imprimirPalavrasUnidade(Portugues23 *arvore, int unidade);
 void exibir_traducao_Portugues(Portugues23 **raiz, const char *palavraPortugues);
 void imprimirTraducoes(Inglesbin *node, int unidade, const char *palavraPortuguês);
 
-void menorInfoDir(Portugues23 *Raiz, Portugues23 **no, Portugues23 **paiNo);
-void maiorInfoEsq(Portugues23 *Raiz, Portugues23 **no, Portugues23 **paiNo);
+void no23_desalocar(Portugues23 **no);
+int arvore23_rebalancear(Portugues23 **raiz, char *info, Portugues23 **maior);
+Portugues23 *no23_juntar(Portugues23 *filho1, Info info, Portugues23 *maior, Portugues23 **raiz);
+int possivel_remover(Portugues23 *raiz);
+int arvore23_remover2(Portugues23 **raiz, char *info, Portugues23 *pai, Portugues23 **origem, Portugues23 **maior);
+int arvore23_remover1(Portugues23 **raiz, char *info, Portugues23 *pai, Portugues23 **origem, Portugues23 **maior);
+int arvore23_remover_nao_folha2(Portugues23 **origem, Portugues23* raiz, Info *info, Portugues23 *filho1, Portugues23 *filho2, Portugues23 **maior);
+int arvore23_remover_nao_folha1(Portugues23 **origem, Portugues23* raiz, Info *info, Portugues23 *filho1, Portugues23 *filho2, Portugues23 **maior);
 
-int remover23(Portugues23 **Pai, Portugues23 **Raiz, char *valor, Portugues23 **Origem);
-
+int arvore_2_3_remover(Portugues23 **raiz, char *info);
 int ehInfo1(Portugues23 *raiz, char *valor);
 int ehInfo2(Portugues23 *raiz, char *valor);
 
