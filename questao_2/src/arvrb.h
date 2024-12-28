@@ -1,10 +1,11 @@
 #ifndef ARVRB_H
 #define ARVRB_H
 #include "structs.h"
+#include "lista_encadeada.h"
 
-int inserirPalavraPortugues(PortuguesRB **arvore, char *palavraPortugues, char *palavraIngles, int unidade);
+int inserirPalavraPortugues(PortuguesRB **arvore, char *palavraPortugues, char *palavraIngles, char *unidade);
 
-Info criaInfo(char *palavra, char *palavraIngles, int unidade);
+Info criaInfo(char *palavra, char *palavraIngles, char *unidade);
 
 PortuguesRB *criaNo(Info *informacao);
 int cor(PortuguesRB *raiz);
@@ -35,11 +36,11 @@ int removerArvRB(PortuguesRB **raiz, char *valor);
 
 PortuguesRB *BuscarPalavra(PortuguesRB **arvore, char *palavraPortugues);
 
-void imprimirPalavrasUnidade(PortuguesRB *arvore, int unidade);
+void imprimirPalavrasUnidade(PortuguesRB *arvore, char *unidade);
 
 void exibir_traducao_Portugues(PortuguesRB **raiz, char *palavraPortugues);
 
-void imprimirTraducoes(Inglesbin *node, int unidade, char *palavraPortuguês);
+void imprimirTraducoes(Inglesbin *node, char *unidade, char *palavraPortuguês);
 
 void exibirArvore(PortuguesRB *raiz);
 

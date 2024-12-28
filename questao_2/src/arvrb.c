@@ -6,32 +6,31 @@
 #define RED 1
 #define BLACK 0
 
-int inserirPalavraPortugues(PortuguesRB **arvore, char *palavraPortugues, char *palavraIngles, int unidade) {
+int inserirPalavraPortugues(PortuguesRB **arvore, char *palavraPortugues, char *palavraIngles, char *unidade)
+{
     int inseriu = 0;
 
-    // Busca a palavra na árvore
-    PortuguesRB *noExistente = NULL;
-    noExistente =  BuscarPalavra(arvore, palavraPortugues);
+    Info novoInfo = criaInfo(palavraPortugues, palavraIngles, unidade);
+    inseriu = inserirArvRB(arvore, &novoInfo);
 
-    if (noExistente != NULL) {
-        adicionarTraducaoEmIngles(noExistente, palavraIngles, unidade);
-        inseriu = 1;
-    } else {
-        Info novoInfo = criaInfo(palavraPortugues, palavraIngles, unidade);
-        inserirArvRB(arvore, &novoInfo);
-        inseriu = 1;
-    }
     return inseriu;
 }
-Info criaInfo(char *palavra, char *palavraIngles, int unidade)
+Info criaInfo(char *palavra, char *palavraIngles, char *unidade)
 {
     Info info;
 
+    // Aloca e copia a palavra em português
     info.palavraPortugues = malloc(strlen(palavra) + 1);
     strcpy(info.palavraPortugues, palavra);
 
-    info.palavraIngles = NULL;
-    info.palavraIngles = insertpalavraIngles(info.palavraIngles, palavraIngles, unidade);
+    // Estrutura de palavraIngles
+    info.palavraIngles = malloc(sizeof(Inglesbin));
+    info.palavraIngles->palavraIngles = malloc(strlen(palavraIngles) + 1);
+    strcpy(info.palavraIngles->palavraIngles, palavraIngles);
+
+    info.palavraIngles->unidades = NULL;
+    inserir_lista_encadeada_unidade(&(info.palavraIngles->unidades), unidade);
+
     return info;
 }
 
@@ -101,23 +100,19 @@ void balancear(PortuguesRB **raiz)
 int inserirRB(PortuguesRB **raiz, Info *informacao)
 {
 
-    int inseriu = 1;
-    if (*raiz == NULL)
-    {
+    int inseriu = 0;
+    if (*raiz == NULL){
         *raiz = criaNo(informacao);
+        inseriu = 1;
     }
+    else if (strcmp(informacao->palavraPortugues, (*raiz)->info.palavraPortugues) < 0)
+        inseriu = inserirRB(&(*raiz)->esq, informacao);
+    else if (strcmp(informacao->palavraPortugues, (*raiz)->info.palavraPortugues) > 0)
+        inseriu = inserirRB(&(*raiz)->dir, informacao);
     else
-    {
-        if (strcmp(informacao->palavraPortugues, (*raiz)->info.palavraPortugues) < 0)
-        {
-            inseriu = inserirRB(&(*raiz)->esq, informacao);
-        }
-        else
-        {
-            inseriu = inserirRB(&(*raiz)->dir, informacao);
-        }
-        balancear(&(*raiz));
-    }
+        inseriu = insertpalavraIngles(&(*raiz)->info.palavraIngles, informacao);
+
+    balancear(&(*raiz));
 
     return inseriu;
 }
@@ -208,9 +203,11 @@ int removerNoArvVP(PortuguesRB **raiz, char *valor)
                 *raiz = NULL;
 
                 existe = 1;
-            }else{
+            }
+            else
+            {
                 if ((*raiz)->dir && cor((*raiz)->dir) == BLACK && cor((*raiz)->dir->esq) == BLACK)
-                moveDirVermelha(raiz);
+                    moveDirVermelha(raiz);
 
                 if (strcmp(valor, (*raiz)->info.palavraPortugues) == 0)
                 {
@@ -242,7 +239,6 @@ int removerArvRB(PortuguesRB **raiz, char *valor)
     return removeu;
 }
 
-
 PortuguesRB *BuscarPalavra(PortuguesRB **arvore, char *palavraPortugues)
 {
     PortuguesRB *atual = NULL;
@@ -265,8 +261,7 @@ PortuguesRB *BuscarPalavra(PortuguesRB **arvore, char *palavraPortugues)
     return atual;
 }
 
-
-void imprimirPalavrasUnidade(PortuguesRB *arvore, int unidade)
+void imprimirPalavrasUnidade(PortuguesRB *arvore, char *unidade)
 {
     if (arvore)
     {
@@ -276,17 +271,17 @@ void imprimirPalavrasUnidade(PortuguesRB *arvore, int unidade)
     }
 }
 
-void imprimirTraducoes(Inglesbin *node, int unidade, char *palavraPortuguês)
+void imprimirTraducoes(Inglesbin *node, char *unidade, char *palavraPortugues)
 {
     if (node)
     {
-        if (node->unidade == unidade)
+        if (buscar_lista_encadeada_unidade(node->unidades, unidade))
         {
-            printf("Palavra em Português: %s\n", palavraPortuguês);
-            printf("Palavra em inglês: %s\n", node->palavraIngles);
+            printf("Palavra em Portugues: %s\n", palavraPortugues);
+            printf("Palavra em ingles: %s\n", node->palavraIngles);
         }
-        imprimirTraducoes(node->esq, unidade, palavraPortuguês);
-        imprimirTraducoes(node->dir, unidade, palavraPortuguês);
+        imprimirTraducoes(node->esq, unidade, palavraPortugues);
+        imprimirTraducoes(node->dir, unidade, palavraPortugues);
     }
 }
 
@@ -298,13 +293,12 @@ void exibir_traducao_Portugues(PortuguesRB **raiz, char *palavraPortugues)
         resultado = BuscarPalavra(raiz, palavraPortugues);
         if (resultado)
         {
-            printf("Traduções em inglês para a palavra '%s':\n", palavraPortugues);
+            printf("Traduções em ingles para a palavra '%s':\n", palavraPortugues);
 
             if (strcmp(palavraPortugues, resultado->info.palavraPortugues) == 0)
             {
                 printBinaryTree(resultado->info.palavraIngles);
             }
-
         }
     }
 }
@@ -315,7 +309,7 @@ void exibirArvore(PortuguesRB *raiz)
     {
         exibirArvore(raiz->esq);
         printf("Cor - %d\n", raiz->cor);
-        printf("Palavra em Português - %s\n", raiz->info.palavraPortugues);
+        printf("Palavra em Portugues - %s\n", raiz->info.palavraPortugues);
         printBinaryTree(raiz->info.palavraIngles);
         printf("\n");
         exibirArvore(raiz->dir);

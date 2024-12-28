@@ -19,23 +19,21 @@ Inglesbin *createNode(const char *palavraIngles, char *unidade)
 }
 
 // Função para inserir uma palavra em inglês na arvore binaria de busca
-int insertpalavraIngles(Inglesbin **root, const char *palavraIngles, char *unidade)
+int insertpalavraIngles(Inglesbin **root, Info *informacao)
 {
     int result = 0;
     if ((*root) == NULL)
     {
-        Inglesbin *new = createNode(palavraIngles, unidade);
+        Inglesbin *new = createNode(informacao->palavraIngles->palavraIngles, informacao->palavraIngles->unidades->nome_unidade);
         *root = new;
     }
+    else if (strcmp(informacao->palavraIngles->palavraIngles, (*root)->palavraIngles) < 0)
+        insertpalavraIngles(&(*root)->esq, informacao);
+    else if (strcmp(informacao->palavraIngles->palavraIngles, (*root)->palavraIngles) > 0)
+        insertpalavraIngles(&(*root)->dir, informacao);
     else
-    {
-        if (strcmp(palavraIngles, (*root)->palavraIngles) < 0)
-            insertpalavraIngles(&(*root)->esq, palavraIngles, unidade);
-        else if (strcmp(palavraIngles, (*root)->palavraIngles) > 0)
-            insertpalavraIngles(&(*root)->dir, palavraIngles, unidade);
-        else
-            inserir_lista_encadeada_unidade(&((*root)->unidades), unidade);
-    }
+        inserir_lista_encadeada_unidade(&((*root)->unidades), informacao->palavraIngles->unidades->nome_unidade);
+
     return result;
 }
 
@@ -129,8 +127,6 @@ int removerPalavraIngles(Inglesbin **raiz, const char *palavra)
 
     return existe;
 }
-
-
 
 void free_arvore_binaria(Inglesbin *raiz)
 {

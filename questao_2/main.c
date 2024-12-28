@@ -4,6 +4,7 @@
 #include <string.h>
 #include "src/arvbin.h"
 #include "src/arvrb.h"
+#include "src/remocao.h"
 
 void carregarArquivo(const char *nomeArquivo, PortuguesRB **arvore)
 {
@@ -12,16 +13,15 @@ void carregarArquivo(const char *nomeArquivo, PortuguesRB **arvore)
     {
         char linha[256];
 
-        int unidadeAtual = 0;
+        char unidadeAtual[50];
 
         while (fgets(linha, sizeof(linha), arquivo))
         {
-            linha[strcspn(linha, "\n")] = 0;
 
             if (linha[0] == '%')
             {
                 // Atualiza a unidade corretamente
-                sscanf(linha, "%% Unidade %d", &unidadeAtual);
+                sscanf(linha, "%% Unidade %[^\n]", unidadeAtual);
             }
             else
             {
@@ -34,7 +34,8 @@ void carregarArquivo(const char *nomeArquivo, PortuguesRB **arvore)
                     while (*traducaoPortugues == ' ')
                         traducaoPortugues++;
 
-                    inserirPalavraPortugues(arvore, traducaoPortugues, palavraIngles, unidadeAtual);
+                    if(!inserirPalavraPortugues(arvore, traducaoPortugues, palavraIngles, unidadeAtual))
+                        perror("Erro ao inserir na arvore vermelho preto");
 
                     traducaoPortugues = strtok(NULL, ",;");
                 }
@@ -69,7 +70,7 @@ int main()
 
     int op, res;
     char palavra[50];
-    int unidade;
+    char unidade[50];
     int removido;
     do
     {
@@ -81,7 +82,8 @@ int main()
         case 1:
             printf("\n--------------------------------------------------------------- \n");
             printf("Insira a unidade que deseja imprimir as palavras: ");
-            scanf("%d", &unidade);
+            setbuf(stdin, NULL);
+            scanf("%[^\n]", unidade);
             imprimirPalavrasUnidade(raiz, unidade);
             printf("\n--------------------------------------------------------------- \n");
             break;
@@ -95,10 +97,12 @@ int main()
         case 3:
             printf("\n--------------------------------------------------------------- \n");
             printf("Insira a palavra em ingles que deseja remover: ");
-            scanf("%s", palavra);
+            setbuf(stdin, NULL);
+            scanf("%[^\n]", palavra);
             printf("Insira a unidade da palavra que deseja remover: ");
-            scanf("%d", &unidade);
-            BuscarPalavraIngles(&raiz, palavra, unidade);
+            setbuf(stdin, NULL);
+            scanf("%[^\n]", unidade);
+            Remove_palavra_ingles_unidade(&raiz, palavra, unidade);
             printf("\n--------------------------------------------------------------- \n");
             break;
         case 4:
@@ -106,7 +110,10 @@ int main()
             printf("Insira a palavra em portugues que deseja remover: ");
             setbuf(stdin, NULL);
             scanf("%[^\n]", palavra);
-            removido = removerArvRB(&raiz, palavra);
+            printf("Insira a unidade da palavra que deseja remover: ");
+            setbuf(stdin, NULL);
+            scanf("%[^\n]", unidade);
+            removido = Remove_palavra_portugues_unidade(&raiz, palavra, unidade);
             if (removido)
                 printf("A palavra %s foi removida com sucesso!\n\n", palavra);
             printf("\n--------------------------------------------------------------- \n");

@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "arv23.h"
-#include "lista_encadeada.h"
 
 
 void no23_desalocar(Portugues23 **no)
@@ -24,17 +23,24 @@ int inserirPalavraPortugues(Portugues23 **arvore, char *palavraPortugues, char *
     return inseriu;
 }
 
-Info criaInfo(char *palavra, char *palavraIngles, char *unidade)
-{
+Info criaInfo(char *palavra, char *palavraIngles, char *unidade) {
     Info info;
 
+    // Aloca e copia a palavra em português
     info.palavraPortugues = malloc(strlen(palavra) + 1);
     strcpy(info.palavraPortugues, palavra);
 
-    info.palavraIngles = NULL; // Inicializa a árvore binária vazia
-    insertpalavraIngles(&info.palavraIngles, palavraIngles, unidade);
+    // Estrutura de palavraIngles
+    info.palavraIngles = malloc(sizeof(Inglesbin));  
+    info.palavraIngles->palavraIngles = malloc(strlen(palavraIngles) + 1);
+    strcpy(info.palavraIngles->palavraIngles, palavraIngles);
+    
+    info.palavraIngles->unidades = NULL;
+    inserir_lista_encadeada_unidade(&(info.palavraIngles->unidades), unidade);
+
     return info;
 }
+
 
 Portugues23 *criaNo(const Info *informacao, Portugues23 *filhoesq, Portugues23 *filhocen)
 {
@@ -134,9 +140,9 @@ Portugues23 *inserirArv23(Portugues23 **no, Info *informacao, Info *promove, Por
         *no = criaNo(informacao, NULL, NULL);
     }
     if (strcmp(informacao->palavraPortugues, (*no)->info1.palavraPortugues) == 0)
-        insertpalavraIngles(&(*no)->info1.palavraIngles, informacao->palavraIngles->palavraIngles, informacao->palavraIngles->unidades->nome_unidade);
+        insertpalavraIngles(&(*no)->info1.palavraIngles, informacao);
     else if ((*no)->nInfos == 2 && strcmp(informacao->palavraPortugues, (*no)->info2.palavraPortugues) == 0)
-        insertpalavraIngles(&(*no)->info2.palavraIngles, informacao->palavraIngles->palavraIngles, informacao->palavraIngles->unidades->nome_unidade);
+        insertpalavraIngles(&(*no)->info2.palavraIngles, informacao);
     else
     {
         if (ehFolha(*no))

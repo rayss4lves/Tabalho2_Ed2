@@ -3,11 +3,11 @@
 
 #include "structs.h"
 #include "arvbin.h"
+#include "lista_encadeada.h"
 
 
 Portugues23 *BuscarPalavra(Portugues23 **no, const char *palavraPortugues);
 int inserirPalavraPortugues(Portugues23 **arvore, char *palavraPortugues, char *palavraIngles, char *unidade);
-void adicionarTraducaoEmIngles(Info *info, const char *palavraIng, char *unidade);
 
 Info criaInfo(char *palavra, char *palavraIngles, char *unidade);
 Portugues23 *criaNo(const Info *informacao, Portugues23 *filhoesq, Portugues23 *filhocen);

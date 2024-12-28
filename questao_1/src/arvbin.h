@@ -2,14 +2,10 @@
 #define ARVBIN_H
 
 #include "structs.h"
-#include "arv23.h"
 
 Inglesbin* createNode(const char* word, char *unidade);
-
 // Função para inserir uma palavra em inglês na arvore binaria de busca
-int insertpalavraIngles(Inglesbin **root, const char *palavraIngles, char *unidade);
-
-
+int insertpalavraIngles(Inglesbin **root, Info *informacao);
 
 int ehFolhas(Inglesbin *raiz);
 
