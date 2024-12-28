@@ -30,9 +30,9 @@ void show_lista_encadeada_unidade(const ListaEncadeadaUnidade *lista)
   if (lista)
   {
     if (lista->prox)
-      printf("%s, ", lista->nome_unidade);
+      printf("Unidade %s, ", lista->nome_unidade);
     else
-      printf("%s", lista->nome_unidade);
+      printf("Unidade %s", lista->nome_unidade);
     show_lista_encadeada_unidade(lista->prox);
   }
   else

@@ -63,12 +63,12 @@ int main_teste(void)
         "comida", "água", "sol", "lua", "estrela"
     };
 
-    char *portugues_decrescente[] = {
-        "trem", "estrada", "sol", "rio", "praia",
-        "oceano", "montanha", "mesa", "lua", "livro",
-        "janela", "gato", "filme", "escola", "estrela",
-        "computador", "cidade", "cachorro", "carro", "caneta",
-        "cadeira", "avião", "amigo", "água"
+    char *ingles_crescente[] = {
+    "friend", "plane", "dog", "chair", "pen", "car", "house", 
+    "city", "food", "computer", "school", "road", "star", "movie", 
+    "cat", "window", "game", "book", "moon", "table", "mountain", 
+    "music", "ocean", "beach", "river", "sun", "phone", "train", 
+    "water", "tree"
     };
     char *portugues_crescente[] = {
         "água", "amigo", "avião", "cadeira", "caneta",
@@ -77,6 +77,15 @@ int main_teste(void)
         "lua", "mesa", "montanha", "oceano", "praia",
         "rio", "sol", "trem", "estrada"
     };
+
+    char *portugues_decrescente[] = {
+        "trem", "estrada", "sol", "rio", "praia",
+        "oceano", "montanha", "mesa", "lua", "livro",
+        "janela", "gato", "filme", "escola", "estrela",
+        "computador", "cidade", "cachorro", "carro", "caneta",
+        "cadeira", "avião", "amigo", "água"
+    };
+    
 
 
 

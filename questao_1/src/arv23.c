@@ -4,57 +4,11 @@
 #include "arv23.h"
 #include "lista_encadeada.h"
 
-Portugues23 *BuscarPalavra(Portugues23 **no, const char *palavraPortugues)
-{
-    Portugues23 *inserida = NULL; // Inicializa o retorno como NULL
-
-    if (no != NULL && *no != NULL)
-    {
-        if (strcmp(palavraPortugues, (*no)->info1.palavraPortugues) == 0)
-        {
-            inserida = (*no); // Palavra encontrada, retorna o nó
-        }
-        else if ((*no)->nInfos == 2 && strcmp(palavraPortugues, (*no)->info2.palavraPortugues) == 0)
-        {
-            inserida = (*no);
-        }
-        else
-        {
-            // Continua a busca nos filhos
-            if (strcmp(palavraPortugues, (*no)->info1.palavraPortugues) < 0)
-            {
-                inserida = BuscarPalavra(&(*no)->esq, palavraPortugues);
-            }
-            else if ((*no)->nInfos == 1 || strcmp(palavraPortugues, (*no)->info2.palavraPortugues) < 0)
-            {
-                inserida = BuscarPalavra(&(*no)->cent, palavraPortugues);
-            }
-            else
-            {
-                inserida = BuscarPalavra(&(*no)->dir, palavraPortugues);
-            }
-        }
-    }
-
-    return inserida;
-}
 
 void no23_desalocar(Portugues23 **no)
 {
     free(*no);
     *no = NULL;
-}
-
-void adicionarTraducao(Portugues23 *no, const char *palavraPortugues, const char *palavraIngles, char *unidade)
-{
-    if (strcmp(palavraPortugues, (no)->info1.palavraPortugues) == 0)
-    {
-        adicionarTraducaoEmIngles(&(no)->info1, palavraIngles, unidade);
-    }
-    else if (no->nInfos == 2 && strcmp(palavraPortugues, no->info2.palavraPortugues) == 0)
-    {
-        adicionarTraducaoEmIngles(&(no)->info2, palavraIngles, unidade);
-    }
 }
 
 int inserirPalavraPortugues(Portugues23 **arvore, char *palavraPortugues, char *palavraIngles, char *unidade)
@@ -308,6 +262,41 @@ void imprimirTraducoes(Inglesbin *node, char *unidade, const char *palavraPortug
         imprimirTraducoes(node->esq, unidade, palavraPortugues);
         imprimirTraducoes(node->dir, unidade, palavraPortugues);
     }
+}
+
+Portugues23 *BuscarPalavra(Portugues23 **no, const char *palavraPortugues)
+{
+    Portugues23 *inserida = NULL; // Inicializa o retorno como NULL
+
+    if (no != NULL && *no != NULL)
+    {
+        if (strcmp(palavraPortugues, (*no)->info1.palavraPortugues) == 0)
+        {
+            inserida = (*no); // Palavra encontrada, retorna o nó
+        }
+        else if ((*no)->nInfos == 2 && strcmp(palavraPortugues, (*no)->info2.palavraPortugues) == 0)
+        {
+            inserida = (*no);
+        }
+        else
+        {
+            // Continua a busca nos filhos
+            if (strcmp(palavraPortugues, (*no)->info1.palavraPortugues) < 0)
+            {
+                inserida = BuscarPalavra(&(*no)->esq, palavraPortugues);
+            }
+            else if ((*no)->nInfos == 1 || strcmp(palavraPortugues, (*no)->info2.palavraPortugues) < 0)
+            {
+                inserida = BuscarPalavra(&(*no)->cent, palavraPortugues);
+            }
+            else
+            {
+                inserida = BuscarPalavra(&(*no)->dir, palavraPortugues);
+            }
+        }
+    }
+
+    return inserida;
 }
 
 void exibir_traducao_Portugues(Portugues23 **Raiz, const char *palavraPortugues)
@@ -843,27 +832,27 @@ int arvore_2_3_remover(Portugues23 **raiz, char *info)
 }
 /*#########################################FREE#######################################################*/
 
-// void freeInfo2_3(Info *info)
-// {
-//     free_arvore_binaria(info->palavraIngles);
-//     free(info->palavraPortugues);
-// }
+void freeInfo2_3(Info *info)
+{
+    free_arvore_binaria(info->palavraIngles);
+    free(info->palavraPortugues);
+}
 
-// void freeTree(Portugues23 *no)
-// {
-//     if (no != NULL)
-//     {
-//         freeTree(no->esq);
-//         freeInfo2_3(&no->info1);
-//         freeTree(no->cent);
-//         if (no->nInfos == 2)
-//         {
-//             freeInfo2_3(&no->info2);
-//             freeTree(no->dir);
-//         }
-//         free(no);
-//     }
-// }
+void freeTree(Portugues23 *no)
+{
+    if (no != NULL)
+    {
+        freeTree(no->esq);
+        freeInfo2_3(&no->info1);
+        freeTree(no->cent);
+        if (no->nInfos == 2)
+        {
+            freeInfo2_3(&no->info2);
+            freeTree(no->dir);
+        }
+        free(no);
+    }
+}
 
 /*-----------------------------------------------------------------------------------------------------*/
 

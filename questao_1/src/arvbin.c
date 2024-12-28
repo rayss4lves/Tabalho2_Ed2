@@ -39,11 +39,6 @@ int insertpalavraIngles(Inglesbin **root, const char *palavraIngles, char *unida
     return result;
 }
 
-void adicionarTraducaoEmIngles(Info *info, const char *palavraIng, char *unidade)
-{
-    insertpalavraIngles(&(info->palavraIngles), palavraIng, unidade);
-}
-
 void printBinaryTree(Inglesbin *root)
 {
     if (root != NULL)
@@ -93,7 +88,7 @@ Inglesbin *menorFilho(Inglesbin *raiz)
     return aux;
 }
 
-int removerPalavraIngles(Inglesbin **raiz, char *palavra)
+int removerPalavraIngles(Inglesbin **raiz, const char *palavra)
 {
     Inglesbin *endFilho;
     int existe = 0;
@@ -103,16 +98,14 @@ int removerPalavraIngles(Inglesbin **raiz, char *palavra)
         if (strcmp(palavra, (*raiz)->palavraIngles) == 0)
         {
             existe = 1;
-            printf("removendo palavra: %s\n", palavra);
-            Inglesbin *aux = *raiz;
             if (ehFolhas(*raiz))
             {
-                free(aux);
+                free_arvore_binaria(*raiz);
                 *raiz = NULL;
             }
             else if ((endFilho = soUmFilho(*raiz)) != NULL)
             {
-                free(aux);
+                free_arvore_binaria(*raiz);
                 *raiz = endFilho;
             }
             else
@@ -137,72 +130,7 @@ int removerPalavraIngles(Inglesbin **raiz, char *palavra)
     return existe;
 }
 
-void BuscarPalavraIngles(Portugues23 **raiz, char *palavraIngles, char *unidade)
-{
-    int removeu;
-    if (*raiz != NULL)
-    {
-        BuscarPalavraIngles(&(*raiz)->esq, palavraIngles, unidade);
 
-        if ((*raiz)->info1.palavraIngles != NULL && strcmp((*raiz)->info1.palavraIngles->palavraIngles, palavraIngles) == 0)
-        {
-            int achou = contar_lista_encadeada_unidade((*raiz)->info1.palavraIngles->unidades);
-            // Verifica se há apenas uma unidade para essa palavra inglesa
-            if ( achou > 1)
-            {
-                removeu = remover_lista_encadeada_unidade(&((*raiz)->info1.palavraIngles->unidades), unidade);
-                if (removeu)
-                    printf("Unidade %s removida para a palavra %s\n\n", unidade, palavraIngles);
-                
-            }
-            else
-            {
-                // Se ainda houver mais unidades para a palavra inglesa, só remove a unidade
-                printf("Entrou aqui!\n");
-                removeu = removerPalavraIngles(&(*raiz)->info1.palavraIngles, palavraIngles);
-                if (removeu)
-                    printf("A palavra %s foi removida com sucesso!\n\n", palavraIngles);
-
-                // Se a palavra inglesa foi removida e não há mais traduções, removemos a palavra do nó
-                if ((*raiz)->info1.palavraIngles == NULL)
-                {
-                    removeu = arvore_2_3_remover(raiz, (*raiz)->info1.palavraPortugues);
-                    if (removeu)
-                        printf("Palavra portuguesa removida\n\n");
-                }
-            }
-        }
-
-        BuscarPalavraIngles(&(*raiz)->cent, palavraIngles, unidade);
-
-        if ((*raiz)->nInfos == 2 && (*raiz)->info2.palavraIngles != NULL && strcmp((*raiz)->info2.palavraIngles->palavraIngles, palavraIngles) == 0)
-        {
-            if (contar_lista_encadeada_unidade((*raiz)->info2.palavraIngles->unidades) == 1)
-            {
-                removeu = removerPalavraIngles(&(*raiz)->info2.palavraIngles, palavraIngles);
-                if (removeu)
-                    printf("A palavra %s foi removida com sucesso!\n\n", palavraIngles);
-                if ((*raiz)->info2.palavraIngles == NULL)
-                {
-                    removeu = arvore_2_3_remover(raiz, (*raiz)->info2.palavraPortugues);
-                    if (removeu)
-                        printf("Removido\n\n");
-                }
-            }
-            else
-            {
-                removeu = remover_lista_encadeada_unidade(&((*raiz)->info2.palavraIngles->unidades), unidade);
-                if (removeu)
-                    printf("Removido\n\n");
-            }
-        }
-
-        if ((*raiz)->nInfos == 2 && (*raiz)->info2.palavraIngles != NULL)
-        {
-            BuscarPalavraIngles(&(*raiz)->dir, palavraIngles, unidade);
-        }
-    }
-}
 
 void free_arvore_binaria(Inglesbin *raiz)
 {

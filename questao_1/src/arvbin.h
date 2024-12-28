@@ -9,7 +9,7 @@ Inglesbin* createNode(const char* word, char *unidade);
 // Função para inserir uma palavra em inglês na arvore binaria de busca
 int insertpalavraIngles(Inglesbin **root, const char *palavraIngles, char *unidade);
 
-void adicionarTraducao(Portugues23 *no, const char *palavraPortugues, const char *palavraIngles, char *unidade);
+
 
 int ehFolhas(Inglesbin *raiz);
 
@@ -19,8 +19,7 @@ Inglesbin *menorFilho(Inglesbin *raiz);
 
 void printBinaryTree(Inglesbin *root);
 
-int removerPalavraIngles(Inglesbin **raiz, char *palavra);
-void BuscarPalavraIngles(Portugues23 **raiz, char *palavraIngles, char *unidade);
+int removerPalavraIngles(Inglesbin **raiz, const char *palavra);
 
 void free_arvore_binaria(Inglesbin *raiz);
 

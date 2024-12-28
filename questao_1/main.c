@@ -4,6 +4,7 @@
 #include "src/arv23.h"
 #include "src/arvbin.h"
 #include "test/maintest.h"
+#include "src/remocao.h"
 void imprimirArvore23(Portugues23 *raiz, int nivel) {
     if (raiz == NULL) return;
 
@@ -98,6 +99,7 @@ void menu()
     printf("3 - Informar uma palavra em inglês e a unidade, removê-la da árvore binária e da árvore 2-3.\n");
     printf("4 - Informar uma palavra em português e a unidade, removê-la da árvore binária e da árvore 2-3.\n");
     printf("5 - Imprimir a arvore completa\n");
+    printf("6 - Imprimir a arvore completa na ordem 2-3\n");
     printf("0 - Sair\n");
     printf("Escolha uma opção: \n");
     printf("\n------------------------------------------------------------------------------------------------- \n");
@@ -113,8 +115,7 @@ int main()
     int removido;
     carregarArquivo("../text.txt", &raiz);
     int op, res;
-    printf("Árvore 2-3:\n");
-    imprimirArvore23(raiz, 0);
+    
     do
     {
         menu();
@@ -142,7 +143,7 @@ int main()
             scanf("%s", palavra);
             printf("Insira a unidade da palavra que deseja remover: ");
             scanf("%s", unidade);
-            BuscarPalavraIngles(&raiz, palavra, unidade);
+            Remove_palavra_ingles_unidade(&raiz, palavra, unidade);
             printf("\n--------------------------------------------------------------- \n");
             break;
         case 4:
@@ -150,14 +151,23 @@ int main()
             printf("Insira a palavra em portugues que deseja remover: ");
             setbuf(stdin, NULL);
             scanf("%[^\n]", palavra);
-            removido = arvore_2_3_remover(&raiz, palavra);
+            printf("Insira a unidade da palavra que deseja remover: ");
+            scanf("%s", unidade);
+            removido = Remove_palavra_portugues_unidade(&raiz, palavra, unidade);
             if (removido)
                 printf("A palavra %s foi removida com sucesso!\n\n", palavra);
             printf("\n--------------------------------------------------------------- \n");
             break;
         case 5:
             printf("\n--------------------------------------------------------------- \n");
+            printf("\nArvore 2-3 em ordem:\n");
             exibir_tree23(raiz);
+            
+            printf("\n--------------------------------------------------------------- \n");
+            break;
+        case 6:
+            printf("\n--------------------------------------------------------------- \n");
+            printf("\nArvore 2-3:\n");
             imprimirArvore23(raiz, 0);
             printf("\n--------------------------------------------------------------- \n");
             break;
@@ -174,7 +184,7 @@ int main()
 
     
 
-    //freeTree(raiz);
+    freeTree(raiz);
 
     //main_teste();
 
