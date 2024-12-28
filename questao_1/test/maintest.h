@@ -6,6 +6,7 @@
 #include <string.h>
 #include "../src/arv23.h"
 #include "../src/arvbin.h"
+#include "../src/lista_encadeada.h"
 Portugues23 *buscaTestes(Portugues23 **tree, char *codigo, int n);
 int main_teste(void);
 

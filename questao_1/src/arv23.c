@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "arv23.h"
+#include "lista_encadeada.h"
 
 Portugues23 *BuscarPalavra(Portugues23 **no, const char *palavraPortugues)
 {
@@ -44,7 +45,7 @@ void no23_desalocar(Portugues23 **no)
     *no = NULL;
 }
 
-void adicionarTraducao(Portugues23 *no, const char *palavraPortugues, const char *palavraIngles, int unidade)
+void adicionarTraducao(Portugues23 *no, const char *palavraPortugues, const char *palavraIngles, char *unidade)
 {
     if (strcmp(palavraPortugues, (no)->info1.palavraPortugues) == 0)
     {
@@ -56,40 +57,28 @@ void adicionarTraducao(Portugues23 *no, const char *palavraPortugues, const char
     }
 }
 
-int inserirPalavraPortugues(Portugues23 **arvore, char *palavraPortugues, char *palavraIngles, int unidade)
+int inserirPalavraPortugues(Portugues23 **arvore, char *palavraPortugues, char *palavraIngles, char *unidade)
 {
     Info promove;
     Portugues23 *Pai = NULL;
     int inseriu;
 
-    // Busca a palavra na árvore
-    Portugues23 *noExistente = BuscarPalavra(arvore, palavraPortugues);
+    printf("Inserindo a palavra %s \n", palavraPortugues);
+    Info novoInfo = criaInfo(palavraPortugues, palavraIngles, unidade);
+    inserirArv23(arvore, &novoInfo, &promove, &Pai);
 
-    if (noExistente != NULL)
-    {
-        printf("A palavra %s já existe. Adicionando tradução...\n", palavraPortugues);
-        adicionarTraducao(noExistente, palavraPortugues, palavraIngles, unidade);
-        inseriu = 0;
-    }
-    else
-    {
-        printf("Inserindo a palavra %s \n", palavraPortugues);
-        Info novoInfo = criaInfo(palavraPortugues, palavraIngles, unidade);
-        inserirArv23(arvore, &novoInfo, &promove, &Pai);
-        inseriu = 1;
-    }
     return inseriu;
 }
 
-Info criaInfo(char *palavra, char *palavraIngles, int unidade)
+Info criaInfo(char *palavra, char *palavraIngles, char *unidade)
 {
     Info info;
 
     info.palavraPortugues = malloc(strlen(palavra) + 1);
     strcpy(info.palavraPortugues, palavra);
 
-    info.palavraIngles = NULL;
-    info.palavraIngles = insertpalavraIngles(info.palavraIngles, palavraIngles, unidade);
+    info.palavraIngles = NULL; // Inicializa a árvore binária vazia
+    insertpalavraIngles(&info.palavraIngles, palavraIngles, unidade);
     return info;
 }
 
@@ -190,6 +179,10 @@ Portugues23 *inserirArv23(Portugues23 **no, Info *informacao, Info *promove, Por
         // Cria um novo nó caso seja nulo
         *no = criaNo(informacao, NULL, NULL);
     }
+    if (strcmp(informacao->palavraPortugues, (*no)->info1.palavraPortugues) == 0)
+        insertpalavraIngles(&(*no)->info1.palavraIngles, informacao->palavraIngles->palavraIngles, informacao->palavraIngles->unidades->nome_unidade);
+    else if ((*no)->nInfos == 2 && strcmp(informacao->palavraPortugues, (*no)->info2.palavraPortugues) == 0)
+        insertpalavraIngles(&(*no)->info2.palavraIngles, informacao->palavraIngles->palavraIngles, informacao->palavraIngles->unidades->nome_unidade);
     else
     {
         if (ehFolha(*no))
@@ -273,28 +266,21 @@ void exibir_tree23(const Portugues23 *Raiz)
     {
         exibir_tree23(Raiz->esq);
         printf("Palavra (PT): %s", Raiz->info1.palavraPortugues);
-        if (Raiz->info1.palavraIngles != NULL && Raiz->info1.palavraIngles->palavraIngles != NULL)
-        {
-            printBinaryTree(Raiz->info1.palavraIngles);
-            printf("\n");
-        }
+        printBinaryTree(Raiz->info1.palavraIngles);
 
         exibir_tree23(Raiz->cent);
         // Se houver o segundo elemento (nInfos == 2), exibe o segundo filho
         if (Raiz->nInfos == 2)
         {
             printf("Palavra (PT): %s", Raiz->info2.palavraPortugues);
-
-            // Exibir a tradução em inglês, se houver
-            if (Raiz->info2.palavraIngles != NULL && Raiz->info2.palavraIngles->palavraIngles != NULL)
-                printBinaryTree(Raiz->info2.palavraIngles);
+            printBinaryTree(Raiz->info2.palavraIngles);
             printf("\n");
             exibir_tree23(Raiz->dir);
         }
     }
 }
 
-void imprimirPalavrasUnidade(Portugues23 *arvore, int unidade)
+void imprimirPalavrasUnidade(Portugues23 *arvore, char *unidade)
 {
     if (arvore)
     {
@@ -310,17 +296,17 @@ void imprimirPalavrasUnidade(Portugues23 *arvore, int unidade)
     }
 }
 
-void imprimirTraducoes(Inglesbin *node, int unidade, const char *palavraPortuguês)
+void imprimirTraducoes(Inglesbin *node, char *unidade, const char *palavraPortugues)
 {
     if (node)
     {
-        if (node->unidade == unidade)
+        if (buscar_lista_encadeada_unidade(node->unidades, unidade))
         {
-            printf("Palavra em Português: %s\n", palavraPortuguês);
+            printf("Palavra em Português: %s\n", palavraPortugues);
             printf("Palavra em inglês: %s\n", node->palavraIngles);
         }
-        imprimirTraducoes(node->esq, unidade, palavraPortuguês);
-        imprimirTraducoes(node->dir, unidade, palavraPortuguês);
+        imprimirTraducoes(node->esq, unidade, palavraPortugues);
+        imprimirTraducoes(node->dir, unidade, palavraPortugues);
     }
 }
 

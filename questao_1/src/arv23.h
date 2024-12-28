@@ -6,10 +6,10 @@
 
 
 Portugues23 *BuscarPalavra(Portugues23 **no, const char *palavraPortugues);
-int inserirPalavraPortugues(Portugues23 **arvore, char *palavraPortugues, char *palavraIngles, int unidade);
-void adicionarTraducaoEmIngles(Info *info, const char *palavraIng, int unidade);
+int inserirPalavraPortugues(Portugues23 **arvore, char *palavraPortugues, char *palavraIngles, char *unidade);
+void adicionarTraducaoEmIngles(Info *info, const char *palavraIng, char *unidade);
 
-Info criaInfo(char *palavra, char *palavraIngles, int unidade);
+Info criaInfo(char *palavra, char *palavraIngles, char *unidade);
 Portugues23 *criaNo(const Info *informacao, Portugues23 *filhoesq, Portugues23 *filhocen);
 void adicionaChave(Portugues23 **no, const Info *informacao, Portugues23 *filho);
 Portugues23 *quebraNo(Portugues23 **no, const Info *informacao, Info *promove, Portugues23 *filho);
@@ -21,9 +21,9 @@ void freeInfo2_3(Info *info);
 void freeTree(Portugues23 *no);
 
 void exibir_tree23(const Portugues23 *raiz);
-void imprimirPalavrasUnidade(Portugues23 *arvore, int unidade);
+void imprimirPalavrasUnidade(Portugues23 *arvore, char *unidade);
 void exibir_traducao_Portugues(Portugues23 **raiz, const char *palavraPortugues);
-void imprimirTraducoes(Inglesbin *node, int unidade, const char *palavraPortuguês);
+void imprimirTraducoes(Inglesbin *node, char *unidade, const char *palavraPortugues);
 
 void no23_desalocar(Portugues23 **no);
 int arvore23_rebalancear(Portugues23 **raiz, char *info, Portugues23 **maior);

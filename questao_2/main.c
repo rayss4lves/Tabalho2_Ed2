@@ -65,7 +65,7 @@ int main()
 
     PortuguesRB *raiz = NULL;
 
-    carregarArquivo("../trabalhoEd2.txt", &raiz);
+    carregarArquivo("../text.txt", &raiz);
 
     int op, res;
     char palavra[50];

@@ -1,10 +1,16 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
+typedef struct listaEncadeadaUnidade
+{
+  char *nome_unidade;
+  struct listaEncadeadaUnidade *prox;
+} ListaEncadeadaUnidade;
+
 typedef struct Inglesbin{
+    ListaEncadeadaUnidade *unidades;
     char *palavraIngles;
     struct Inglesbin *dir,*esq;
-    int unidade;
 } Inglesbin;
 
 typedef struct info {
