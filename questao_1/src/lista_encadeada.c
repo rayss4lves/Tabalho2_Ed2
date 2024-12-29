@@ -16,15 +16,6 @@ void def_lista_encadeada_unidade(ListaEncadeadaUnidade *lista, const char *nome_
   strcpy(lista->nome_unidade, nome_unidade);
 }
 
-void copia_lista_encadeada_unidade(ListaEncadeadaUnidade *recebe, ListaEncadeadaUnidade *envia)
-{
-  if (envia)
-  {
-    def_lista_encadeada_unidade(recebe, envia->nome_unidade);
-    copia_lista_encadeada_unidade(recebe->prox, envia->prox);
-  }
-}
-
 void show_lista_encadeada_unidade(const ListaEncadeadaUnidade *lista)
 {
   if (lista)
@@ -50,18 +41,6 @@ int buscar_lista_encadeada_unidade(const ListaEncadeadaUnidade *lista, const cha
       confirmacao = buscar_lista_encadeada_unidade(lista->prox, nome_unidade);
   }
   return confirmacao;
-}
-
-int contar_lista_encadeada_unidade(const ListaEncadeadaUnidade *lista)
-{
-    int soma = 0;
-    while (lista != NULL)
-    {
-        soma++;
-        lista = lista->prox;
-    }
-    return soma;
-    
 }
 
 

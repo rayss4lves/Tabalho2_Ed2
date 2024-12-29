@@ -50,7 +50,7 @@ void printBinaryTree(Inglesbin *root)
     }
 }
 
-int ehFolhas(Inglesbin *raiz)
+int eh_Folha(Inglesbin *raiz)
 {
     return (raiz->esq == NULL && raiz->dir == NULL);
 }
@@ -96,7 +96,7 @@ int removerPalavraIngles(Inglesbin **raiz, const char *palavra)
         if (strcmp(palavra, (*raiz)->palavraIngles) == 0)
         {
             existe = 1;
-            if (ehFolhas(*raiz))
+            if (eh_Folha(*raiz))
             {
                 free_arvore_binaria(*raiz);
                 *raiz = NULL;

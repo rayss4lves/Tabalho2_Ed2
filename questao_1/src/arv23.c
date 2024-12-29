@@ -3,22 +3,15 @@
 #include <string.h>
 #include "arv23.h"
 
-
-void no23_desalocar(Portugues23 **no)
-{
-    free(*no);
-    *no = NULL;
-}
-
 int inserirPalavraPortugues(Portugues23 **arvore, char *palavraPortugues, char *palavraIngles, char *unidade)
 {
     Info promove;
     Portugues23 *Pai = NULL;
     int inseriu;
 
-    printf("Inserindo a palavra %s \n", palavraPortugues);
     Info novoInfo = criaInfo(palavraPortugues, palavraIngles, unidade);
-    inserirArv23(arvore, &novoInfo, &promove, &Pai);
+    if(inserirArv23(arvore, &novoInfo, &promove, &Pai))
+        inseriu = 1;
 
     return inseriu;
 }
@@ -40,7 +33,6 @@ Info criaInfo(char *palavra, char *palavraIngles, char *unidade) {
 
     return info;
 }
-
 
 Portugues23 *criaNo(const Info *informacao, Portugues23 *filhoesq, Portugues23 *filhocen)
 {
@@ -333,6 +325,11 @@ void exibir_traducao_Portugues(Portugues23 **Raiz, const char *palavraPortugues)
 
 // ############################################# REMOÇÃO ############################################
 
+void no23_desalocar(Portugues23 **no)
+{
+    free(*no);
+    *no = NULL;
+}
 
 static Info no23_maior_info(Portugues23 *raiz)
 {
@@ -486,7 +483,6 @@ static Portugues23 *arvore23_buscar_menor_pai(Portugues23 *raiz, char *info)
 
     return pai;
 }
-
 
 int arvore23_remover_nao_folha1(Portugues23 **origem, Portugues23* raiz, Info *info, Portugues23 *filho1, Portugues23 *filho2, Portugues23 **maior)
 {
@@ -793,7 +789,6 @@ int arvore23_rebalancear(Portugues23 **raiz, char *info, Portugues23 **maior)
     return balanceou;
 }
 
-
 int arvore_2_3_remover(Portugues23 **raiz, char *info)
 {
   Portugues23 *maior, *posicao_juncao;
@@ -836,6 +831,7 @@ int arvore_2_3_remover(Portugues23 **raiz, char *info)
 
   return removeu;
 }
+
 /*#########################################FREE#######################################################*/
 
 void freeInfo2_3(Info *info)
@@ -859,26 +855,3 @@ void freeTree(Portugues23 *no)
         free(no);
     }
 }
-
-/*-----------------------------------------------------------------------------------------------------*/
-
-/* (i) informar uma unidade e então imprima todas as palavras da unidade em português seguida das
-equivalentes em inglês */
-
-/*-----------------------------------------------------------------------------------------------------*/
-
-/* (ii) informar uma palavraPortugues em português e então imprima todas as palavras em inglês equivalente à palavraPortugues em
-português dada, independente da unidade */
-
-/*-----------------------------------------------------------------------------------------------------*/
-
-/* (iii) informar uma palavraPortugues em inglês e a unidade a qual a mesma pertence removÊ-la das arvores binarias
-das quais ela pertence. Caso ela seja a única palavraPortugues em uma das arvores binarias, remover tambem da
-arvore 2-3 */
-
-/*-----------------------------------------------------------------------------------------------------*/
-
-/* (iv)informar uma palavraPortugues em português e a unidade a qual a mesma pertence e então removê-la, para isto
-deve remover a palavraPortugues em inglês da arvore binaria correspondente a palavraPortugues em português da mesma
-unidade. Caso ela seja a única palavraPortugues na arvore binaria, a palavraPortugues em português deve ser removida da
-arvore 2-3 */

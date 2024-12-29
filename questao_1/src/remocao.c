@@ -60,6 +60,8 @@ int remove_palavra_ingles_unidade(Portugues23 *raiz, const char *palavraIngles, 
   return confirm;
 }
 
+//##########################################REMOVER A UNIDADE DAS PALAVRAS EM PORTUGUÊS##########################################
+
 int _remove_palavra_portugues_unidade(Inglesbin **raiz, const char *palavraPortugues, const char *unidade)
 {
   int confirm = 0;
