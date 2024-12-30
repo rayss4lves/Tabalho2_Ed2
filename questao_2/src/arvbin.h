@@ -9,9 +9,9 @@ Inglesbin* createNode(const char* word, char *unidade);
 // Função para inserir uma palavra em inglês na arvore binaria de busca
 int insertpalavraIngles(Inglesbin **root, Info *informacao);
 
-int ehFolhas(Inglesbin *raiz);
+int eh_folha(Inglesbin *raiz);
 
-Inglesbin *soUmFilho(Inglesbin *raiz);
+Inglesbin *soUmFilho(Inglesbin **raiz);
 
 Inglesbin *menorFilho(Inglesbin *raiz);
 

@@ -47,6 +47,54 @@ void carregarArquivo(const char *nomeArquivo, PortuguesRB **arvore)
     }
 }
 
+void imprimirArvoreRB(PortuguesRB *raiz, int nivel) {
+    if (raiz == NULL) return;
+
+    // Indentação para cada nível da árvore
+    for (int i = 0; i < nivel; i++) {
+        printf("    ");  // Indentação
+    }
+
+    // Imprime o conteúdo do nó com a cor
+    printf("[ %s ] (%s)\n", 
+        raiz->info.palavraPortugues, 
+        raiz->cor == 0 ? "Preto" : "Vermelho");
+
+    // Se o nó tem filhos, imprime-os
+    if (raiz->esq != NULL || raiz->dir != NULL) {
+        // Imprime o filho à esquerda
+        if (raiz->esq != NULL) {
+            for (int i = 0; i < nivel + 1; i++) {
+                printf("    ");
+            }
+            printf("Esq -> ");
+            imprimirArvoreRB(raiz->esq, nivel + 1);
+        } else {
+            // Caso o filho esquerdo seja NULL
+            for (int i = 0; i < nivel + 1; i++) {
+                printf("    ");
+            }
+            printf("Esq -> [ NULL ]\n");
+        }
+
+        // Imprime o filho à direita
+        if (raiz->dir != NULL) {
+            for (int i = 0; i < nivel + 1; i++) {
+                printf("    ");
+            }
+            printf("Dir -> ");
+            imprimirArvoreRB(raiz->dir, nivel + 1);
+        } else {
+            // Caso o filho direito seja NULL
+            for (int i = 0; i < nivel + 1; i++) {
+                printf("    ");
+            }
+            printf("Dir -> [ NULL ]\n");
+        }
+    }
+}
+
+
 void menu()
 {
     printf("\n------------------------------------------------------------------------------------------------- \n");
@@ -67,7 +115,7 @@ int main()
     PortuguesRB *raiz = NULL;
 
     carregarArquivo("../text.txt", &raiz);
-
+    imprimirArvoreRB(raiz, 0);
     int op, res;
     char palavra[50];
     char unidade[50];
@@ -113,7 +161,7 @@ int main()
             printf("Insira a unidade da palavra que deseja remover: ");
             setbuf(stdin, NULL);
             scanf("%[^\n]", unidade);
-            removido = Remove_palavra_portugues_unidade(&raiz, palavra, unidade);
+            //removido = Remove_palavra_portugues_unidade(&raiz, palavra, unidade);
             if (removido)
                 printf("A palavra %s foi removida com sucesso!\n\n", palavra);
             printf("\n--------------------------------------------------------------- \n");

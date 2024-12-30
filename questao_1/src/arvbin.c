@@ -26,14 +26,15 @@ int insertpalavraIngles(Inglesbin **root, Info *informacao)
     {
         Inglesbin *new = createNode(informacao->palavraIngles->palavraIngles, informacao->palavraIngles->unidades->nome_unidade);
         *root = new;
+        result = 1;
     }
     else if (strcmp(informacao->palavraIngles->palavraIngles, (*root)->palavraIngles) < 0)
-        insertpalavraIngles(&(*root)->esq, informacao);
+        result = insertpalavraIngles(&(*root)->esq, informacao);
     else if (strcmp(informacao->palavraIngles->palavraIngles, (*root)->palavraIngles) > 0)
-        insertpalavraIngles(&(*root)->dir, informacao);
+        result = insertpalavraIngles(&(*root)->dir, informacao);
     else
-        inserir_lista_encadeada_unidade(&((*root)->unidades), informacao->palavraIngles->unidades->nome_unidade);
-
+        result = inserir_lista_encadeada_unidade(&((*root)->unidades), informacao->palavraIngles->unidades->nome_unidade);
+    
     return result;
 }
 
@@ -42,7 +43,6 @@ void printBinaryTree(Inglesbin *root)
     if (root != NULL)
     {
         printBinaryTree(root->esq); // Percorre a árvore à esquerda
-        printf("\n");
         // Imprime a tradução de inglês associada à palavra em português
         printf("Palavra em Inglês: %s \n", root->palavraIngles);
         show_lista_encadeada_unidade(root->unidades);
@@ -55,18 +55,18 @@ int eh_Folha(Inglesbin *raiz)
     return (raiz->esq == NULL && raiz->dir == NULL);
 }
 
-Inglesbin *soUmFilho(Inglesbin *raiz)
+Inglesbin *soUmFilho(Inglesbin **raiz)
 {
     Inglesbin *aux;
     aux = NULL;
 
-    if (raiz->dir == NULL)
+    if ((*raiz)->dir == NULL)
     {
-        aux = raiz->esq;
+        aux = (*raiz)->esq;
     }
-    else if (raiz->esq == NULL)
+    else if ((*raiz)->esq == NULL)
     {
-        aux = raiz->dir;
+        aux = (*raiz)->dir;
     }
 
     return aux;
@@ -88,22 +88,23 @@ Inglesbin *menorFilho(Inglesbin *raiz)
 
 int removerPalavraIngles(Inglesbin **raiz, const char *palavra)
 {
-    Inglesbin *endFilho;
+    Inglesbin *endFilho = NULL;
     int existe = 0;
 
     if (*raiz)
     {
         if (strcmp(palavra, (*raiz)->palavraIngles) == 0)
         {
+            Inglesbin *aux = *raiz;
             existe = 1;
             if (eh_Folha(*raiz))
             {
-                free_arvore_binaria(*raiz);
+                free(aux);
                 *raiz = NULL;
             }
-            else if ((endFilho = soUmFilho(*raiz)) != NULL)
+            else if ((endFilho = soUmFilho(raiz)) != NULL)
             {
-                free_arvore_binaria(*raiz);
+                free(aux);
                 *raiz = endFilho;
             }
             else

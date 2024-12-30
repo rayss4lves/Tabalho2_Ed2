@@ -217,14 +217,14 @@ void exibir_tree23(const Portugues23 *Raiz)
     if (Raiz != NULL)
     {
         exibir_tree23(Raiz->esq);
-        printf("Palavra (PT): %s", Raiz->info1.palavraPortugues);
+        printf("Palavra (PT): %s\n", Raiz->info1.palavraPortugues);
         printBinaryTree(Raiz->info1.palavraIngles);
-
+        printf("\n");
         exibir_tree23(Raiz->cent);
         // Se houver o segundo elemento (nInfos == 2), exibe o segundo filho
         if (Raiz->nInfos == 2)
         {
-            printf("Palavra (PT): %s", Raiz->info2.palavraPortugues);
+            printf("Palavra (PT): %s\n", Raiz->info2.palavraPortugues);
             printBinaryTree(Raiz->info2.palavraIngles);
             printf("\n");
             exibir_tree23(Raiz->dir);

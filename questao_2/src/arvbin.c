@@ -50,24 +50,20 @@ void printBinaryTree(Inglesbin *root)
     }
 }
 
-int ehFolhas(Inglesbin *raiz)
+int eh_folha(Inglesbin *raiz)
 {
     return (raiz->esq == NULL && raiz->dir == NULL);
 }
 
-Inglesbin *soUmFilho(Inglesbin *raiz)
+Inglesbin *soUmFilho(Inglesbin **raiz)
 {
     Inglesbin *aux;
     aux = NULL;
 
-    if (raiz->dir == NULL)
-    {
-        aux = raiz->esq;
-    }
-    else if (raiz->esq == NULL)
-    {
-        aux = raiz->dir;
-    }
+    if ((*raiz)->dir == NULL)
+        aux = (*raiz)->esq;
+    else if ((*raiz)->esq == NULL)
+        aux = (*raiz)->dir;
 
     return aux;
 }
@@ -88,22 +84,23 @@ Inglesbin *menorFilho(Inglesbin *raiz)
 
 int removerPalavraIngles(Inglesbin **raiz, const char *palavra)
 {
-    Inglesbin *endFilho;
-    int existe = 0;
+    Inglesbin *endFilho = NULL;
+    int confirm = 0;
 
     if (*raiz)
     {
         if (strcmp(palavra, (*raiz)->palavraIngles) == 0)
         {
-            existe = 1;
-            if (ehFolhas(*raiz))
+            Inglesbin *aux = *raiz;
+            confirm = 1;
+            if (eh_folha(*raiz))
             {
-                free_arvore_binaria(*raiz);
+                free(aux);
                 *raiz = NULL;
             }
-            else if ((endFilho = soUmFilho(*raiz)) != NULL)
+            else if ((endFilho = soUmFilho(raiz)) != NULL)
             {
-                free_arvore_binaria(*raiz);
+                free(aux);
                 *raiz = endFilho;
             }
             else
@@ -116,16 +113,12 @@ int removerPalavraIngles(Inglesbin **raiz, const char *palavra)
             }
         }
         else if (strcmp(palavra, (*raiz)->palavraIngles) < 0)
-        {
-            existe = removerPalavraIngles(&(*raiz)->esq, palavra);
-        }
+            confirm = removerPalavraIngles(&(*raiz)->esq, palavra);
         else
-        {
-            existe = removerPalavraIngles(&(*raiz)->dir, palavra);
-        }
+            confirm = removerPalavraIngles(&(*raiz)->dir, palavra);
     }
 
-    return existe;
+    return confirm;
 }
 
 void free_arvore_binaria(Inglesbin *raiz)

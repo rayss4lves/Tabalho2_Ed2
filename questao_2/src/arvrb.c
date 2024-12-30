@@ -99,7 +99,6 @@ void balancear(PortuguesRB **raiz)
 
 int inserirRB(PortuguesRB **raiz, Info *informacao)
 {
-
     int inseriu = 0;
     if (*raiz == NULL){
         *raiz = criaNo(informacao);
@@ -310,8 +309,8 @@ void exibirArvore(PortuguesRB *raiz)
         exibirArvore(raiz->esq);
         printf("Cor - %d\n", raiz->cor);
         printf("Palavra em Portugues - %s\n", raiz->info.palavraPortugues);
-        printBinaryTree(raiz->info.palavraIngles);
         printf("\n");
+        printBinaryTree(raiz->info.palavraIngles);
         exibirArvore(raiz->dir);
     }
 }

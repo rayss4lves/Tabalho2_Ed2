@@ -6,7 +6,7 @@
             "command": "sh",
             "args": [
                 "-c",
-                "gcc -g main.c src/arvrb.c src/arvbin.c -o main"
+                "gcc -g main.c src/arvrb.c src/arvbin.c src/remocao.c src/lista_encadeada.c -o main"
             ],
             "options": {
                 "cwd": "${fileDirname}"
