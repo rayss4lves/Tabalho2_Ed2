@@ -309,8 +309,8 @@ void exibirArvore(PortuguesRB *raiz)
         exibirArvore(raiz->esq);
         printf("Cor - %d\n", raiz->cor);
         printf("Palavra em Portugues - %s\n", raiz->info.palavraPortugues);
-        printf("\n");
         printBinaryTree(raiz->info.palavraIngles);
+        printf("\n");
         exibirArvore(raiz->dir);
     }
 }
