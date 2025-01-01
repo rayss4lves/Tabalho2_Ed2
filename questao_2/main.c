@@ -5,6 +5,7 @@
 #include "src/arvbin.h"
 #include "src/arvrb.h"
 #include "src/remocao.h"
+#include "test/maintest.h"
 
 void carregarArquivo(const char *nomeArquivo, PortuguesRB **arvore)
 {
@@ -50,9 +51,9 @@ void carregarArquivo(const char *nomeArquivo, PortuguesRB **arvore)
 void imprimirArvoreRB(PortuguesRB *raiz, int nivel) {
     if (raiz == NULL) return;
 
-    // Indentação para cada nível da árvore
+    // Indentacao para cada nível da arvore
     for (int i = 0; i < nivel; i++) {
-        printf("    ");  // Indentação
+        printf("    ");  // Indentacao
     }
 
     // Imprime o conteúdo do nó com a cor
@@ -98,14 +99,15 @@ void imprimirArvoreRB(PortuguesRB *raiz, int nivel) {
 void menu()
 {
     printf("\n------------------------------------------------------------------------------------------------- \n");
-    printf("\nMenu de opções:\n");
-    printf("1 - Informar uma unidade e imprimir todas as palavras em português e as equivalentes em inglês.\n");
-    printf("2 - Informar uma palavra em português e imprimir todas as palavras em inglês equivalentes.\n");
-    printf("3 - Informar uma palavra em inglês e a unidade, removê-la da árvore binária e da árvore 2-3.\n");
-    printf("4 - Informar uma palavra em português e a unidade, removê-la da árvore binária e da árvore 2-3.\n");
+    printf("\nMenu de opcoes:\n");
+    printf("1 - Informar uma unidade e imprimir todas as palavras em portugues e as equivalentes em ingles.\n");
+    printf("2 - Informar uma palavra em portugues e imprimir todas as palavras em ingles equivalentes.\n");
+    printf("3 - Informar uma palavra em ingles e a unidade, remove-la da arvore binaria e da arvore 2-3.\n");
+    printf("4 - Informar uma palavra em portugues e a unidade, remove-la da arvore binaria e da arvore 2-3.\n");
     printf("5 - Imprimir a arvore completa\n");
+    printf("5 - Imprimir a arvore completa na ordem rubro-negra\n");
     printf("0 - Sair\n");
-    printf("Escolha uma opção: \n");
+    printf("Escolha uma opcao: \n");
     printf("\n------------------------------------------------------------------------------------------------- \n");
 }
 
@@ -115,7 +117,6 @@ int main()
     PortuguesRB *raiz = NULL;
 
     carregarArquivo("../text.txt", &raiz);
-    imprimirArvoreRB(raiz, 0);
     int op, res;
     char palavra[50];
     char unidade[50];
@@ -150,7 +151,9 @@ int main()
             printf("Insira a unidade da palavra que deseja remover: ");
             setbuf(stdin, NULL);
             scanf("%[^\n]", unidade);
-            Remove_palavra_ingles_unidade(&raiz, palavra, unidade);
+            removido = Remove_palavra_ingles_unidade(&raiz, palavra, unidade);
+            if (removido)
+                printf("A palavra %s foi removida com sucesso!\n\n", palavra);
             printf("\n--------------------------------------------------------------- \n");
             break;
         case 4:
@@ -161,7 +164,7 @@ int main()
             printf("Insira a unidade da palavra que deseja remover: ");
             setbuf(stdin, NULL);
             scanf("%[^\n]", unidade);
-            //removido = Remove_palavra_portugues_unidade(&raiz, palavra, unidade);
+            removido = Remove_palavra_portugues_unidade(&raiz, palavra, unidade);
             if (removido)
                 printf("A palavra %s foi removida com sucesso!\n\n", palavra);
             printf("\n--------------------------------------------------------------- \n");
@@ -171,19 +174,25 @@ int main()
             exibirArvore(raiz);
             printf("\n--------------------------------------------------------------- \n");
             break;
+        case 6:
+            printf("\n--------------------------------------------------------------- \n");
+            imprimirArvoreRB(raiz, 0);
+            printf("\n--------------------------------------------------------------- \n");
+            break;
         case 0:
             printf("\n--------------------------------------------------------------- \n");
             printf("\nSaindo do programa...\n");
             printf("\n--------------------------------------------------------------- \n");
             break;
         default:
-            printf("Insira um valor válido. \n");
+            printf("Insira um valor valido. \n");
             break;
         }
     } while (op != 0);
 
 
-    // freeTree(raiz);
+    freeTree(raiz);
+    main_teste();
 
     return 0;
 }

@@ -1,0 +1,34 @@
+% Unidade 1
+Pineapple: abacaxi;   
+Student: aluno;  
+Friend: amigo;        
+Airplane: avião;   
+Bag: bolsa;   
+Dog: cachorro;      
+Car: carro;
+% Unidade 2
+House: casa;    
+Key: chave;      
+Computer: computador;         
+School: escola;      
+Happiness: felicidade;  
+Flower: flor;  
+Forest: floresta;
+% Unidade 3
+Cat: gato;  
+War: guerra;     
+Window: janela;  
+Garden: jardim;   
+Book: livro;  
+Moon: lua;        
+Table: mesa;             
+Ocean: oceano;
+% Unidade 4
+Door: porta;  
+Beach: praia;       
+Clothes: roupas;      
+Sun: sol;    
+Technology: tecnologia;  
+Phone: telefone;       
+University: universidade;   
+Water: água;  

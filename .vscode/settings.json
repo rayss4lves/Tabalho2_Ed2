@@ -61,6 +61,7 @@
     "arv23.h": "c",
     "structs.h": "c",
     "arvbin.h": "c",
-    "maintest.h": "c"
+    "maintest.h": "c",
+    "remocao.h": "c"
   }
 }

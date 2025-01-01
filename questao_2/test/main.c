@@ -2,45 +2,32 @@
 
 #define TEST_SIZE 30
 
-Portugues23 *buscaTestes(Portugues23 **tree, char *codigo, int n)
+PortuguesRB *buscaTestes(PortuguesRB **tree, char *codigo, int n)
 {
-    Portugues23 *no = NULL;
+    PortuguesRB *no = NULL;
     if (*tree != NULL)
     {
         // Comparando strings (codigo e palavras na árvore)
-        if (strcmp(codigo, (*tree)->info1.palavraPortugues) == 0)
+        if (strcmp(codigo, (*tree)->info.palavraPortugues) == 0)
         {
-            printf("Info 1: %s\n", (*tree)->info1.palavraPortugues);
+            printf("Info: %s\n", (*tree)->info.palavraPortugues);
             no = *tree;
         }
-        else if ((*tree)->nInfos == 2 && strcmp(codigo, (*tree)->info2.palavraPortugues) == 0)
+        else if (strcmp(codigo, (*tree)->info.palavraPortugues) < 0)
         {
-            printf("Info 2: %s\n", (*tree)->info2.palavraPortugues);
-            no = *tree;
+            printf("%d-esquerda \n", n);
+            no = buscaTestes(&(*tree)->esq, codigo, n + 1);
         }
         else
         {
-            if (strcmp(codigo, (*tree)->info1.palavraPortugues) < 0)
-            {
-                printf("%d-esquerda \n", n);
-                no = buscaTestes(&(*tree)->esq, codigo, n + 1);
-            }
-            else if ((*tree)->nInfos == 1 || strcmp(codigo, (*tree)->info2.palavraPortugues) < 0)
-            {
-                printf("%d-centro \n", n);
-                no = buscaTestes(&(*tree)->cent, codigo, n + 1);
-            }
-            else
-            {
-                printf("%d-direita \n", n);
-                no = buscaTestes(&(*tree)->dir, codigo, n + 1);
-            }
+            printf("%d-direita \n", n);
+            no = buscaTestes(&(*tree)->dir, codigo, n + 1);
         }
     }
     return no;
 }
 
-void carregarArquivoTeste(const char *nomeArquivo, Portugues23 **arvore)
+void carregarArquivoTeste(const char *nomeArquivo, PortuguesRB **arvore)
 {
     FILE *arquivo = fopen(nomeArquivo, "r");
     if (arquivo != NULL)
@@ -67,7 +54,7 @@ void carregarArquivoTeste(const char *nomeArquivo, Portugues23 **arvore)
                 {
                     while (*traducaoPortugues == ' ')
                         traducaoPortugues++;
-                  
+
                     inserirPalavraPortugues(arvore, traducaoPortugues, palavraIngles, unidadeAtual);
                     traducaoPortugues = strtok(NULL, ",;");
                 }
@@ -79,14 +66,16 @@ void carregarArquivoTeste(const char *nomeArquivo, Portugues23 **arvore)
     }
 }
 
-void buscaSequencial(char palavras[][20], Portugues23 *raiz) {
+void buscaSequencial(char palavras[][20], PortuguesRB *raiz)
+{
     clock_t start, end;
     float totalTime, media;
 
     start = clock();
-    for (int i = 0; i < TEST_SIZE; i++) {
+    for (int i = 0; i < TEST_SIZE; i++)
+    {
         printf("\n%d Palavra: %s\n", i, palavras[i]);
-        buscaTestes(&raiz, palavras[i], 0); // Busca na árvore    
+        buscaTestes(&raiz, palavras[i], 0); // Busca na árvore
     }
     end = clock();
     totalTime = (float)(end - start) / CLOCKS_PER_SEC * 1000.0;
@@ -94,12 +83,14 @@ void buscaSequencial(char palavras[][20], Portugues23 *raiz) {
     printf("\nTempo medio de busca: %.8f ms\n\n", media);
 }
 
-void buscaAleatoria(char palavrasAleatorias[][20], Portugues23 *raiz) {
+void buscaAleatoria(char palavrasAleatorias[][20], PortuguesRB *raiz)
+{
     clock_t start, end;
     float totalTime, media;
 
     start = clock();
-    for (int i = 0; i < TEST_SIZE; i++) {
+    for (int i = 0; i < TEST_SIZE; i++)
+    {
         printf("\n%d Palavra: %s\n", i, palavrasAleatorias[i]);
         buscaTestes(&raiz, palavrasAleatorias[i], 0); // Busca na árvore
     }
@@ -112,20 +103,17 @@ void buscaAleatoria(char palavrasAleatorias[][20], Portugues23 *raiz) {
 
 int main_teste(void)
 {
-    
-    Portugues23 *raiz = NULL;
-    char palavras[30][20] = {
-    "abacaxi", "aluno", "amigo", "avião", "bolsa", "cachorro", "carro", "casa", 
-    "chave", "computador", "escola", "felicidade", "flor", "floresta", "gato", 
-    "guerra", "janela", "jardim", "livro", "lua", "mesa", "oceano", "porta", 
-    "praia", "roupas", "sol", "tecnologia", "telefone", "universidade", "água"
-    };
-    char palavrasAleatorias[30][20] = {
-    "universidade", "bolsa", "roupas", "felicidade", "sol", "avião", "gato", "tecnologia", "escola", "oceano", 
-    "cachorro", "abacaxi", "guerra", "computador", "flor", "porta", "lua", "praia", "jardim", "mesa", 
-    "carro", "amigo", "janela", "floresta", "casa", "água", "telefone", "livro", "chave", "aluno"
-    };
 
+    PortuguesRB *raiz = NULL;
+    char palavras[30][20] = {
+        "abacaxi", "aluno", "amigo", "avião", "bolsa", "cachorro", "carro", "casa",
+        "chave", "computador", "escola", "felicidade", "flor", "floresta", "gato",
+        "guerra", "janela", "jardim", "livro", "lua", "mesa", "oceano", "porta",
+        "praia", "roupas", "sol", "tecnologia", "telefone", "universidade", "água"};
+    char palavrasAleatorias[30][20] = {
+        "universidade", "bolsa", "roupas", "felicidade", "sol", "avião", "gato", "tecnologia", "escola", "oceano",
+        "cachorro", "abacaxi", "guerra", "computador", "flor", "porta", "lua", "praia", "jardim", "mesa",
+        "carro", "amigo", "janela", "floresta", "casa", "água", "telefone", "livro", "chave", "aluno"};
 
     carregarArquivoTeste("../teste.txt", &raiz);
 

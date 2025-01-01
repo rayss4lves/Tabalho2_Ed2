@@ -18,7 +18,7 @@ Inglesbin *createNode(const char *palavraIngles, char *unidade)
     return novoNo;
 }
 
-// Função para inserir uma palavra em inglês na arvore binaria de busca
+// Função para inserir uma palavra em ingles na arvore binaria de busca
 int insertpalavraIngles(Inglesbin **root, Info *informacao)
 {
     int result = 0;
@@ -43,8 +43,8 @@ void printBinaryTree(Inglesbin *root)
     if (root != NULL)
     {
         printBinaryTree(root->esq); // Percorre a árvore à esquerda
-        // Imprime a tradução de inglês associada à palavra em português
-        printf("Palavra em Inglês: %s \n", root->palavraIngles);
+        // Imprime a tradução de ingles associada à palavra em portugues
+        printf("Palavra em Ingles: %s \n", root->palavraIngles);
         show_lista_encadeada_unidade(root->unidades);
         printBinaryTree(root->dir); // Percorre a árvore à direita
     }

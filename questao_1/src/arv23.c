@@ -19,7 +19,7 @@ int inserirPalavraPortugues(Portugues23 **arvore, char *palavraPortugues, char *
 Info criaInfo(char *palavra, char *palavraIngles, char *unidade) {
     Info info;
 
-    // Aloca e copia a palavra em português
+    // Aloca e copia a palavra em portugues
     info.palavraPortugues = malloc(strlen(palavra) + 1);
     strcpy(info.palavraPortugues, palavra);
 
@@ -254,8 +254,8 @@ void imprimirTraducoes(Inglesbin *node, char *unidade, const char *palavraPortug
     {
         if (buscar_lista_encadeada_unidade(node->unidades, unidade))
         {
-            printf("Palavra em Português: %s\n", palavraPortugues);
-            printf("Palavra em inglês: %s\n", node->palavraIngles);
+            printf("Palavra em Portugues: %s\n", palavraPortugues);
+            printf("Palavra em ingles: %s\n", node->palavraIngles);
         }
         imprimirTraducoes(node->esq, unidade, palavraPortugues);
         imprimirTraducoes(node->dir, unidade, palavraPortugues);
@@ -305,7 +305,7 @@ void exibir_traducao_Portugues(Portugues23 **Raiz, const char *palavraPortugues)
         resultado = BuscarPalavra(Raiz, palavraPortugues);
         if (resultado)
         {
-            printf("Traduções em inglês para a palavra '%s':\n", palavraPortugues);
+            printf("Traducoes em ingles para a palavra '%s':\n", palavraPortugues);
 
             if (strcmp(palavraPortugues, resultado->info1.palavraPortugues) == 0)
             {
@@ -318,7 +318,7 @@ void exibir_traducao_Portugues(Portugues23 **Raiz, const char *palavraPortugues)
         }
         else
         {
-            printf("A palavra '%s' não foi encontrada na árvore.\n", palavraPortugues);
+            printf("A palavra '%s' nao foi encontrada na arvore.\n", palavraPortugues);
         }
     }
 }
@@ -781,6 +781,7 @@ int arvore23_rebalancear(Portugues23 **raiz, char *info, Portugues23 **maior)
                     balanceou = balanceamento(raiz, (*raiz)->esq, &((*raiz)->cent), (*raiz)->info1, maior);
                 else if((*raiz)->nInfos == 2)
                     balanceou = balanceamento(raiz, (*raiz)->cent, &((*raiz)->dir), (*raiz)->info2, maior);
+                balanceou = 1;
             }
             
         }

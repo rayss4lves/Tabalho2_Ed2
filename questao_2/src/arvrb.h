@@ -45,6 +45,8 @@ void imprimirTraducoes(Inglesbin *node, char *unidade, char *palavraPortuguês);
 void exibirArvore(PortuguesRB *raiz);
 
 
-// void freeTree(PortuguesRB *no);
+void freeInforb(Info *info);
+
+void freeTree(PortuguesRB *no);
 
 #endif

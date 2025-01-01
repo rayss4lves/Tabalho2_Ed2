@@ -44,7 +44,7 @@ void printBinaryTree(Inglesbin *root)
     {
         printBinaryTree(root->esq); // Percorre a árvore à esquerda
         // Imprime a tradução de inglês associada à palavra em português
-        printf("Palavra em Inglês: %s \n", root->palavraIngles);
+        printf("Palavra em Ingles: %s \n", root->palavraIngles);
         show_lista_encadeada_unidade(root->unidades);
         printBinaryTree(root->dir); // Percorre a árvore à direita
     }

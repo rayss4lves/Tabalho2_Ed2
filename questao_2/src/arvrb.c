@@ -292,7 +292,7 @@ void exibir_traducao_Portugues(PortuguesRB **raiz, char *palavraPortugues)
         resultado = BuscarPalavra(raiz, palavraPortugues);
         if (resultado)
         {
-            printf("Traduções em ingles para a palavra '%s':\n", palavraPortugues);
+            printf("Traducoes em ingles para a palavra '%s':\n", palavraPortugues);
 
             if (strcmp(palavraPortugues, resultado->info.palavraPortugues) == 0)
             {
@@ -312,5 +312,22 @@ void exibirArvore(PortuguesRB *raiz)
         printBinaryTree(raiz->info.palavraIngles);
         printf("\n");
         exibirArvore(raiz->dir);
+    }
+}
+
+void freeInforb(Info *info)
+{
+    free_arvore_binaria(info->palavraIngles);
+    free(info->palavraPortugues);
+}
+
+void freeTree(PortuguesRB *no)
+{
+    if (no != NULL)
+    {
+        freeTree(no->esq);
+        freeInforb(&no->info);
+        freeTree(no->dir);
+        free(no);
     }
 }
