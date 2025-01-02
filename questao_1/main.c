@@ -8,49 +8,31 @@
 void imprimirArvore23(Portugues23 *raiz, int nivel) {
     if (raiz == NULL) return;
 
-    // Indentacao para cada nível da arvore
+    // Indentação para representar o nível atual
     for (int i = 0; i < nivel; i++) {
-        printf("    ");  // Indentacao
+        printf("    ");
     }
 
     // Imprime as chaves do nó
     if (raiz->nInfos == 1) {
         printf("[ %s ]\n", raiz->info1.palavraPortugues);
-    }
-    else if (raiz->nInfos == 2) {
+    } else if (raiz->nInfos == 2) {
         printf("[ %s | %s ]\n", raiz->info1.palavraPortugues, raiz->info2.palavraPortugues);
     }
 
-    // Se o nó tem filhos, imprime-os
-    if (raiz->esq != NULL || raiz->cent != NULL || raiz->dir != NULL) {
-        // Imprime os filhos à esquerda
-        if (raiz->esq != NULL) {
-            for (int i = 0; i < nivel + 1; i++) {
-                printf("    ");
-            }
-            printf("Esq -> ");
-            imprimirArvore23(raiz->esq, nivel + 1);  // Filhos à esquerda
-        }
-
-        // Imprime o filho central
-        if (raiz->cent != NULL) {
-            for (int i = 0; i < nivel + 1; i++) {
-                printf("    ");
-            }
-            printf("Cent -> ");
-            imprimirArvore23(raiz->cent, nivel + 1);  // Filho central
-        }
-
-        // Imprime os filhos à direita
-        if (raiz->dir != NULL) {
-            for (int i = 0; i < nivel + 1; i++) {
-                printf("    ");
-            }
-            printf("Dir -> ");
-            imprimirArvore23(raiz->dir, nivel + 1);  // Filho à direita
-        }
+    // Recursivamente imprime os filhos, com indentação ajustada
+    if (raiz->esq != NULL) {
+        imprimirArvore23(raiz->esq, nivel + 1); // Filhos à esquerda
+    }
+    if (raiz->cent != NULL) {
+        imprimirArvore23(raiz->cent, nivel + 1); // Filho central
+    }
+    if (raiz->dir != NULL) {
+        imprimirArvore23(raiz->dir, nivel + 1); // Filhos à direita
     }
 }
+
+
 void carregarArquivo(const char *nomeArquivo, Portugues23 **arvore)
 {
     FILE *arquivo = fopen(nomeArquivo, "r");
@@ -99,7 +81,7 @@ void menu()
     printf("3 - Informar uma palavra em ingles e a unidade, remove-la da arvore binaria e da arvore 2-3.\n");
     printf("4 - Informar uma palavra em portugues e a unidade, remove-la da arvore binaria e da arvore 2-3.\n");
     printf("5 - Imprimir a arvore completa\n");
-    printf("6 - Imprimir a arvore completa na ordem 2-3\n");
+    printf("6 - Imprimir a arvore 2-3 pre-ordem, em ordem e pos-ordem\n");
     printf("0 - Sair\n");
     printf("Escolha uma opcao: \n");
     printf("\n------------------------------------------------------------------------------------------------- \n");
@@ -162,15 +144,18 @@ int main()
             break;
         case 5:
             printf("\n--------------------------------------------------------------- \n");
-            printf("\nArvore 2-3 em ordem:\n");
+            printf("\nArvore 2-3 e binaria:\n");
             exibir_tree23(raiz);
-            
             printf("\n--------------------------------------------------------------- \n");
             break;
         case 6:
             printf("\n--------------------------------------------------------------- \n");
-            printf("\nArvore 2-3:\n");
-            imprimirArvore23(raiz, 0);
+            printf("\nArvore 2-3 pre-ordem:\n");
+            arvore23_exibir_pre(raiz);
+            printf("\n\nArvore 2-3 em ordem:\n");
+            arvore23_exibir_ordem(raiz);
+            printf("\n\nArvore 2-3 pos-ordem:\n");
+            arvore23_exibir_pos(raiz);
             printf("\n--------------------------------------------------------------- \n");
             break;
         case 0:
@@ -186,7 +171,7 @@ int main()
 
     
 
-    freeTree(raiz);
+    freeTree(&raiz);
 
     main_teste();
 

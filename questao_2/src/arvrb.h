@@ -22,9 +22,9 @@ int inserirRB(PortuguesRB **raiz, Info *informacao);
 
 int inserirArvRB(PortuguesRB **raiz, Info *informacao);
 
-void moveEsqVermelha(PortuguesRB **raiz);
+void move2EsqRed(PortuguesRB **raiz);
 
-void moveDirVermelha(PortuguesRB **raiz);
+void move2EsqDir(PortuguesRB **raiz);
 
 void removeMenor(PortuguesRB **raiz);
 

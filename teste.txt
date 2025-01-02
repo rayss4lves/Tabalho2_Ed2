@@ -11,17 +11,17 @@ House: casa;
 Key: chave;      
 Computer: computador;         
 School: escola;      
-Happiness: felicidade;  
-Flower: flor;  
+Happiness: felicidade;
+Flower: flor;
 Forest: floresta;
 % Unidade 3
-Cat: gato;  
-War: guerra;     
-Window: janela;  
-Garden: jardim;   
-Book: livro;  
-Moon: lua;        
-Table: mesa;             
+Cat: gato;
+War: guerra;
+Window: janela;
+Garden: jardim;
+Book: livro;
+Moon: lua;    
+Table: mesa;
 Ocean: oceano;
 % Unidade 4
 Door: porta;  

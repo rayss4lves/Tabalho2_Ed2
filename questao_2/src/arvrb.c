@@ -33,7 +33,6 @@ Info criaInfo(char *palavra, char *palavraIngles, char *unidade)
 
     return info;
 }
-
 PortuguesRB *criaNo(Info *informacao)
 {
     PortuguesRB *novo = (PortuguesRB *)malloc(sizeof(PortuguesRB));
@@ -54,7 +53,6 @@ int cor(PortuguesRB *raiz)
 
     return cor;
 }
-
 void troca_cor(PortuguesRB **raiz)
 {
     (*raiz)->cor = !(*raiz)->cor;
@@ -126,7 +124,9 @@ int inserirArvRB(PortuguesRB **raiz, Info *informacao)
     return inseriu;
 }
 
-void moveEsqVermelha(PortuguesRB **raiz)
+/*#########################################REMOCAO#######################################################*/
+
+void move2EsqRed(PortuguesRB **raiz)
 {
     troca_cor(raiz);
 
@@ -138,7 +138,7 @@ void moveEsqVermelha(PortuguesRB **raiz)
     }
 }
 
-void moveDirVermelha(PortuguesRB **raiz)
+void move2DirRed(PortuguesRB **raiz)
 {
     troca_cor(raiz);
 
@@ -159,7 +159,7 @@ void removeMenor(PortuguesRB **raiz)
     else
     {
         if (cor((*raiz)->esq) == BLACK && cor((*raiz)->esq->esq) == BLACK)
-            moveEsqVermelha(raiz);
+            move2EsqRed(raiz);
 
         removeMenor(&(*raiz)->esq);
         balancear(raiz);
@@ -187,7 +187,7 @@ int removerNoArvVP(PortuguesRB **raiz, char *valor)
         if (strcmp(valor, (*raiz)->info.palavraPortugues) < 0)
         {
             if ((*raiz)->esq && cor((*raiz)->esq) == BLACK && cor((*raiz)->esq->esq) == BLACK)
-                moveEsqVermelha(raiz);
+                move2EsqRed(raiz);
 
             existe = removerNoArvVP(&(*raiz)->esq, valor);
         }
@@ -200,13 +200,12 @@ int removerNoArvVP(PortuguesRB **raiz, char *valor)
             {
                 free(*raiz);
                 *raiz = NULL;
-
                 existe = 1;
             }
             else
             {
                 if ((*raiz)->dir && cor((*raiz)->dir) == BLACK && cor((*raiz)->dir->esq) == BLACK)
-                    moveDirVermelha(raiz);
+                    move2DirRed(raiz);
 
                 if (strcmp(valor, (*raiz)->info.palavraPortugues) == 0)
                 {
@@ -237,6 +236,8 @@ int removerArvRB(PortuguesRB **raiz, char *valor)
     }
     return removeu;
 }
+
+/*#########################################EXIBICAO#######################################################*/
 
 PortuguesRB *BuscarPalavra(PortuguesRB **arvore, char *palavraPortugues)
 {
@@ -315,6 +316,7 @@ void exibirArvore(PortuguesRB *raiz)
     }
 }
 
+/*#########################################FREE#######################################################*/
 void freeInforb(Info *info)
 {
     free_arvore_binaria(info->palavraIngles);
@@ -329,5 +331,6 @@ void freeTree(PortuguesRB *no)
         freeInforb(&no->info);
         freeTree(no->dir);
         free(no);
+        no = NULL;
     }
 }
