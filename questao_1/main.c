@@ -27,7 +27,6 @@ void carregarArquivo(const char *nomeArquivo, Portugues23 **arvore)
             {
                 char palavraIngles[50], traducoesPortugues[200];
                 sscanf(linha, "%[^:]: %[^;]", palavraIngles, traducoesPortugues);
-                printf("Inserindo palavra em ingles: %s na unidade: %s\n", palavraIngles, unidadeAtual);
                 char *traducaoPortugues = strtok(traducoesPortugues, ",;");
                 while (traducaoPortugues != NULL)
                 {
@@ -64,13 +63,12 @@ void menu()
 int main()
 {
     Portugues23 *raiz = NULL;
-    Portugues23 *pai = NULL;
 
     char palavra[50];
     char unidade[50];
     int removido;
     carregarArquivo("../text.txt", &raiz);
-    int op, res;
+    int op;
     
     do
     {
@@ -83,7 +81,7 @@ int main()
             printf("\n--------------------------------------------------------------- \n");
             printf("Insira a unidade que deseja imprimir as palavras: ");
             setbuf(stdin, NULL);
-            scanf("%[^\n]s", palavra);
+            scanf("%[^\n]s", unidade);
             imprimirPalavrasUnidade(raiz, unidade);
             printf("\n--------------------------------------------------------------- \n");
             break;

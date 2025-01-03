@@ -48,7 +48,6 @@ void carregarArquivoTeste(const char *nomeArquivo, PortuguesRB **arvore)
             {
                 char palavraIngles[50], traducoesPortugues[200];
                 sscanf(linha, "%[^:]: %[^;]", palavraIngles, traducoesPortugues);
-                printf("Inserindo palavra em ingles: %s na unidade: %s\n", palavraIngles, unidadeAtual);
                 char *traducaoPortugues = strtok(traducoesPortugues, ",;");
                 while (traducaoPortugues != NULL)
                 {
@@ -62,37 +61,36 @@ void carregarArquivoTeste(const char *nomeArquivo, PortuguesRB **arvore)
         }
 
         fclose(arquivo);
-        printf("Arquivo '%s' carregado com sucesso!\n", nomeArquivo);
     }
 }
 
 void buscaCrescente(char palavras[][20], PortuguesRB *raiz)
 {
     clock_t start, end;
-    float totalTime, media;
+    double totalTime, media;
 
     start = clock();
     for (int i = 0; i < TEST_SIZE; i++)
         buscaTestes(&raiz, palavras[i], 0); // Busca na árvore
     end = clock();
-    totalTime = (float)(end - start) / CLOCKS_PER_SEC * 1000.0;
+    totalTime = (double)(end - start) / CLOCKS_PER_SEC;
     media = totalTime / TEST_SIZE;
-    printf("\nTempo medio de busca: %.8f ms\n\n", media);
+    printf("\nTempo medio de busca: %.8lf ms\n\n", media);
 }
 
 void buscaAleatoria(char palavrasAleatorias[][20], PortuguesRB *raiz)
 {
     clock_t start, end;
-    float totalTime, media;
+    double totalTime, media;
 
     start = clock();
     for (int i = 0; i < TEST_SIZE; i++)
         buscaTestes(&raiz, palavrasAleatorias[i], 0); // Busca na árvore
     end = clock();
 
-    totalTime = (float)(end - start) / CLOCKS_PER_SEC * 1000.0;
+    totalTime = (double)(end - start) / CLOCKS_PER_SEC;
     media = totalTime / TEST_SIZE;
-    printf("\nTempo medio de busca (aleatorio): %.8f ms\n", media);
+    printf("\nTempo medio de busca (aleatorio): %.8lf ms\n", media);
 }
 
 int main_teste(void)
