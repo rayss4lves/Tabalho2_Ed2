@@ -99,13 +99,15 @@ void imprimirArvoreRB(PortuguesRB *raiz, int nivel) {
 void menu()
 {
     printf("\n------------------------------------------------------------------------------------------------- \n");
-    printf("\nMenu de opcoes:\n");
+    printf("\n                                          MENU DE OPCOES                                          \n\n");
     printf("1 - Informar uma unidade e imprimir todas as palavras em portugues e as equivalentes em ingles.\n");
     printf("2 - Informar uma palavra em portugues e imprimir todas as palavras em ingles equivalentes.\n");
     printf("3 - Informar uma palavra em ingles e a unidade, remove-la da arvore binaria e da arvore 2-3.\n");
     printf("4 - Informar uma palavra em portugues e a unidade, remove-la da arvore binaria e da arvore 2-3.\n");
     printf("5 - Imprimir a arvore completa\n");
     printf("5 - Imprimir a arvore completa na ordem rubro-negra\n");
+    printf("6 - Imprimir a arvore 2-3 pre-ordem, em ordem e pos-ordem\n");
+    printf("7 - Executar os casos de testes\n");
     printf("0 - Sair\n");
     printf("Escolha uma opcao: \n");
     printf("\n------------------------------------------------------------------------------------------------- \n");
@@ -132,14 +134,15 @@ int main()
             printf("\n--------------------------------------------------------------- \n");
             printf("Insira a unidade que deseja imprimir as palavras: ");
             setbuf(stdin, NULL);
-            scanf("%[^\n]", unidade);
+            scanf("%[^\n]s", unidade);
             imprimirPalavrasUnidade(raiz, unidade);
             printf("\n--------------------------------------------------------------- \n");
             break;
         case 2:
             printf("\n--------------------------------------------------------------- \n");
             printf("Insira a palavra em portugues que deseja imprimir as palavras em ingles: ");
-            scanf("%s", palavra);
+            setbuf(stdin, NULL);
+            scanf("%[^\n]s", palavra);
             exibir_traducao_Portugues(&raiz, palavra);
             printf("\n--------------------------------------------------------------- \n");
             break;
@@ -147,10 +150,10 @@ int main()
             printf("\n--------------------------------------------------------------- \n");
             printf("Insira a palavra em ingles que deseja remover: ");
             setbuf(stdin, NULL);
-            scanf("%[^\n]", palavra);
+            scanf("%[^\n]s", palavra);
             printf("Insira a unidade da palavra que deseja remover: ");
             setbuf(stdin, NULL);
-            scanf("%[^\n]", unidade);
+            scanf("%[^\n]s", unidade);
             removido = Remove_palavra_ingles_unidade(&raiz, palavra, unidade);
             if (removido)
                 printf("A palavra %s foi removida com sucesso!\n\n", palavra);
@@ -160,10 +163,10 @@ int main()
             printf("\n--------------------------------------------------------------- \n");
             printf("Insira a palavra em portugues que deseja remover: ");
             setbuf(stdin, NULL);
-            scanf("%[^\n]", palavra);
+            scanf("%[^\n]s", palavra);
             printf("Insira a unidade da palavra que deseja remover: ");
             setbuf(stdin, NULL);
-            scanf("%[^\n]", unidade);
+            scanf("%[^\n]s", unidade);
             removido = Remove_palavra_portugues_unidade(&raiz, palavra, unidade);
             if (removido)
                 printf("A palavra %s foi removida com sucesso!\n\n", palavra);
@@ -179,6 +182,11 @@ int main()
             imprimirArvoreRB(raiz, 0);
             printf("\n--------------------------------------------------------------- \n");
             break;
+        case 7:
+            printf("\n--------------------------------------------------------------- \n");
+            main_teste();
+            printf("\n--------------------------------------------------------------- \n");
+            break;
         case 0:
             printf("\n--------------------------------------------------------------- \n");
             printf("\nSaindo do programa...\n");
@@ -192,7 +200,6 @@ int main()
 
 
     freeTree(raiz);
-    main_teste();
 
     return 0;
 }

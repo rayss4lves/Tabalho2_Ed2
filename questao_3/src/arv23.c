@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "arv23.h"
 
 int inserirArvore23(Arvore23 **arvore, Info info)
@@ -35,19 +34,19 @@ void adicionaChave(Arvore23 *no, Info informacao, Arvore23 *filho)
 {
     if (informacao.inicio > (no)->info1.inicio)
     {
-        // Adiciona a nova informação a info2
+        // Adiciona a nova informacao a info2
         (no)->info2 = informacao;
         (no)->dir = filho; // Ajusta o ponteiro do filho dir
     }
     else
     {
-        // Move info1 para info2 e coloca a nova informação em info1
+        // Move info1 para info2 e coloca a nova informacao em info1
         (no)->info2 = (no)->info1;
         (no)->info1 = informacao;
         (no)->dir = (no)->cent;
         (no)->cent = filho;
     }
-    (no)->nInfos = 2; // Atualiza o número de informações
+    (no)->nInfos = 2; // Atualiza o número de informacões
 }
 
 Arvore23 *quebraNo(Arvore23 *no, Info informacao, Info *promove, Arvore23 *filho)
@@ -57,21 +56,21 @@ Arvore23 *quebraNo(Arvore23 *no, Info informacao, Info *promove, Arvore23 *filho
     if (informacao.inicio < (no)->info1.inicio)
     {
         *promove = (no)->info1;                             // Promove info1
-        maior = criaNo((no)->info2, (no)->cent, (no)->dir); // Cria o novo nó
-        (no)->info1 = informacao;                           // Atualiza info1 com a nova informação
+        maior = criaNo((no)->info2, (no)->cent, (no)->dir); // Cria o novo no
+        (no)->info1 = informacao;                           // Atualiza info1 com a nova informacao
         (no)->cent = filho;                                 // Atualiza o filho central
     }
     else if (informacao.inicio < (no)->info2.inicio)
     {
-        *promove = informacao;                         // Promove a nova informação
-        maior = criaNo((no)->info2, filho, (no)->dir); // Cria o novo nó
+        *promove = informacao;                         // Promove a nova informacao
+        maior = criaNo((no)->info2, filho, (no)->dir); // Cria o novo no
     }
     else
     {
         *promove = (no)->info2;                       // Promove info2
-        maior = criaNo(informacao, (no)->dir, filho); // Cria o novo nó
+        maior = criaNo(informacao, (no)->dir, filho); // Cria o novo no
     }
-    (no)->nInfos = 1; // Atualizando a quantidade de informação no nó
+    (no)->nInfos = 1; // Atualizando a quantidade de informacao no no
     (no)->dir = NULL; // Ajusta o filho dir
 
     return maior;
@@ -79,11 +78,11 @@ Arvore23 *quebraNo(Arvore23 *no, Info informacao, Info *promove, Arvore23 *filho
 
 int ehFolha(const Arvore23 *no)
 {
-    int achou = 0;
+    int confirm = 0;
 
     if (no->esq == NULL)
-        achou = 1; // Se não tem filho esq, é uma folha
-    return achou;
+        confirm = 1; // Se nao tem filho esq, é uma folha
+    return confirm;
 }
 
 Arvore23 *inserirArv23(Arvore23 **no, Info informacao, Info *promove, Arvore23 **Pai)
@@ -92,36 +91,36 @@ Arvore23 *inserirArv23(Arvore23 **no, Info informacao, Info *promove, Arvore23 *
     Arvore23 *maiorNo = NULL;
 
     if (*no == NULL)
-        *no = criaNo(informacao, NULL, NULL); // Cria um novo nó caso seja nulo
+        *no = criaNo(informacao, NULL, NULL); // Cria um novo no caso seja nulo
     else
     {
         if (ehFolha(*no))
         { // Verifica se é folha
             if ((*no)->nInfos == 1)
-                adicionaChave(*no, informacao, NULL); // O nó tem espaço para a nova chave
+                adicionaChave(*no, informacao, NULL); // O no tem espaco para a nova chave
             else
             {
-                // O nó precisa ser quebrado
+                // O no precisa ser quebrado
                 // Arvore23 *novo;
-                maiorNo = quebraNo(*no, informacao, promove, NULL); // Quebra o nó e sobe a informação
+                maiorNo = quebraNo(*no, informacao, promove, NULL); // Quebra o no e sobe a informacao
                 if (*Pai == NULL)
-                {                                         // Quando não há pai, cria nova raiz
-                    *no = criaNo(*promove, *no, maiorNo); // Nova raiz com o nó atual à esquerda e maiorNo à direita
-                    maiorNo = NULL;                       // Não há mais necessidade de maiorNo
+                {                                         // Quando nao ha pai, cria nova raiz
+                    *no = criaNo(*promove, *no, maiorNo); // Nova raiz com o no atual a esquerda e maiorNo a direita
+                    maiorNo = NULL;                       // Nao ha mais necessidade de maiorNo
                 }
             }
         }
         else
-        { // Nó não é folha
+        { // No nao é folha
             // Navega para o filho apropriado
             if (informacao.inicio < (*no)->info1.inicio)
-                maiorNo = inserirArv23(&((*no)->esq), informacao, promove, no); // Insere na subárvore à esq
+                maiorNo = inserirArv23(&((*no)->esq), informacao, promove, no); // Insere na subarvore a esq
             else if ((*no)->nInfos == 1 || informacao.inicio < (*no)->info2.inicio)
-                maiorNo = inserirArv23(&((*no)->cent), informacao, promove, no); // Insere na subárvore do cent
+                maiorNo = inserirArv23(&((*no)->cent), informacao, promove, no); // Insere na subarvore do cent
             else
-                maiorNo = inserirArv23(&((*no)->dir), informacao, promove, no); // Insere na subárvore à dir
+                maiorNo = inserirArv23(&((*no)->dir), informacao, promove, no); // Insere na subarvore a dir
 
-            // Após inserir, verifica se houve promoção
+            // Apos inserir, verifica se houve promocao
             if (maiorNo != NULL)
             {
                 if ((*no)->nInfos == 1)
@@ -130,20 +129,20 @@ Arvore23 *inserirArv23(Arvore23 **no, Info informacao, Info *promove, Arvore23 *
                     maiorNo = NULL;
                 }
                 else
-                { // Quando não tem espaço
-                    // O nó precisa ser quebrado
+                { // Quando nao tem espaco
+                    // O no precisa ser quebrado
                     Arvore23 *novo = NULL;
-                    novo = quebraNo((*no), *promove, &promove1, maiorNo); // Quebra o nó e sobe a informação
+                    novo = quebraNo((*no), *promove, &promove1, maiorNo); // Quebra o no e sobe a informacao
                     if (*Pai == NULL)
                     {
                         Arvore23 *novaRaiz;
-                        novaRaiz = criaNo(promove1, *no, novo); // Cria nova raiz se necessário
+                        novaRaiz = criaNo(promove1, *no, novo); // Cria nova raiz se necessario
                         *no = novaRaiz;
                         maiorNo = NULL;
                     }
                     else
                     {
-                        maiorNo = novo; // Ajusta o novo maior nó
+                        maiorNo = novo; // Ajusta o novo maior no
                         *promove = promove1;
                     }
                 }
@@ -154,82 +153,42 @@ Arvore23 *inserirArv23(Arvore23 **no, Info informacao, Info *promove, Arvore23 *
     return maiorNo;
 }
 
-Arvore23 *BuscarPalavra(Arvore23 *no, int info)
+Arvore23 *BuscarArv23(Arvore23 *no, int info)
 {
     Arvore23 *inserida = NULL; // Inicializa o retorno como NULL
 
     if (no != NULL)
     {
         if (info == (no)->info1.inicio)
-            inserida = no; // Palavra encontrada, retorna o nó
+            inserida = no; // Palavra encontrada, retorna o no
         else if (info == (no)->info2.inicio)
             inserida = no;
         else
         {
             // Continua a busca nos filhos
             if (info < (no)->info1.inicio)
-                inserida = BuscarPalavra((no)->esq, info);
+                inserida = BuscarArv23((no)->esq, info);
             else if ((no)->nInfos == 1 || info < (no)->info2.inicio)
-                inserida = BuscarPalavra((no)->cent, info);
+                inserida = BuscarArv23((no)->cent, info);
             else
-                inserida = BuscarPalavra((no)->dir, info);
+                inserida = BuscarArv23((no)->dir, info);
         }
     }
 
     return inserida;
 }
 
-void arvore23_exibir_pre(Arvore23 *raiz)
-{
-    if (raiz != NULL)
-    {
-        printf("[1º] %d -> ", raiz->info1.inicio);
-        if (raiz->nInfos == 2)
-            printf("[2º] %d -> ", raiz->info2.inicio);
-
-        arvore23_exibir_pre(raiz->esq);
-        arvore23_exibir_pre(raiz->cent);
-        if (raiz->nInfos == 2)
-            arvore23_exibir_pre(raiz->dir);
-    }
-}
-
-void arvore23_exibir_ordem(Arvore23 *raiz)
-{
-    if (raiz != NULL)
-    {
-        arvore23_exibir_ordem(raiz->esq);
-        printf("[1º] %d -> ", raiz->info1.inicio);
-        arvore23_exibir_ordem(raiz->cent);
-
-        if (raiz->nInfos == 2)
-        {
-            printf("[2º] %d -> ", raiz->info2.inicio);
-            arvore23_exibir_ordem(raiz->dir);
-        }
-    }
-}
-
-void arvore23_exibir_pos(Arvore23 *raiz)
-{
-    if (raiz != NULL)
-    {
-        arvore23_exibir_pos(raiz->esq);
-        arvore23_exibir_pos(raiz->cent);
-        if (raiz->nInfos == 2)
-            arvore23_exibir_pos(raiz->dir);
-
-        printf("[1º] %d -> ", raiz->info1.inicio);
-        if (raiz->nInfos == 2)
-            printf("[2º] %d -> ", raiz->info2.inicio);
-    }
-}
-
-// ############################################# REMOÇÃO ############################################
+// ############################################# REMOcaO ############################################
 
 Info *no23_maior_info(Arvore23 *raiz)
 {
-    return raiz->nInfos == 2 ? &(raiz->info2) : &(raiz->info1);
+    Info *info;
+    if (raiz->nInfos == 2)
+        info = &(raiz->info2);
+    else
+        info = &(raiz->info1);
+    
+    return info;
 }
 
 static int eh_info1(Arvore23 no, int info)

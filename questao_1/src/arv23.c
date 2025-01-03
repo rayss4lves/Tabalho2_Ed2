@@ -576,7 +576,7 @@ int arvore23_remover1(Portugues23 **raiz, char *info, Portugues23 *pai, Portugue
         else
         {
           if (pai == NULL)
-            freeTree(raiz);
+            freeNo(raiz);
           else
           {
             Portugues23 *pai_aux;
@@ -669,7 +669,7 @@ int arvore23_remover2(Portugues23 **raiz, char *info, Portugues23 *pai, Portugue
         else
         {
           if (pai == NULL)
-            freeTree(raiz);
+            freeNo(raiz);
           else
           {
             Portugues23 *pai_aux;
@@ -757,7 +757,7 @@ Portugues23 *no23_juntar(Portugues23 *filho1, Info info, Portugues23 *maior, Por
     (*raiz)->nInfos--;
 
     if((*raiz)->nInfos == 0)
-        freeTree(raiz);
+        freeNo(raiz);
 
     return filho1;
 }
@@ -767,7 +767,7 @@ static void balanceamento(Portugues23 **raiz, Portugues23 *filho1, Portugues23 *
     if(*filho2 == NULL || (*filho2)->nInfos == 0)
     {
         if(*filho2 != NULL)
-            freeTree(filho2);
+            freeNo(filho2);
         *maior = no23_juntar(filho1, info, *maior, raiz);
     }
 }
@@ -856,7 +856,11 @@ int arvore_2_3_remover(Portugues23 **raiz, char *info)
 }
 
 /*#########################################FREE#######################################################*/
-
+void freeNo(Portugues23 **no)
+{
+    free(*no);
+    *no = NULL;
+}
 void freeInfo2_3(Info *info)
 {
     if (info != NULL)

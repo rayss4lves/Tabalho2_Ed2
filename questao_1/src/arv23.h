@@ -32,7 +32,7 @@ int arvore23_remover1(Portugues23 **raiz, char *info, Portugues23 *pai, Portugue
 int arvore23_remover_nao_folha2(Portugues23 **origem, Portugues23* raiz, Info *info, Portugues23 *filho1, Portugues23 *filho2, Portugues23 **maior);
 int arvore23_remover_nao_folha1(Portugues23 **origem, Portugues23* raiz, Info *info, Portugues23 *filho1, Portugues23 *filho2, Portugues23 **maior);
 int arvore_2_3_remover(Portugues23 **raiz, char *info);
-
+void freeNo(Portugues23 **no);
 void freeInfo2_3(Info *info);
 void freeTree(Portugues23 **no);
 
