@@ -153,32 +153,35 @@ Arvore23 *inserirArv23(Arvore23 **no, Info informacao, Info *promove, Arvore23 *
     return maiorNo;
 }
 
-Arvore23 *BuscarArv23(Arvore23 *no, int info)
+// ###################################################################################################
+
+void exibir_Arvore23(Arvore23 *raiz)
 {
-    Arvore23 *inserida = NULL; // Inicializa o retorno como NULL
-
-    if (no != NULL)
+    if (raiz != NULL)
     {
-        if (info == (no)->info1.inicio)
-            inserida = no; // Palavra encontrada, retorna o no
-        else if (info == (no)->info2.inicio)
-            inserida = no;
-        else
+        exibir_Arvore23(raiz->esq);
+        printf("[1º] ");
+        no23_exibir(raiz->info1);
+        if (raiz->nInfos == 2)
         {
-            // Continua a busca nos filhos
-            if (info < (no)->info1.inicio)
-                inserida = BuscarArv23((no)->esq, info);
-            else if ((no)->nInfos == 1 || info < (no)->info2.inicio)
-                inserida = BuscarArv23((no)->cent, info);
-            else
-                inserida = BuscarArv23((no)->dir, info);
+            printf("[2º] ");
+            no23_exibir(raiz->info2);
         }
-    }
 
-    return inserida;
+        exibir_Arvore23(raiz->cent);
+        if (raiz->nInfos == 2)
+            exibir_Arvore23(raiz->dir);
+    }
 }
 
-// ############################################# REMOcaO ############################################
+void no23_exibir(Info info)
+{
+    printf("Inicio: %d\n", info.inicio);
+    printf("Fim: %d\n", info.fim);
+    printf("Status: %d\n", info.status);
+}
+
+// ############################################# REMOCAO ############################################
 
 Info *no23_maior_info(Arvore23 *raiz)
 {
@@ -187,7 +190,7 @@ Info *no23_maior_info(Arvore23 *raiz)
         info = &(raiz->info2);
     else
         info = &(raiz->info1);
-    
+
     return info;
 }
 
@@ -340,8 +343,7 @@ Arvore23 *arvore23_buscar_menor_pai(Arvore23 *raiz, int info)
                 pai = arvore23_buscar_menor_pai(raiz->dir, info);
 
             if (pai == NULL && raiz->info1.inicio < info)
-                ;
-            pai = raiz;
+                pai = raiz;
         }
     }
 

@@ -10,9 +10,7 @@ int menu()
     printf("\nMENU");
     printf("\n1 - Alocar Nos");
     printf("\n2 - Liberar Nos");
-    printf("\n3 - Exibir Nos (Pre-Ordem)");
-    printf("\n4 - Exibir Nos (Em-Ordem)");
-    printf("\n5 - Exibir Nos (Pos-Ordem)");
+    printf("\n3 - Exibir Nos");
     printf("\n0 - Sair");
     printf("\n-----------------------------------------------\n");
     scanf("%d", &op);
@@ -67,21 +65,7 @@ int main()
             case 3:
                 printf("--------------------------------------------------------------------\n\n");
                 printf("\nExibindo arvore Pre-Ordem\n");
-                arvore23_exibir_pre(arvore);
-                printf("--------------------------------------------------------------------\n\n");
-                break;
-
-            case 4:
-                printf("--------------------------------------------------------------------\n\n");
-                printf("\nExibindo arvore Em-Ordem\n");
-                arvore23_exibir_ordem(arvore);
-                printf("--------------------------------------------------------------------\n\n");
-                break;
-
-            case 5:
-                printf("--------------------------------------------------------------------\n\n");
-                printf("\nExibindo arvore Pos-Ordem\n");
-                arvore23_exibir_pos(arvore);
+                exibir_Arvore23(arvore);
                 printf("--------------------------------------------------------------------\n\n");
                 break;
 

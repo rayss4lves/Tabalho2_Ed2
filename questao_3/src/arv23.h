@@ -32,11 +32,9 @@ int ehFolha(const Arvore23 *no);
 Arvore23 *inserirArv23(Arvore23 **no, Info informacao, Info *promove, Arvore23 **pai);
 
 
-Arvore23 *BuscarArv23(Arvore23 *no, int info);
-
-void arvore23_exibir_pos(Arvore23 *raiz);
-void arvore23_exibir_pre(Arvore23 *raiz);
-void arvore23_exibir_ordem(Arvore23 *raiz);
+// Arvore23 *BuscarArv23(Arvore23 *no, int info);
+void exibir_Arvore23(Arvore23 *raiz);
+void no23_exibir(Info info);
 
 Info *no23_maior_info(Arvore23 *raiz);
 Arvore23 *arvore23_buscar_menor_pai(Arvore23 *raiz, int info);
