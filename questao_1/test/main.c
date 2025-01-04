@@ -2,30 +2,39 @@
 
 #define TEST_SIZE 30
 
-int buscaTestes(Portugues23 **tree, char *codigo, int n)
+Portugues23 *buscaTestes(Portugues23 **tree, char *codigo, int n)
 {
-    int encontrou =0;
+    Portugues23 *no = NULL;
     if (*tree != NULL)
     {
         // Comparando strings (codigo e palavras na árvore)
         if (strcmp(codigo, (*tree)->info1.palavraPortugues) == 0)
-            encontrou = 1;
+        {
+            printf("Info 1: %s\n\n", (*tree)->info1.palavraPortugues);
+            no = *tree;
+        }
         else if ((*tree)->nInfos == 2 && strcmp(codigo, (*tree)->info2.palavraPortugues) == 0)
-           encontrou = 1;
+        {
+            printf("Info 2: %s\n\n", (*tree)->info2.palavraPortugues);
+            no = *tree;
+        }
         else if(strcmp(codigo, (*tree)->info1.palavraPortugues) < 0)
         {
-            encontrou = buscaTestes(&(*tree)->esq, codigo, n + 1);
+            printf("%d-esquerda \n", n);
+            no = buscaTestes(&(*tree)->esq, codigo, n + 1);
         }
         else if ((*tree)->nInfos == 1 || strcmp(codigo, (*tree)->info2.palavraPortugues) < 0)
         {
-            encontrou = buscaTestes(&(*tree)->cent, codigo, n + 1);
+            printf("%d-centro \n", n);
+            no = buscaTestes(&(*tree)->cent, codigo, n + 1);
         }
         else
         {
-            encontrou = buscaTestes(&(*tree)->dir, codigo, n + 1);
+            printf("%d-direita \n", n);
+            no = buscaTestes(&(*tree)->dir, codigo, n + 1);
         }
     }
-    return encontrou;
+    return no;
 }
 
 void carregarArquivoTeste(const char *nomeArquivo, Portugues23 **arvore)
