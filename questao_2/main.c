@@ -198,7 +198,6 @@ int main()
         }
     } while (op != 0);
 
-
     freeTree(raiz);
 
     return 0;

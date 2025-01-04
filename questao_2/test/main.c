@@ -2,29 +2,20 @@
 
 #define TEST_SIZE 30
 
-PortuguesRB *buscaTestes(PortuguesRB **tree, char *codigo, int n)
+int buscaTestes(PortuguesRB **tree, char *codigo, int n)
 {
-    PortuguesRB *no = NULL;
+    int encontrou = 0;
     if (*tree != NULL)
     {
         // Comparando strings (codigo e palavras na árvore)
         if (strcmp(codigo, (*tree)->info.palavraPortugues) == 0)
-        {
-            printf("Info: %s\n\n", (*tree)->info.palavraPortugues);
-            no = *tree;
-        }
+            encontrou = 1;
         else if (strcmp(codigo, (*tree)->info.palavraPortugues) < 0)
-        {
-            printf("%d-esquerda\n", n);
-            no = buscaTestes(&(*tree)->esq, codigo, n + 1);
-        }
+            encontrou = buscaTestes(&(*tree)->esq, codigo, n + 1);
         else
-        {
-            printf("%d-direita\n", n);
-            no = buscaTestes(&(*tree)->dir, codigo, n + 1);
-        }
+            encontrou = buscaTestes(&(*tree)->dir, codigo, n + 1);
     }
-    return no;
+    return encontrou;
 }
 
 void carregarArquivoTeste(const char *nomeArquivo, PortuguesRB **arvore)
@@ -64,18 +55,22 @@ void carregarArquivoTeste(const char *nomeArquivo, PortuguesRB **arvore)
     }
 }
 
-void buscaCrescente(char palavras[][20], PortuguesRB *raiz)
+void buscaSequencial(char palavras[][20], PortuguesRB *raiz)
 {
     clock_t start, end;
     double totalTime, media;
 
-    start = clock();
-    for (int i = 0; i < TEST_SIZE; i++)
+    for (int i = 0; i < TEST_SIZE; i++){
+        start = clock();
         buscaTestes(&raiz, palavras[i], 0); // Busca na árvore
-    end = clock();
-    totalTime = (double)(end - start) / CLOCKS_PER_SEC;
-    media = totalTime / TEST_SIZE;
-    printf("\nTempo medio de busca: %.8lf ms\n\n", media);
+        end = clock();
+        totalTime += (double)(end - start) / CLOCKS_PER_SEC;
+        printf("Tempo de busca %s: %.8lf s\n", palavras[i], totalTime);
+        media+=totalTime;
+        }
+
+    media = (media / TEST_SIZE);
+    printf("\nTempo medio de busca : %.8lf s\n", media);
 }
 
 void buscaAleatoria(char palavrasAleatorias[][20], PortuguesRB *raiz)
@@ -83,14 +78,18 @@ void buscaAleatoria(char palavrasAleatorias[][20], PortuguesRB *raiz)
     clock_t start, end;
     double totalTime, media;
 
-    start = clock();
-    for (int i = 0; i < TEST_SIZE; i++)
+    
+    for (int i = 0; i < TEST_SIZE; i++){
+        start = clock();
         buscaTestes(&raiz, palavrasAleatorias[i], 0); // Busca na árvore
-    end = clock();
+        end = clock();
+        totalTime += (double)(end - start) / CLOCKS_PER_SEC;
+        printf("Tempo de busca %s: %.8lf s\n", palavrasAleatorias[i], totalTime);
+        media+=totalTime;
+        }
 
-    totalTime = (double)(end - start) / CLOCKS_PER_SEC;
-    media = totalTime / TEST_SIZE;
-    printf("\nTempo medio de busca (aleatorio): %.8lf ms\n", media);
+    media = (media / TEST_SIZE);
+    printf("\nTempo medio de busca (aleatorio): %.8lf s\n", media);
 }
 
 int main_teste(void)
@@ -111,7 +110,7 @@ int main_teste(void)
 
     // Busca na árvore
     printf("\nBusca crescente:\n");
-    buscaCrescente(palavras, raiz);
+    buscaSequencial(palavras, raiz);
     printf("\nBusca aleatoria:\n");
     buscaAleatoria(palavrasAleatorias, raiz);
 
