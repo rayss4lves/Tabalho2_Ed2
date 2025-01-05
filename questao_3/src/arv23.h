@@ -8,6 +8,8 @@ typedef struct Info
 {
     int inicio;
     int fim;
+    int endereco_inicial;
+    int endereco_final;
     int status;
 } Info;
 

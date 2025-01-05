@@ -8,7 +8,7 @@ void inserir_endereco_inicial(int *variavel, int minimo, int maximo);
 
 void inserir_endereco_final(int *variavel, int minimo, int maximo);
 
-void inserir_nos(Arvore23 **arvore, int inicio, int maximo, int status);
+void inserir_nos(Arvore23 **arvore, int inicio, int maximo, int status, int minimo);
 int pegar_status();
 int cadastrar_nos(Arvore23 **arvore, int maximo);
 

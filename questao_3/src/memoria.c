@@ -35,23 +35,22 @@ void trocar_status(int status, int *novoStatus){
 }
 
 
-void inserir_nos(Arvore23 **arvore, int inicio, int maximo, int status) {
+void inserir_nos(Arvore23 **arvore, int inicio, int maximo, int status, int minimo) {
     Info no;
-    no.inicio = inicio;
-    no.fim = inicio;
+    no.endereco_inicial = inicio;
 
-    while (no.fim < (maximo - 1)) {
+    do {
         no.status = status;
-        inserir_endereco_final(&no.fim, no.inicio, maximo);
+        no.inicio = minimo;
+        no.fim = maximo - 1;
+        inserir_endereco_final(&no.endereco_final, no.endereco_inicial, maximo);
 
         inserirArvore23(arvore, no);
 
-        no.inicio = no.fim + 1;
+        no.endereco_inicial = no.endereco_final + 1;
 
-        int novoStatus;
-        trocar_status(status, &novoStatus);
-        status = novoStatus;
-    }
+        trocar_status(status, &status);
+    }while (no.endereco_final < (maximo - 1));
 }
 
 int pegar_status() {
@@ -80,10 +79,9 @@ int cadastrar_nos(Arvore23 **arvore, int maximo) {
     int status = pegar_status();
     
     Info no;
-    inserir_endereco_inicial(&no.inicio, 0, maximo);
-    int minimo = no.inicio;
-
-    inserir_nos(arvore, no.inicio, maximo, status);
+    inserir_endereco_inicial(&no.endereco_inicial, 0, maximo);
+    int minimo = no.endereco_inicial;
+    inserir_nos(arvore, no.endereco_inicial, maximo, status, minimo);
 
     return minimo;
 }
@@ -146,20 +144,20 @@ Arvore23 *buscar_menor_bloco(Arvore23 **raiz, Arvore23 *no, Info *info, Info **v
 
     if(ehFolha(no))
     {
-        if(no->info1.inicio != info->inicio)
+        if(no->info1.endereco_inicial != info->endereco_inicial)
             menor = no;
         else
-            menor = arvore23_buscar_menor_pai(*raiz, info->inicio);
+            menor = arvore23_buscar_menor_pai(*raiz, info->endereco_inicial);
 
         if(menor != NULL)
         {
-            if(menor->nInfos == 2 && menor->info2.inicio < info->inicio)
+            if(menor->nInfos == 2 && menor->info2.endereco_inicial < info->endereco_inicial)
                 *valor_menor = &(menor->info2);
             else
                 *valor_menor = &(menor->info1);
         }
     }
-    else if(no->info1.inicio == info->inicio)
+    else if(no->info1.endereco_inicial == info->endereco_inicial)
         menor = arvore23_buscar_maior_filho(no->esq, &pai, valor_menor);
     else
         menor = arvore23_buscar_maior_filho(no->cent, &pai, valor_menor);
@@ -175,14 +173,14 @@ Arvore23 *buscar_maior_bloco(Arvore23 **raiz, Arvore23 *no, Info *info, Info **v
 
     if(ehFolha(no))
     {
-        if(no->nInfos == 2 && no->info1.inicio == info->inicio)
+        if(no->nInfos == 2 && no->info1.endereco_inicial == info->endereco_inicial)
             maior = no;
         else
-            maior = arvore23_buscar_maior_pai(*raiz, info->inicio);
+            maior = arvore23_buscar_maior_pai(*raiz, info->endereco_inicial);
 
         if (maior != NULL)
         {
-            if(maior->nInfos == 2 && maior->info2.inicio > info->inicio)
+            if(maior->nInfos == 2 && maior->info2.endereco_inicial > info->endereco_inicial)
                 *valor_maior = &(maior->info2);
             else
                 *valor_maior = &(maior->info1);
@@ -216,16 +214,18 @@ void alterar_no(Arvore23 **raiz, Arvore23 *no, Info *info, int quant)
         {
             Info data;
             data.inicio = info->inicio;
-            data.fim = info->inicio + quant - 1;
-            data.status = !(info->status);
+            data.fim = info->fim;
+            data.endereco_inicial = info->endereco_inicial;
+            data.endereco_final = info->endereco_inicial + quant - 1;
+            trocar_status(info->status, &(data.status));
 
-            info->inicio += quant;
+            info->endereco_inicial += quant;
             inserirArvore23(raiz, data);
         }
         else
         {
-            valor_menor->fim += quant;
-            info->inicio += quant;
+            valor_menor->endereco_final += quant;
+            info->endereco_inicial += quant;
         }
     }
     else
@@ -236,20 +236,20 @@ void alterar_no(Arvore23 **raiz, Arvore23 *no, Info *info, int quant)
         maior = buscar_maior_bloco(raiz, no, info, &valor_maior);
 
         if(menor == NULL && maior == NULL)
-            info->status = !(info->status);
+            trocar_status(info->status, &(info->status));
         else
         {
             if(menor == NULL)
             {
-                info->status = !(info->status);
-                juntarNoMemoria(raiz, &(info->fim), valor_maior->fim, valor_maior->inicio);
+                trocar_status(info->status, &(info->status));
+                juntarNoMemoria(raiz, &(info->endereco_final), valor_maior->endereco_final, valor_maior->endereco_inicial);
             }
             else if(maior == NULL)
-                juntarNoMemoria(raiz, &(valor_menor->fim), info->fim, info->inicio);
+                juntarNoMemoria(raiz, &(valor_menor->endereco_final), info->endereco_final, info->endereco_inicial);
             else
             {
-                int numero = valor_maior->inicio;
-                juntarNoMemoria(raiz, &(valor_menor->fim), valor_maior->fim, info->inicio);
+                int numero = valor_maior->endereco_inicial;
+                juntarNoMemoria(raiz, &(valor_menor->endereco_final), valor_maior->endereco_final, info->endereco_inicial);
                 arvore_2_3_remover(raiz, numero);
             }
         }
