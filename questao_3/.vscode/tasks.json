@@ -6,7 +6,7 @@
             "command": "sh",
             "args": [
                 "-c",
-                "gcc -g main.c src/arv23.c src/arvbin.c src/remocao.c src/lista_encadeada.c test/main.c -o main"
+                "gcc -g main.c src/arv23.c src/memoria.c -o main"
             ],
             "options": {
                 "cwd": "${fileDirname}"

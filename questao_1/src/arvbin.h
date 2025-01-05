@@ -2,26 +2,16 @@
 #define ARVBIN_H
 
 #include "structs.h"
-#include "arv23.h"
 
-Inglesbin* createNode(const char* word, int unit);
-
-// Função para inserir uma palavra em inglês na arvore binaria de busca
-Inglesbin* insertpalavraIngles(Inglesbin* root, const char* word, int unit);
-
-void adicionarTraducao(Portugues23 *no, const char *palavraPortugues, const char *palavraIngles, int unidade);
-
-int ehFolhas(Inglesbin *raiz);
-
-Inglesbin *soUmFilho(Inglesbin *raiz);
-
-Inglesbin *menorFilho(Inglesbin *raiz);
+Inglesbin* createNode(const char* word, char *unidade);
+int insertpalavraIngles(Inglesbin **root, Info *informacao);
 
 void printBinaryTree(Inglesbin *root);
 
-int removerPalavraIngles(Inglesbin **raiz, char *palavra);
-void BuscarPalavraIngles(Portugues23 **raiz, char *palavraIngles, int unidade, Portugues23 **pai);
-
+int eh_Folha(Inglesbin *raiz);
+Inglesbin *soUmFilho(Inglesbin **raiz);
+Inglesbin *menorFilho(Inglesbin *raiz);
+int removerPalavraIngles(Inglesbin **raiz, const char *palavra);
 void free_arvore_binaria(Inglesbin *raiz);
 
 #endif

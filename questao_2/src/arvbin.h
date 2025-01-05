@@ -3,22 +3,22 @@
 
 #include "structs.h"
 
-Inglesbin *createNode(char *palavraIngles, int unidade);
+
+Inglesbin* createNode(const char* word, char *unidade);
 
 // Função para inserir uma palavra em inglês na arvore binaria de busca
-Inglesbin *insertpalavraIngles(Inglesbin *root, char *palavraIngles, int unidade);
+int insertpalavraIngles(Inglesbin **root, Info *informacao);
 
-void adicionarTraducaoEmIngles(PortuguesRB *raiz, char *palavraIng, int unidade);
+int eh_folha(Inglesbin *raiz);
 
-int ehFolhas(Inglesbin *raiz);
-
-Inglesbin *soUmFilho(Inglesbin *raiz);
+Inglesbin *soUmFilho(Inglesbin **raiz);
 
 Inglesbin *menorFilho(Inglesbin *raiz);
 
 void printBinaryTree(Inglesbin *root);
 
-int removerPalavraIngles(Inglesbin **raiz, char *palavra);
-void BuscarPalavraIngles(PortuguesRB **raiz, char *palavraIngles, int unidade);
+int removerPalavraIngles(Inglesbin **raiz, const char *palavra);
+
+void free_arvore_binaria(Inglesbin *raiz);
 
 #endif

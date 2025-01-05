@@ -1,43 +1,61 @@
 #ifndef SRC_H
 #define SRC_H
 
-#define FREE 1
-#define OCCUPIED 0
+#define LIVRE 1
+#define OCUPADO 0
 
 typedef struct Info
 {
-    int start;
-    int end;
+    int inicio;
+    int fim;
+    int endereco_inicial;
+    int endereco_final;
     int status;
 } Info;
 
-typedef struct Memory
+typedef struct Arvore23
 {
-    Info *info1;
-    Info *info2;
+    Info info1;
+    Info info2;
 
-    struct Memory *left;
-    struct Memory *center;
-    struct Memory *right;
+    struct Arvore23 *esq;
+    struct Arvore23 *cent;
+    struct Arvore23 *dir;
 
-    int numKeys;
+    int nInfos;
 
-} Memory;
+} Arvore23;
 
-typedef struct Split
-{
-    Memory *largestNode;
-    Info *promote;
-} Split;
+int inserirArvore23(Arvore23 **arvore, Info info);
+Arvore23 *criaNo(const Info informacao, Arvore23 *filhoesq, Arvore23 *filhocen);
+void adicionaChave(Arvore23 *no, const Info informacao, Arvore23 *filho);
+Arvore23 *quebraNo(Arvore23 *no, const Info informacao, Info *promove, Arvore23 *filho);
+int ehFolha(const Arvore23 *no);
+Arvore23 *inserirArv23(Arvore23 **no, Info informacao, Info *promove, Arvore23 **pai);
 
-Info *CreateInfo(int start, int end, int status);
-Memory *createNode(Info *information, Memory *leftChild, Memory *centerChild);
-int isLeaf(Memory *node);
-void AddInfo(Memory **node, Info *info, Memory *child);
-Split SplitNode(Memory **root, Info *info, Memory *child);
-void Insert23(Memory **root, Memory *parent, Info **promote, int start, int end, int status, int *flag);
-Memory *FindSpace(Memory *root, int requiredSpace);
-Memory *SourceSpace(Memory *root, int RequiredSpace);
-void DisplayInfos(Memory *root);
+
+// Arvore23 *BuscarArv23(Arvore23 *no, int info);
+void exibir_Arvore23(Arvore23 *raiz);
+void no23_exibir(Info info);
+
+Info *no23_maior_info(Arvore23 *raiz);
+Arvore23 *arvore23_buscar_menor_pai(Arvore23 *raiz, int info);
+Arvore23 *arvore23_buscar_menor_pai_2_infos(Arvore23 *raiz, int info);
+Arvore23 *arvore23_buscar_maior_pai(Arvore23 *raiz, int info);
+Arvore23 *arvore23_buscar_pai(Arvore23 *raiz, int info);
+Arvore23 *arvore23_buscar_menor_filho(Arvore23 *raiz, Arvore23 **pai);
+Arvore23 *arvore23_buscar_maior_filho(Arvore23 *raiz, Arvore23 **pai, Info **maior_valor);
+int arvore23_rebalancear(Arvore23 **raiz, int info, Arvore23 **maior);
+Arvore23 *no23_juntar(Arvore23 *filho1, Info info, Arvore23 *maior, Arvore23 **raiz);
+int possivel_remover(Arvore23 *raiz);
+int arvore23_remover2(Arvore23 **raiz, int info, Arvore23 *pai, Arvore23 **origem, Arvore23 **maior);
+int arvore23_remover1(Arvore23 **raiz, int info, Arvore23 *pai, Arvore23 **origem, Arvore23 **maior);
+int arvore23_remover_nao_folha2(Arvore23 **origem, Arvore23* raiz, Info *info, Arvore23 *filho1, Arvore23 *filho2, Arvore23 **maior);
+int arvore23_remover_nao_folha1(Arvore23 **origem, Arvore23* raiz, Info *info, Arvore23 *filho1, Arvore23 *filho2, Arvore23 **maior);
+int arvore_2_3_remover(Arvore23 **raiz, int info);
+
+void freeNo(Arvore23 **no);
+void freeTree(Arvore23 **no);
+
 
 #endif
