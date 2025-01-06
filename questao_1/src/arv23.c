@@ -569,8 +569,9 @@ int arvore23_remover1(Portugues23 **raiz, char *info, Portugues23 *pai, Portugue
       {
         if ((*raiz)->nInfos == 2)
         {
-          if (info1)
-            (*raiz)->info1 = (*raiz)->info2;
+            if (info1)
+                (*raiz)->info1 = (*raiz)->info2;
+                
             (*raiz)->nInfos = 1;
         }
         else
