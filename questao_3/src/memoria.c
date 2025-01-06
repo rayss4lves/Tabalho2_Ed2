@@ -56,11 +56,10 @@ void inserir_nos(Arvore23 **arvore, int inicio, int maximo, int status, int mini
 int pegar_status() {
     int status;
     int confirm = 0;
-    printf("\n-------------------------------------------\n");
-    printf("\nEscolha um status para os nos:");
+
     while (!confirm){
         printf("\n-------------------------------------------\n");
-        printf("\nO primeiro no esta livre ou ocupado?");
+        printf("\nEscolha um status para o no:");
         printf("\n1 - Livre");
         printf("\n0 - Ocupado");
         printf("\nStatus: \n");
@@ -256,68 +255,6 @@ void alterar_no(Arvore23 **raiz, Arvore23 *no, Info *info, int quant)
     }
 }
 
-// void no23_exibir(Info no)
-// {
-//     printf("Bloco de [%d] até [%d] - [%s]\n", no.inicio, no.fim, no.status == LIVRE ? "Livre" : "Ocupado");
-//     // printf("%d -> ", no.inicio);
-// }
-
-// void arvore23_exibir_pre(Arvore23 *raiz)
-// {
-//     if(raiz != NULL)
-//     {
-//         printf("[1º] ");
-//         no23_exibir(raiz->info1);
-//         if(raiz->nInfos == 2)
-//         {
-//             printf("[2º] ");
-//             no23_exibir(raiz->info2);
-//         }
-
-//         arvore23_exibir_pre(raiz->esq);
-//         arvore23_exibir_pre(raiz->cent);
-//         if(raiz->nInfos == 2)
-//             arvore23_exibir_pre(raiz->dir);
-//     }
-// }
-
-// void arvore23_exibir_ordem(Arvore23 *raiz)
-// {
-//     if(raiz != NULL)
-//     {
-//         arvore23_exibir_ordem(raiz->esq);
-//         printf("[1º] ");
-//         no23_exibir(raiz->info1);
-//         arvore23_exibir_ordem(raiz->cent);
-
-//         if(raiz->nInfos == 2)
-//         {
-//             printf("[2º] ");
-//             no23_exibir(raiz->info2);
-//             arvore23_exibir_ordem(raiz->dir);
-//         }
-//     }
-// }
-
-// void arvore23_exibir_pos(Arvore23 *raiz)
-// {
-//     if(raiz != NULL)
-//     {
-//         arvore23_exibir_pos(raiz->esq);
-//         arvore23_exibir_pos(raiz->cent);
-//         if(raiz->nInfos == 2)
-//             arvore23_exibir_pos(raiz->dir);
-
-//         printf("[1º] ");
-//         no23_exibir(raiz->info1);
-//         if(raiz->nInfos == 2)
-//         {
-//             printf("[2º] ");
-//             no23_exibir(raiz->info2);
-//         }
-//     }
-// }
-
 
 int alocar_desalocar_no(Arvore23 **arvore, int quantidadeNos, int status)
 {
@@ -334,5 +271,5 @@ int alocar_desalocar_no(Arvore23 **arvore, int quantidadeNos, int status)
         alterar_no(arvore, no_escolhido, info_escolhido, quantidadeNos);
     }
     else
-        printf("\nNao ha no disponível\n");
+        printf("\nNao ha no disponivel\n");
 }

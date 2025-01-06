@@ -1,0 +1,8 @@
+Executar a primeira questão:
+gcc -g main.c src/arv23.c src/arvbin.c src/remocao.c src/lista_encadeada.c test/main.c -o main
+
+Executar a segunda questão:
+gcc -g main.c src/arvrb.c src/arvbin.c src/remocao.c src/lista_encadeada.c test/main.c -o main
+
+Executar a terceira questão:
+gcc -g main.c src/arv23.c src/memoria.c -o main
